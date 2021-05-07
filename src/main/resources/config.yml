@@ -1,0 +1,323 @@
+# MobContracts
+# Written by MintyMonster
+
+# The prefix for all messages
+prefix: '&6Contracts &8➟ '
+
+# These are the possible types of mobs that the contract can be.
+# Please ensure the mob-type is a hostile mob, otherwise targeting won't work and they won't attack.
+# Silverfish can be added for maximum annoyance! ;)
+contract-type:
+  - 'BLAZE'
+  - 'EVOKER'
+  - 'HUSK'
+  - 'PILLAGER'
+  - 'RAVAGER'
+  - 'SKELETON'
+  - 'STRAY'
+  - 'VINDICATOR'
+  - 'WITHER_SKELETON'
+  - 'ZOMBIE_VILLAGER'
+  - 'ZOMBIE'
+
+settings:
+
+  database:
+    host: 'host'
+    port: 3306
+    database-name: 'database_name'
+    username: 'username'
+    password: 'password'
+
+  general:
+    # When the player leaves, should we kill the contract?
+    kill-contract-on-leave: true
+    # When player kills contract, announce?
+    announce-contract-kill: true
+
+    # Enable/Disable damaging events
+    # true = cancel damage
+    # false = allow damage
+    damageevents:
+      cramming: true
+      drowning: true
+      falling: true
+      falling-block: true # (Sand/Gravel)
+      fire: true
+      hot-blocks: true # (Magma blocks)
+      lava: true
+      lightning: true
+      magic: true # (Potions or spells)
+      poison: true
+      projectile: false
+      suffocation: true
+      wither: true # (Wither potion effect)
+      thorns: true
+
+  levels:
+    # Max level that players can achieve
+    max-level: 500
+    # Xp per contract towards level
+    xp-common: 100
+    xp-epic: 250
+    xp-legendary: 500
+    # How much xp per level? Equation: level * xp-multi = xp per level
+    xp-multi: 1000
+
+  targeting:
+    # If set to true, the entity will teleport to their target upon re-targeting.
+    allow-teleport: true
+    # If set to true, targeting message will be displayed
+    allow-target-message: true
+    # Distance in blocks for player to be within from entity for targeting to count them
+    # Also distance in blocks for player to get targeting message
+    max-distance-from-target: 40
+    # Minimum distance away that the player has to be for the mob to teleport
+    # If the player is under this threshold, the entity will just re-target the player, without teleporting
+    min-distance-from-target: 10
+    # Time in ticks on how often the targeting should re-check
+    target-delay: 800
+
+  common:
+    # Name format for spawned mob (Reference name lists below)
+    name-format: '&7[&e%name% &ethe &e%adjective%&7]'
+    # The range of which the health randomiser picks between (Max 1024)
+    max-health: 220
+    min-health: 100
+    # The range of which the damage randomiser picks between.
+    max-damage: 8
+    min-damage: 3
+    # The range of which the speed randomiser picks between
+    # For reference, player sprinting speed is 0.15
+    # Max 1024.0 || Min 0.0
+    max-speed: 1.5
+    min-speed: 0.5
+    # If set to true, contract will gain a random amount of armor stats (Max 20, Min 1)
+    allow-armor: true
+    # If set to true, contracts have a chance to spawn with a powerful weapon
+    allow-weapon: true
+    # If set to true, this mob will use the targeting system
+    allow-targeting: true
+
+  epic:
+    # Name format for spawned mob (Reference name lists below)
+    name-format: '&7[&5%name% &5the &5%adjective%&7]'
+    # Set to true if you want the epic mobs to have AOE effects
+    enable-aoe-effects: true
+    # Distance between player and entity in blocks before effected by AOE
+    distance-from-entity: 2
+    # Time in ticks for AOE repeat check for players
+    repeat-check: 200
+    # The range of which the health randomiser picks between (Max 1024)
+    max-health: 550
+    min-health: 300
+    # The range of which the damage randomiser picks between
+    max-damage: 11
+    min-damage: 6
+    # The range of which the speed randomiser picks between
+    # For reference, player sprinting speed is 0.15
+    # Max 1024.0 || Min 0.0
+    max-speed: 1.5
+    min-speed: 0.5
+    # If set to true, contract will gain a random amount of armor stats (Max 20, Min 1)
+    allow-armor: true
+    # If set to true, contracts have a chance to spawn with a powerful weapon
+    allow-weapon: true
+    # If set to true, this mob will use the targeting system
+    allow-targeting: true
+
+  legendary:
+    # Name format for spawned mob (Reference name lists below)
+    name-format: '&8[&6%name% &6the &6%adjective%&8]'
+    # Set to true if you want the legendary mobs to have AOE effects
+    enable-aoe-effects: true
+    # Set to true if you want the legendary mobs to have a secondary effect of hunger 2 (Added difficulty)
+    enable-hunger-two: true
+    # Distance between player and entity in blocks before effected by AOE
+    distance-from-entity: 6
+    # Time in ticks for AOE repeat check for players
+    repeat-check: 140
+    # Set to true if you want legendary contracts to say a 'quote' when spawned.
+    enable-boss-message: true
+    # Set to true if you want quotes to be sent globally
+    # If false, and 'enable-boss-message' is true, messages will be sent locally to nearby players
+    global-boss-message: true
+    # The range of which the health randomiser picks between (Max 1024)
+    max-health: 1000
+    min-health: 500
+    # The range of which the damage randomiser picks between
+    max-damage: 15
+    min-damage: 10
+    # The range of which the speed randomiser picks between
+    # For reference, player sprinting speed is 0.15
+    # Max 1024.0 || Min 0.0
+    max-speed: 1.5
+    min-speed: 0.5
+    # If set to true, contract will gain a random amount of armor stats (Max 20, Min 1)
+    allow-armor: true
+    # If set to true, contracts have a chance to spawn with a powerful weapon
+    allow-weapon: true
+    # If set to true, this mob will use the targeting system
+    allow-targeting: true
+
+    # Add whatever you want to these
+    # Ensure that you follow the format
+    # Format on parse: 'Odin the Acidic'
+  names:
+    name:
+      - 'Odin'
+      - 'Frigg'
+      - 'Balder'
+      - 'Loki'
+      - 'Thor'
+      - 'Freya'
+      - 'Heimdall'
+      - 'Hel'
+      - 'Vidar'
+      - 'Vale'
+      - 'Zeus'
+      - 'Hera'
+      - 'Poseidon'
+      - 'Demeter'
+      - 'Ares'
+      - 'Athena'
+      - 'Apollo'
+      - 'Artemis'
+      - 'Hephaestus'
+      - 'Aphrodite'
+      - 'Hermes'
+      - 'Dionysus'
+      - 'Hades'
+      - 'Hyphnos'
+      - 'Nike'
+      - 'Janus'
+      - 'Nemesis'
+      - 'Iris'
+      - 'Hecate'
+      - 'Tyche'
+      - 'Steve'
+      - 'Bob'
+      - 'Jimbo'
+      - 'Betsy'
+      - 'Herobrine'
+      - 'Minty'
+    adjectives:
+      - 'Acidic'
+      - 'Abnormal'
+      - 'Barbarous'
+      - 'Destroyer'
+      - 'Wonder'
+      - 'Barbarian'
+      - 'Bewildered'
+      - 'Berserk'
+      - 'Brainless'
+      - 'Colossal'
+      - 'Damaged'
+      - 'Cynical'
+      - 'Chaotic'
+      - 'Annoying'
+      - 'Deranged'
+      - 'Draconian'
+      - 'Enchanted'
+      - 'Fabulous'
+      - 'Frantic'
+      - 'Fearless'
+      - 'Thicc'
+      - 'Gruesome'
+      - 'Hallowed'
+      - 'Hypnotic'
+      - 'Idiotic'
+      - 'Invincible'
+      - 'Unwieldy'
+      - 'Lewd'
+      - 'Merciful'
+      - 'Maniacle'
+      - 'Rabbid'
+      - 'Inquisitive'
+      - 'Sassy'
+      - 'Scandalous'
+      - 'Righteous'
+      - 'Voiceless'
+      - 'Vigorous'
+      - 'Wretched'
+
+messages:
+  event:
+    # %player% -> Killer
+    # %entity% -> Contract
+    # %tier% -> Common/Epic/Legendary
+    # %effect% -> Fire, Poison... etc.
+    contract-kill: '&a%player% &7has slain %entity%&7 + %tier% + %effect%!'
+
+  command:
+    # Messages sent when player starts a new contract
+    start-common: '&7You have started a new &eCommon &7contract!'
+    start-epic: '&7You have started a new &5Epic &7contract!'
+    start-legendary: '&7You have started a new &6Legendary &7contract!'
+    # When player is already in contract and can't start another one
+    already-in-contract: '&7You are already in a contract! Finish that before starting another!'
+    # When player starts contract, and has no contracts left.
+    no-contracts-left: '&7You have no &6%type% &7contracts left :('
+    # When Admin removes all contracts
+    remove-all: '&7You have removed &call &7current contracts'
+    # When Admin removes specific player's contract
+    remove-player-contract: '&7You have removed &a%player%&7''s contract'
+    # When there's no contract to remove for that specific player
+    no-contract-remove: '&7This player doesn''t have a contract active!'
+    # Message when Admin gives user a contract
+    give-legendary: '&7You have given &a%amount% &6Legendary &7contract(s) to &a%player%&7!'
+    give-epic: '&7You have given &a%amount% &5Epic &7contract(s) to &a%player%&7!'
+    give-common: '&7You have given &a%amount% &eCommon &7contract(s) to &a%player%&7!'
+    # Message when player receives a contract
+    received-legendary: '&7You have received &a%amount% &6Legendary &7contract(s)!'
+    received-epic: '&7You have received &a%amount% &5Epic &7contract(s)!'
+    received-common: '&7You have received &a%amount% &eCommon &7contract(s)!'
+
+  # %entity% -> Contract's custom name
+  # %player% -> Player's name
+  target-message: '%entity% &7is now targeting &6%player%'
+
+  levels:
+    # %xp% -> Amount of xp from contract given
+    # %levelxp% -> Amount of xp in that current level
+    # %level% -> Current level
+    added-xp: '&a%xp% experience &7added! You are now &a%levelxp%&7 experience into level &c%level%'
+    level-up: '&aYou leveled up! You are now level &c%level%'
+    highest-level: '&7You are already the &6highest &7level, but XP is still added to your total!'
+
+  # Quotes when legendary contract is spawned (Add or remove as you wish)
+  bossmessage:
+    fire:
+      - '&7Feel the &6&lburn&r&7!'
+      - '&7Let''s turn up the &6&lheat&r&7!'
+      - '&7I just want to see the world &6&lburn&r&7!'
+      - '&7I''d &c&lrun &r&7if I were you...'
+    poison:
+      - '&7Just a little &2&lpoison&r&7...!'
+      - '&7A spoonful of &2&lcyanide &r&7keeps the hero away!'
+      - '&7I''d &c&lrun &r&7if I were you...'
+      - '&7This may &2&lhurt&r&7!'
+    nausea:
+      - '&7Are you feeling &9&ldizzy &r&7yet?'
+      - '&7I think you should take a &9&lsick &r&7day....'
+      - '&7I''d &c&lrun &r&7if I were you...'
+    smite:
+      - '&7Feel the power of the &b&lskies&r&7!'
+      - '&7I''ll &b&lsmite &r&7you!'
+      - '&7I''d &c&lrun &r&7if I were you...'
+      - '&7Men speak in small words, I speak in &b&lthunder&r&7!'
+    slow:
+      - '&7Looking a little &lsluggish&r&7...!'
+      - '&7Time to &lslowwwww &r&7down!'
+      - '&7I''d &c&lrun &r&7if I were you...'
+    wither:
+      - '&7&8&lWilt &r&7away...!'
+      - '&7Make like a &dflower &r&7and &8&lwilt&r&7!'
+      - '&7I''d &c&lrun &r&7if I were you...'
+      - '&7Let the &8&lshadows &r&7consume you!'
+    blind:
+      - '&7Can you even &f&lsee &r&7me?'
+      - '&7You can''t &f&lsee &r&7me!'
+    weakness:
+      - '&7&a&lWeakling!'
+      - '&7You''re &a&lweak &r&7now!'

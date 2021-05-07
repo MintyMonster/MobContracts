@@ -1,0 +1,13 @@
+name: MobContracts
+version: 1.0
+main: uk.co.minty_studios.mobcontracts.MobContracts
+author: MintyMonster
+description: Defeat epic mobs, and collect bounties in Mobcontracts
+api-version: 1.16
+commands:
+  mobcontracts:
+    aliases: [mcontracts, contracts, contract, mobs, mobcon, con]
+    description: Main MobContracts command
+    usage: /mobcontracts
+    permission-message: &cPermission denied.
+    permission: mobcontracts.core
