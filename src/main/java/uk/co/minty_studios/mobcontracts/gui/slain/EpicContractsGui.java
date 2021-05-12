@@ -1,4 +1,4 @@
-package uk.co.minty_studios.mobcontracts.gui;
+package uk.co.minty_studios.mobcontracts.gui.slain;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -9,13 +9,14 @@ import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
 import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
 import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.gui.MainMenu;
 import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
 import uk.co.minty_studios.mobcontracts.gui.handler.PaginatedGui;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 
 import java.util.*;
 
-public class LegendaryContractsGui extends PaginatedGui {
+public class EpicContractsGui extends PaginatedGui {
 
     private final MobContracts plugin;
     private final PlayerDataDatabase playerDataDatabase;
@@ -25,12 +26,12 @@ public class LegendaryContractsGui extends PaginatedGui {
     private int index;
 
 
-    public LegendaryContractsGui(GuiUtil guiUtil,
-                            MobContracts plugin,
-                            PlayerDataDatabase playerDataDatabase,
-                            CreateCustomGuiItem createCustomGuiItem,
-                            ContractStorageDatabase contractStorageDatabase,
-                            MobDataDatabase mobDataDatabase) {
+    public EpicContractsGui(GuiUtil guiUtil,
+                              MobContracts plugin,
+                              PlayerDataDatabase playerDataDatabase,
+                              CreateCustomGuiItem createCustomGuiItem,
+                              ContractStorageDatabase contractStorageDatabase,
+                              MobDataDatabase mobDataDatabase) {
         super(guiUtil);
         this.plugin = plugin;
         this.playerDataDatabase = playerDataDatabase;
@@ -41,7 +42,7 @@ public class LegendaryContractsGui extends PaginatedGui {
 
     @Override
     public String getMenuName() {
-        return "Leaderboard: Legendary contracts slain";
+        return "Leaderboard: Epic contracts slain";
     }
 
     @Override
@@ -52,7 +53,7 @@ public class LegendaryContractsGui extends PaginatedGui {
     @Override
     public void handleMenu(InventoryClickEvent e) {
 
-        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalLegendarySlainMap().entrySet());
+        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalEpicSlainMap().entrySet());
 
         if(e.getCurrentItem().getType().equals(Material.PAPER)){
             if(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Previous page")){
@@ -78,7 +79,7 @@ public class LegendaryContractsGui extends PaginatedGui {
 
         addBottomRow();
 
-        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalLegendarySlainMap().entrySet());
+        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalEpicSlainMap().entrySet());
         sorted.sort(Collections.reverseOrder(Comparator.comparingInt(Map.Entry::getValue)));
 
         for(int i = 0; i < super.maxItemsPerPage; i++){
@@ -89,8 +90,8 @@ public class LegendaryContractsGui extends PaginatedGui {
                 UUID uuid = sorted.get(index).getKey();
 
                 head = createCustomGuiItem.getPlayerHead(uuid,
-                        "&8➟ &aLegendary slain",
-                        "&7Total: &6" + playerDataDatabase.getLegendary(uuid) + " &7slain",
+                        "&8➟ &aEpic slain",
+                        "&7Total: &6" + playerDataDatabase.getEpic(uuid) + " &7slain",
                         "",
                         "&8➟ &aStats",
                         "&7Level: &e" + playerDataDatabase.getPlayerLevel(uuid),
@@ -100,5 +101,4 @@ public class LegendaryContractsGui extends PaginatedGui {
             }
         }
     }
-
 }

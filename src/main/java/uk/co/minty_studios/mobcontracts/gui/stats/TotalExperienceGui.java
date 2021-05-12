@@ -1,4 +1,4 @@
-package uk.co.minty_studios.mobcontracts.gui;
+package uk.co.minty_studios.mobcontracts.gui.stats;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -9,13 +9,14 @@ import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
 import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
 import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.gui.MainMenu;
 import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
 import uk.co.minty_studios.mobcontracts.gui.handler.PaginatedGui;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 
 import java.util.*;
 
-public class ContractsKilledGui extends PaginatedGui {
+public class TotalExperienceGui extends PaginatedGui {
 
     private final MobContracts plugin;
     private final PlayerDataDatabase playerDataDatabase;
@@ -24,10 +25,11 @@ public class ContractsKilledGui extends PaginatedGui {
     private final MobDataDatabase mobDataDatabase;
     private int index;
 
-    public ContractsKilledGui(GuiUtil guiUtil,
-                              CreateCustomGuiItem createCustomGuiItem,
+
+    public TotalExperienceGui(GuiUtil guiUtil,
                               MobContracts plugin,
                               PlayerDataDatabase playerDataDatabase,
+                              CreateCustomGuiItem createCustomGuiItem,
                               ContractStorageDatabase contractStorageDatabase,
                               MobDataDatabase mobDataDatabase) {
         super(guiUtil);
@@ -40,7 +42,7 @@ public class ContractsKilledGui extends PaginatedGui {
 
     @Override
     public String getMenuName() {
-        return "Leaderboard: Contracts killed";
+        return "Leaderboard: Total experience";
     }
 
     @Override
@@ -51,26 +53,7 @@ public class ContractsKilledGui extends PaginatedGui {
     @Override
     public void handleMenu(InventoryClickEvent e) {
 
-        /*switch(e.getCurrentItem().getType()){
-            case PLAYER_HEAD:
-
-                GuiUtil util = plugin.getMenuUtil((Player) e.getWhoClicked());
-                util.setPlayerForProfile(Bukkit.getPlayer(
-                        UUID.fromString(e.getCurrentItem().getItemMeta()
-                        .getPersistentDataContainer().get(new NamespacedKey(plugin, "uuid"), PersistentDataType.STRING))));
-
-                break;
-        }*/
-        // Add pages handling
-        // Add profile
-        /*GuiUtil guiUtil = plugin.getMenuUtil((Player) e.getWhoClicked());
-        Bukkit.getPlayer(UUID.fromString(e.getCurrentItem().getItemMeta()
-                .getPersistentDataContainer().get(new NamespacedKey(plugin, "uuid"), PersistentDataType.STRING));*/
-        // Use getter/setter in GuiUtil
-        // open profile
-        // Player target = super.guiUtil.getPlayerForProfile();
-
-        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalSlainMap().entrySet());
+        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalExperienceMap().entrySet());
 
         if(e.getCurrentItem().getType().equals(Material.PAPER)){
             if(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Previous page")){
@@ -96,7 +79,7 @@ public class ContractsKilledGui extends PaginatedGui {
 
         addBottomRow();
 
-        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalSlainMap().entrySet());
+        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalExperienceMap().entrySet());
         sorted.sort(Collections.reverseOrder(Comparator.comparingInt(Map.Entry::getValue)));
 
         if(sorted == null && sorted.isEmpty())
@@ -106,23 +89,15 @@ public class ContractsKilledGui extends PaginatedGui {
             index = super.maxItemsPerPage * page + i;
             if(index >= sorted.size()) break;
             if(sorted.get(index) != null){
-
                 ItemStack head = null;
 
-                // Turn into one method
                 head = createCustomGuiItem.getPlayerHead(sorted.get(index).getKey(),
-                        "&8➟ &aSlain",
-                        "&7Total: &6" + playerDataDatabase.getTotalSlain(sorted.get(index).getKey()) + " &7 slain",
+                        "&8➟ &aExperience",
+                        "&7Total: &6" + playerDataDatabase.getPlayerTotalXp(sorted.get(index).getKey()) + "&7xp",
                         "",
                         "&8➟ &aStats",
-                        "&7Level: &e" + playerDataDatabase.getPlayerLevel(sorted.get(index).getKey()),
-                        "&7Experience: &e" + playerDataDatabase.getPlayerXp(sorted.get(index).getKey()) + "&7xp");
-
-
-                // Get UUID from player's head for future profile
-                /*ItemMeta meta = head.getItemMeta();
-                meta.getPersistentDataContainer().set(new NamespacedKey(plugin, "uuid"), PersistentDataType.STRING, sorted.get(index).getKey().toString());
-                head.setItemMeta(meta);*/
+                        "&7Slain: &e" + playerDataDatabase.getTotalSlain(sorted.get(index).getKey()) + " &7contracts",
+                        "&7Level: &e" + playerDataDatabase.getPlayerLevel(sorted.get(index).getKey()));
 
                 inventory.addItem(head);
             }

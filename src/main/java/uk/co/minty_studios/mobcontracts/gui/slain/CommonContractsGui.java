@@ -1,4 +1,4 @@
-package uk.co.minty_studios.mobcontracts.gui;
+package uk.co.minty_studios.mobcontracts.gui.slain;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -9,14 +9,14 @@ import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
 import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
 import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.gui.MainMenu;
 import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
 import uk.co.minty_studios.mobcontracts.gui.handler.PaginatedGui;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 
 import java.util.*;
 
-public class TotalExperienceGui extends PaginatedGui {
-
+public class CommonContractsGui extends PaginatedGui {
     private final MobContracts plugin;
     private final PlayerDataDatabase playerDataDatabase;
     private final CreateCustomGuiItem createCustomGuiItem;
@@ -25,7 +25,7 @@ public class TotalExperienceGui extends PaginatedGui {
     private int index;
 
 
-    public TotalExperienceGui(GuiUtil guiUtil,
+    public CommonContractsGui(GuiUtil guiUtil,
                               MobContracts plugin,
                               PlayerDataDatabase playerDataDatabase,
                               CreateCustomGuiItem createCustomGuiItem,
@@ -41,7 +41,7 @@ public class TotalExperienceGui extends PaginatedGui {
 
     @Override
     public String getMenuName() {
-        return "Leaderboard: Total experience";
+        return "Leaderboard: Common contracts slain";
     }
 
     @Override
@@ -52,7 +52,7 @@ public class TotalExperienceGui extends PaginatedGui {
     @Override
     public void handleMenu(InventoryClickEvent e) {
 
-        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalExperienceMap().entrySet());
+        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalCommonSlainMap().entrySet());
 
         if(e.getCurrentItem().getType().equals(Material.PAPER)){
             if(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Previous page")){
@@ -78,25 +78,23 @@ public class TotalExperienceGui extends PaginatedGui {
 
         addBottomRow();
 
-        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalExperienceMap().entrySet());
+        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalCommonSlainMap().entrySet());
         sorted.sort(Collections.reverseOrder(Comparator.comparingInt(Map.Entry::getValue)));
-
-        if(sorted == null && sorted.isEmpty())
-            return;
 
         for(int i = 0; i < super.maxItemsPerPage; i++){
             index = super.maxItemsPerPage * page + i;
             if(index >= sorted.size()) break;
             if(sorted.get(index) != null){
                 ItemStack head = null;
+                UUID uuid = sorted.get(index).getKey();
 
-                head = createCustomGuiItem.getPlayerHead(sorted.get(index).getKey(),
-                        "&8➟ &aExperience",
-                        "&7Total: &6" + playerDataDatabase.getPlayerTotalXp(sorted.get(index).getKey()) + "&7xp",
+                head = createCustomGuiItem.getPlayerHead(uuid,
+                        "&8➟ &aCommon slain",
+                        "&7Total: &6" + playerDataDatabase.getCommon(uuid) + " &7slain",
                         "",
                         "&8➟ &aStats",
-                        "&7Slain: &e" + playerDataDatabase.getTotalSlain(sorted.get(index).getKey()) + " &7contracts",
-                        "&7Level: &e" + playerDataDatabase.getPlayerLevel(sorted.get(index).getKey()));
+                        "&7Level: &e" + playerDataDatabase.getPlayerLevel(uuid),
+                        "&7Experience: &e" + playerDataDatabase.getPlayerXp(uuid) + "&7xp");
 
                 inventory.addItem(head);
             }

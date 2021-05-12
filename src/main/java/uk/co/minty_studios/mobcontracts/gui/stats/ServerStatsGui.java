@@ -1,4 +1,4 @@
-package uk.co.minty_studios.mobcontracts.gui;
+package uk.co.minty_studios.mobcontracts.gui.stats;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -8,6 +8,7 @@ import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
 import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
 import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.gui.MainMenu;
 import uk.co.minty_studios.mobcontracts.gui.handler.Gui;
 import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;

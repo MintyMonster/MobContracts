@@ -8,8 +8,16 @@ import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
 import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
 import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.gui.generic.AllContractsGui;
 import uk.co.minty_studios.mobcontracts.gui.handler.Gui;
 import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
+import uk.co.minty_studios.mobcontracts.gui.slain.CommonContractsGui;
+import uk.co.minty_studios.mobcontracts.gui.slain.EpicContractsGui;
+import uk.co.minty_studios.mobcontracts.gui.slain.LegendaryContractsGui;
+import uk.co.minty_studios.mobcontracts.gui.stats.ContractsKilledGui;
+import uk.co.minty_studios.mobcontracts.gui.stats.PlayerLevelGui;
+import uk.co.minty_studios.mobcontracts.gui.stats.ServerStatsGui;
+import uk.co.minty_studios.mobcontracts.gui.stats.TotalExperienceGui;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 
 public class MainMenu extends Gui {
