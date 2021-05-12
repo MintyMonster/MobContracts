@@ -38,11 +38,11 @@ contract-type:
 settings:
 
   database:
-    host: 'na01-sql.pebblehost.com'
+    host: 'host'
     port: 3306
-    database-name: 'customer_119398_general'
-    username: 'customer_119398_general'
-    password: 'jXxJw-1NB-@0FIbUM#TF'
+    database-name: 'database_name'
+    username: 'username'
+    password: 'password'
 
   general:
     # When the player leaves, should we kill the contract?
