@@ -6,7 +6,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.events.ContractSummonEvent;
-import uk.co.minty_studios.mobcontracts.mobeffects.EpicEffects;
+import uk.co.minty_studios.mobcontracts.effects.EpicEffects;
 import uk.co.minty_studios.mobcontracts.mobs.MobFeatures;
 import uk.co.minty_studios.mobcontracts.utils.ContractType;
 
@@ -19,7 +19,7 @@ public class EpicContract {
     private final MobFeatures mobFeatures;
     private final EpicEffects epicEffects;
     private final ContractType contractType;
-    private static Random rnd = new Random();
+    private static final Random rnd = new Random();
 
     public EpicContract(MobContracts plugin, MobFeatures mobFeatures, EpicEffects epicEffects, ContractType contractType) {
         this.plugin = plugin;
@@ -28,8 +28,9 @@ public class EpicContract {
         this.contractType = contractType;
     }
 
-    public void summonEpicContract(Player player){
+    public void summonEpicContract(Player player) {
         UUID uuid = player.getUniqueId();
+        UUID mobUuid = UUID.randomUUID();
         double maxHp = plugin.getConfig().getDouble("settings.epic.max-health");
         double minHp = plugin.getConfig().getDouble("settings.epic.min-health");
         double maxDmg = plugin.getConfig().getDouble("settings.epic.max-damage");
@@ -62,19 +63,18 @@ public class EpicContract {
         spawned.setCustomNameVisible(true);
 
 
-
         String effect = "No effect";
-        if(plugin.getConfig().getBoolean("settings.epic.allow-weapon"))
+        if (plugin.getConfig().getBoolean("settings.epic.allow-weapon"))
             mobFeatures.giveWeapons(spawned);
 
-        if(plugin.getConfig().getBoolean("settings.epic.allow-targeting"))
+        if (plugin.getConfig().getBoolean("settings.epic.allow-targeting"))
             mobFeatures.getTarget((Creature) spawned);
 
-        if(plugin.getConfig().getBoolean("settings.epic.enable-aoe-effects"))
+        if (plugin.getConfig().getBoolean("settings.epic.enable-aoe-effects"))
             effect = epicEffects.randomEpicEffect(spawned);
 
         contractType.addContract(spawned.getUniqueId(), "Epic", effect, spawned.getType());
-        ContractSummonEvent event = new ContractSummonEvent(spawned, spawned.getCustomName(), damage, speed, health, armor, "Epic", effect, spawned.getType().name(), player);
+        ContractSummonEvent event = new ContractSummonEvent(spawned, mobUuid, spawned.getCustomName(), damage, speed, health, armor, "Epic", effect, spawned.getType().name(), player);
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 }

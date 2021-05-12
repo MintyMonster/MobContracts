@@ -17,11 +17,11 @@ public class PlayerJoinListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event){
-        if(!(playerDataDatabase.uuidExists(event.getPlayer().getUniqueId())))
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if (!(playerDataDatabase.uuidExists(event.getPlayer().getUniqueId())))
             playerDataDatabase.addPlayer(event.getPlayer());
 
-        if(!(contractStorageDatabase.uuidExists(event.getPlayer().getUniqueId())))
+        if (!(contractStorageDatabase.uuidExists(event.getPlayer().getUniqueId())))
             contractStorageDatabase.addPlayer(event.getPlayer());
     }
 }

@@ -1,17 +1,15 @@
 package uk.co.minty_studios.mobcontracts.utils;
 
-import org.bukkit.Effect;
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
 import java.util.UUID;
 
 public class ContractStats {
 
-    private String contractTier;
-    private String effectType;
-    private EntityType entityType;
-    private UUID uuid;
+    private final String contractTier;
+    private final String effectType;
+    private final EntityType entityType;
+    private final UUID uuid;
 
     public ContractStats(UUID u, String tier, String type, EntityType mobType) {
         contractTier = tier;
@@ -20,19 +18,19 @@ public class ContractStats {
         uuid = u;
     }
 
-    public UUID getUuid(){
+    public UUID getUuid() {
         return uuid;
     }
 
-    public String getTier(){
+    public String getTier() {
         return contractTier;
     }
 
-    public String getType(){
+    public String getType() {
         return effectType;
     }
 
-    public EntityType getMobType(){
+    public EntityType getMobType() {
         return entityType;
     }
 }

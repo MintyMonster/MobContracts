@@ -1,4 +1,4 @@
-package uk.co.minty_studios.mobcontracts.mobeffects;
+package uk.co.minty_studios.mobcontracts.effects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
@@ -14,9 +14,9 @@ public class EpicEffects {
 
     private final MobContracts plugin;
     private final CurrentContracts currentContracts;
-    private int distance;
-    private long repeat;
-    private static Random rnd = new Random();
+    private final int distance;
+    private final long repeat;
+    private static final Random rnd = new Random();
 
     public EpicEffects(MobContracts plugin, CurrentContracts currentContracts) {
         this.plugin = plugin;
@@ -25,106 +25,106 @@ public class EpicEffects {
         this.currentContracts = currentContracts;
     }
 
-    private void epicFire(LivingEntity entity){
-        new BukkitRunnable(){
+    private void epicFire(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
-                };
+                }
                 Bukkit.getOnlinePlayers().forEach(p -> {
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.setFireTicks(100);
                 });
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    private void epicPoison(LivingEntity entity){
-        new BukkitRunnable(){
+    private void epicPoison(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
-                };
+                }
                 Bukkit.getOnlinePlayers().forEach(p -> {
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 100, 1));
                 });
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    private void epicSick(LivingEntity entity){
-        new BukkitRunnable(){
+    private void epicSick(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
-                };
+                }
                 Bukkit.getOnlinePlayers().forEach(p -> {
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 100, 1));
                 });
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    private void epicSmite(LivingEntity entity){
-        new BukkitRunnable(){
+    private void epicSmite(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
-                };
+                }
                 Bukkit.getOnlinePlayers().forEach(p -> {
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.getWorld().strikeLightning(p.getLocation());
                 });
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    private void epicSlow(LivingEntity entity){
+    private void epicSlow(LivingEntity entity) {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if(!(currentContracts.isContract(entity))){
+                if (entity.isDead()) {
                     cancel();
                     return;
-                };
+                }
                 Bukkit.getOnlinePlayers().forEach(p -> {
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 1));
                 });
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    private void epicWither(LivingEntity entity){
+    private void epicWither(LivingEntity entity) {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if(!(currentContracts.isContract(entity))){
+                if (entity.isDead()) {
                     cancel();
                     return;
-                };
+                }
                 Bukkit.getOnlinePlayers().forEach(p -> {
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 100, 1));
                 });
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public String randomEpicEffect(LivingEntity entity){
+    public String randomEpicEffect(LivingEntity entity) {
         int chance = rnd.nextInt(6);
         String effect = "";
-        switch(chance){
+        switch (chance) {
             case 0:
                 epicFire(entity);
                 effect = "Fire";

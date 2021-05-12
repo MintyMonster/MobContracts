@@ -36,14 +36,14 @@ public class GiveCommand extends ChildCommand {
 
     @Override
     public void perform(Player player, String[] args) {
-        if(!(args.length >= 3)){
+        if (!(args.length >= 3)) {
             genericUseMethods.sendMessageWithPrefix(player, "&c" + this.getSyntax());
             return;
         }
 
         Player p = plugin.getServer().getPlayer(args[1]);
         int amount = args.length == 3 ? 1 : Integer.parseInt(args[3]);
-        if((args[2].equalsIgnoreCase("legendary")) || (args[2].equalsIgnoreCase("leg")) || (args[2].equalsIgnoreCase("l"))){
+        if ((args[2].equalsIgnoreCase("legendary")) || (args[2].equalsIgnoreCase("leg")) || (args[2].equalsIgnoreCase("l"))) {
             contractStorageDatabase.addLegendaryContract(p.getUniqueId(), amount);
             genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.give-legendary")
                     .replace("%player%", p.getName())
@@ -51,7 +51,7 @@ public class GiveCommand extends ChildCommand {
             genericUseMethods.sendMessageWithPrefix(p, plugin.getConfig().getString("messages.command.received-legendary")
                     .replace("%amount%", String.valueOf(amount)));
 
-        }else if((args[2].equalsIgnoreCase("epic")) || (args[2].equalsIgnoreCase("ep")) || (args[2].equalsIgnoreCase("e"))){
+        } else if ((args[2].equalsIgnoreCase("epic")) || (args[2].equalsIgnoreCase("ep")) || (args[2].equalsIgnoreCase("e"))) {
             contractStorageDatabase.addEpicContract(p.getUniqueId(), amount);
             genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.give-epic")
                     .replace("%player%", p.getName())
@@ -59,7 +59,7 @@ public class GiveCommand extends ChildCommand {
             genericUseMethods.sendMessageWithPrefix(p, plugin.getConfig().getString("messages.command.received-epic")
                     .replace("%amount%", String.valueOf(amount)));
 
-        }else if((args[2].equalsIgnoreCase("common")) || (args[2].equalsIgnoreCase("com")) || (args[2].equalsIgnoreCase("c"))){
+        } else if ((args[2].equalsIgnoreCase("common")) || (args[2].equalsIgnoreCase("com")) || (args[2].equalsIgnoreCase("c"))) {
             contractStorageDatabase.addCommonContract(p.getUniqueId(), amount);
             genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.give-common")
                     .replace("%player%", p.getName())

@@ -8,31 +8,31 @@ import org.bukkit.event.HandlerList;
 
 public class ContractTargetEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-    private Creature entity;
-    private Player player;
-    private Location eLoc;
-    private Location pLoc;
+    private final Creature entity;
+    private final Player player;
+    private final Location eLoc;
+    private final Location pLoc;
 
-    public ContractTargetEvent(Creature entity, Player player, Location eLoc, Location pLoc){
+    public ContractTargetEvent(Creature entity, Player player, Location eLoc, Location pLoc) {
         this.entity = entity;
         this.player = player;
         this.eLoc = eLoc;
         this.pLoc = pLoc;
     }
 
-    public Creature getEntity(){
+    public Creature getEntity() {
         return entity;
     }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return player;
     }
 
-    public Location getEntityLocation(){
+    public Location getEntityLocation() {
         return eLoc;
     }
 
-    public Location getPlayerLocation(){
+    public Location getPlayerLocation() {
         return pLoc;
     }
 
@@ -40,7 +40,7 @@ public class ContractTargetEvent extends Event {
         return handlers;
     }
 
-    public static HandlerList getHandlerList(){
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

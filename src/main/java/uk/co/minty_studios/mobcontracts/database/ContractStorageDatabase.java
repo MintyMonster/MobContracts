@@ -1,6 +1,5 @@
 package uk.co.minty_studios.mobcontracts.database;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import uk.co.minty_studios.mobcontracts.MobContracts;
@@ -20,14 +19,33 @@ public class ContractStorageDatabase {
         this.database = database;
     }
 
-    public void addPlayer(Player player){
+    // COMMON EPIC LEGENDARY
+    public int getTotalStat(String column){
+        String sql = "SELECT * FROM CONTRACTSTORAGE";
+        int total = 0;
+
+        try(Connection con = database.getConnected()){
+            PreparedStatement prep = con.prepareStatement(sql);
+            ResultSet rs = prep.executeQuery();
+            while(rs.next()){
+                total += rs.getInt(column.toUpperCase());
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return total;
+    }
+
+    public void addPlayer(Player player) {
         String sql = "INSERT INTO CONTRACTSTORAGE (UUID,COMMON,EPIC,LEGENDARY) " +
                 "VALUES (?,?,?,?)";
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                try(Connection con = database.getConnected()){
+            public void run() {
+                try (Connection con = database.getConnected()) {
                     PreparedStatement prep = con.prepareStatement(sql);
                     prep.setString(1, String.valueOf(player.getUniqueId()));
                     prep.setInt(2, 0);
@@ -42,11 +60,11 @@ public class ContractStorageDatabase {
         }.runTaskAsynchronously(plugin);
     }
 
-    public Boolean uuidExists(UUID uuid){
+    public Boolean uuidExists(UUID uuid) {
         String sql = "SELECT * FROM CONTRACTSTORAGE WHERE UUID = '" + uuid + "';";
         Boolean exists;
 
-        try(Connection con = database.getConnected()){
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
             return rs.isBeforeFirst();
@@ -58,10 +76,10 @@ public class ContractStorageDatabase {
         return false;
     }
 
-    public int getCommonContracts(UUID uuid){
+    public int getCommonContracts(UUID uuid) {
         String sql = "SELECT * FROM CONTRACTSTORAGE WHERE UUID = '" + uuid + "'";
 
-        try(Connection con = database.getConnected()){
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
             rs.next();
@@ -74,10 +92,10 @@ public class ContractStorageDatabase {
         return 0;
     }
 
-    public int getEpicContracts(UUID uuid){
+    public int getEpicContracts(UUID uuid) {
         String sql = "SELECT * FROM CONTRACTSTORAGE WHERE UUID = '" + uuid + "'";
 
-        try(Connection con = database.getConnected()){
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
             rs.next();
@@ -90,10 +108,10 @@ public class ContractStorageDatabase {
         return 0;
     }
 
-    public int getLegendaryContracts(UUID uuid){
+    public int getLegendaryContracts(UUID uuid) {
         String sql = "SELECT * FROM CONTRACTSTORAGE WHERE UUID = '" + uuid + "'";
 
-        try(Connection con = database.getConnected()){
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
             rs.next();
@@ -106,13 +124,13 @@ public class ContractStorageDatabase {
         return 0;
     }
 
-    public void useCommonContract(UUID uuid){
+    public void useCommonContract(UUID uuid) {
         String sql = "UPDATE CONTRACTSTORAGE SET COMMON = COMMON - 1 WHERE UUID = '" + uuid + "'";
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                try(Connection con = database.getConnected()){
+            public void run() {
+                try (Connection con = database.getConnected()) {
                     PreparedStatement prep = con.prepareStatement(sql);
                     prep.executeUpdate();
 
@@ -123,13 +141,13 @@ public class ContractStorageDatabase {
         }.runTaskAsynchronously(plugin);
     }
 
-    public void useEpicContract(UUID uuid){
+    public void useEpicContract(UUID uuid) {
         String sql = "UPDATE CONTRACTSTORAGE SET EPIC = EPIC - 1 WHERE UUID = '" + uuid + "'";
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                try(Connection con = database.getConnected()){
+            public void run() {
+                try (Connection con = database.getConnected()) {
                     PreparedStatement prep = con.prepareStatement(sql);
                     prep.executeUpdate();
 
@@ -140,13 +158,13 @@ public class ContractStorageDatabase {
         }.runTaskAsynchronously(plugin);
     }
 
-    public void useLegendaryContract(UUID uuid){
+    public void useLegendaryContract(UUID uuid) {
         String sql = "UPDATE CONTRACTSTORAGE SET LEGENDARY = LEGENDARY - 1 WHERE UUID = '" + uuid + "'";
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                try(Connection con = database.getConnected()){
+            public void run() {
+                try (Connection con = database.getConnected()) {
                     PreparedStatement prep = con.prepareStatement(sql);
                     prep.executeUpdate();
 
@@ -157,13 +175,13 @@ public class ContractStorageDatabase {
         }.runTaskAsynchronously(plugin);
     }
 
-    public void addCommonContract(UUID uuid, int amount){
+    public void addCommonContract(UUID uuid, int amount) {
         String sql = "UPDATE CONTRACTSTORAGE SET COMMON = COMMON + " + amount + " WHERE UUID = '" + uuid + "'";
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                try(Connection con = database.getConnected()){
+            public void run() {
+                try (Connection con = database.getConnected()) {
                     PreparedStatement prep = con.prepareStatement(sql);
                     prep.executeUpdate();
 
@@ -174,13 +192,13 @@ public class ContractStorageDatabase {
         }.runTaskAsynchronously(plugin);
     }
 
-    public void addEpicContract(UUID uuid, int amount){
+    public void addEpicContract(UUID uuid, int amount) {
         String sql = "UPDATE CONTRACTSTORAGE SET EPIC = EPIC + " + amount + " WHERE UUID = '" + uuid + "'";
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                try(Connection con = database.getConnected()){
+            public void run() {
+                try (Connection con = database.getConnected()) {
                     PreparedStatement prep = con.prepareStatement(sql);
                     prep.executeUpdate();
 
@@ -191,13 +209,13 @@ public class ContractStorageDatabase {
         }.runTaskAsynchronously(plugin);
     }
 
-    public void addLegendaryContract(UUID uuid, int amount){
+    public void addLegendaryContract(UUID uuid, int amount) {
         String sql = "UPDATE CONTRACTSTORAGE SET LEGENDARY = LEGENDARY + " + amount + " WHERE UUID = '" + uuid + "'";
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                try(Connection con = database.getConnected()){
+            public void run() {
+                try (Connection con = database.getConnected()) {
                     PreparedStatement prep = con.prepareStatement(sql);
                     prep.executeUpdate();
 

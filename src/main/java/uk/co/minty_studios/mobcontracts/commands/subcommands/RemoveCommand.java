@@ -3,7 +3,6 @@ package uk.co.minty_studios.mobcontracts.commands.subcommands;
 import org.bukkit.entity.Player;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.commands.ChildCommand;
-import uk.co.minty_studios.mobcontracts.utils.ContractType;
 import uk.co.minty_studios.mobcontracts.utils.CurrentContracts;
 import uk.co.minty_studios.mobcontracts.utils.GenericUseMethods;
 
@@ -37,21 +36,21 @@ public class RemoveCommand extends ChildCommand {
 
     @Override
     public void perform(Player player, String[] args) {
-        if(!(args.length > 1)){
+        if (!(args.length > 1)) {
             genericUseMethods.sendMessageWithPrefix(player, "&e" + this.getSyntax());
             return;
         }
 
-        if(args[1].equalsIgnoreCase("all")){
+        if (args[1].equalsIgnoreCase("all")) {
             currentContracts.removeAllContracts();
             genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.remove-all"));
-        }else{
+        } else {
             Player p = plugin.getServer().getPlayer(args[1]);
-            if(currentContracts.inContract(p)){
+            if (currentContracts.inContract(p)) {
                 currentContracts.removePlayerContract(p);
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.remove-player-contract")
                         .replace("%player%", p.getName()));
-            }else{
+            } else {
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.no-contract-remove"));
             }
         }

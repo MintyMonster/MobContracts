@@ -48,43 +48,43 @@ public class StartCommand extends ChildCommand {
 
     @Override
     public void perform(Player player, String[] args) {
-        if(!(args.length > 1)){
+        if (!(args.length > 1)) {
             genericUseMethods.sendMessageWithPrefix(player, "&e" + this.getSyntax());
             return;
         }
 
-        if(currentContracts.inContract(player)){
+        if (currentContracts.inContract(player)) {
             genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.already-in-contract"));
             return;
         }
 
         String type = args[1];
-        if((type.equalsIgnoreCase("legendary")) || (type.equalsIgnoreCase("leg")) || (type.equalsIgnoreCase("l"))){
-            if(contractStorageDatabase.getLegendaryContracts(player.getUniqueId()) > 0){
+        if ((type.equalsIgnoreCase("legendary")) || (type.equalsIgnoreCase("leg")) || (type.equalsIgnoreCase("l"))) {
+            if (contractStorageDatabase.getLegendaryContracts(player.getUniqueId()) > 0) {
                 legendaryContract.summonLegendaryContract(player);
                 contractStorageDatabase.useLegendaryContract(player.getUniqueId());
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.start-legendary"));
-            }else{
+            } else {
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.no-contracts-left")
                         .replace("%type%", "Legendary"));
             }
 
-        }else if((type.equalsIgnoreCase("epic")) || (type.equalsIgnoreCase("ep"))|| (type.equalsIgnoreCase("e"))){
-            if(contractStorageDatabase.getEpicContracts(player.getUniqueId()) > 0){
+        } else if ((type.equalsIgnoreCase("epic")) || (type.equalsIgnoreCase("ep")) || (type.equalsIgnoreCase("e"))) {
+            if (contractStorageDatabase.getEpicContracts(player.getUniqueId()) > 0) {
                 epicContract.summonEpicContract(player);
                 contractStorageDatabase.useEpicContract(player.getUniqueId());
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.start-epic"));
-            }else{
+            } else {
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.no-contracts-left")
                         .replace("%type%", "Epic"));
             }
 
-        }else if((type.equalsIgnoreCase("common")) || (type.equalsIgnoreCase("com"))|| (type.equalsIgnoreCase("c"))){
-            if(contractStorageDatabase.getCommonContracts(player.getUniqueId()) > 0){
+        } else if ((type.equalsIgnoreCase("common")) || (type.equalsIgnoreCase("com")) || (type.equalsIgnoreCase("c"))) {
+            if (contractStorageDatabase.getCommonContracts(player.getUniqueId()) > 0) {
                 commonContract.summonCommonContract(player);
                 contractStorageDatabase.useCommonContract(player.getUniqueId());
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.start-common"));
-            }else{
+            } else {
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.no-contracts-left")
                         .replace("%type%", "Common"));
             }

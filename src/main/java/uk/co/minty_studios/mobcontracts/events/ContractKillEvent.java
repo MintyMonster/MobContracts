@@ -1,7 +1,6 @@
 package uk.co.minty_studios.mobcontracts.events;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -11,28 +10,28 @@ public class ContractKillEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     private final ContractType contractType;
-    private Player player;
-    private Entity contract;
+    private final Player player;
+    private final Entity contract;
 
-    public ContractKillEvent(ContractType contractType, Player killer, Entity contract){
+    public ContractKillEvent(ContractType contractType, Player killer, Entity contract) {
         this.contractType = contractType;
         this.contract = contract;
         this.player = killer;
     }
 
-    public Player getKiller(){
+    public Player getKiller() {
         return player;
     }
 
-    public Entity getEntity(){
+    public Entity getEntity() {
         return contract;
     }
 
-    public String getTier(){
+    public String getTier() {
         return contractType.getContractTier(contract.getUniqueId());
     }
 
-    public String getEffect(){
+    public String getEffect() {
         return contractType.getEffectType(contract.getUniqueId());
     }
 
@@ -40,7 +39,7 @@ public class ContractKillEvent extends Event {
         return handlers;
     }
 
-    public static HandlerList getHandlerList(){
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

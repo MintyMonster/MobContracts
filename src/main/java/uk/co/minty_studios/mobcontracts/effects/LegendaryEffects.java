@@ -1,4 +1,4 @@
-package uk.co.minty_studios.mobcontracts.mobeffects;
+package uk.co.minty_studios.mobcontracts.effects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,191 +19,191 @@ public class LegendaryEffects {
     private final GenericUseMethods genericUseMethods;
     private static FileConfiguration config;
     private final CurrentContracts currentContracts;
-    private int distance;
-    private long repeat;
-    private static Random rnd = new Random();
+    private final int distance;
+    private final long repeat;
+    private static final Random rnd = new Random();
 
     public LegendaryEffects(MobContracts plugin, GenericUseMethods genericUseMethods, CurrentContracts currentContracts) {
         this.plugin = plugin;
-        this.config = plugin.getConfig();
+        config = plugin.getConfig();
         this.currentContracts = currentContracts;
         this.distance = config.getInt("settings.legendary.distance-from-entity");
         this.repeat = config.getLong("settings.legendary.repeat-check");
         this.genericUseMethods = genericUseMethods;
     }
 
-    public void legendaryHunger(LivingEntity entity){
-        new BukkitRunnable(){
+    public void legendaryHunger(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= repeat)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= repeat)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 100, 2));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void legendaryFire(LivingEntity entity){
+    public void legendaryFire(LivingEntity entity) {
 
         genericUseMethods.sendBossMessage(entity, config.getStringList("messages.bossmessage.fire")
                 .get(rnd.nextInt(config.getStringList("messages.bossmessage.fire").size())));
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.setFireTicks(200);
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void legendaryPoison(LivingEntity entity){
+    public void legendaryPoison(LivingEntity entity) {
 
         genericUseMethods.sendBossMessage(entity, config.getStringList("messages.bossmessage.poison")
                 .get(rnd.nextInt(config.getStringList("messages.bossmessage.poison").size())));
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 100, 2));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void legendarySick(LivingEntity entity){
+    public void legendarySick(LivingEntity entity) {
 
         genericUseMethods.sendBossMessage(entity, config.getStringList("messages.bossmessage.nausea")
                 .get(rnd.nextInt(config.getStringList("messages.bossmessage.nausea").size())));
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 100, 2));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void legendarySlow(LivingEntity entity){
+    public void legendarySlow(LivingEntity entity) {
 
         genericUseMethods.sendBossMessage(entity, config.getStringList("messages.bossmessage.slow")
                 .get(rnd.nextInt(config.getStringList("messages.bossmessage.slow").size())));
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 2));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void legendaryWither(LivingEntity entity){
+    public void legendaryWither(LivingEntity entity) {
 
         genericUseMethods.sendBossMessage(entity, config.getStringList("messages.bossmessage.wither")
                 .get(rnd.nextInt(config.getStringList("messages.bossmessage.wither").size())));
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 100, 2));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void legendarySmite(LivingEntity entity){
+    public void legendarySmite(LivingEntity entity) {
 
         genericUseMethods.sendBossMessage(entity, config.getStringList("messages.bossmessage.smite")
                 .get(rnd.nextInt(config.getStringList("messages.bossmessage.smite").size())));
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.getWorld().strikeLightning(p.getLocation());
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void legendaryBlind(LivingEntity entity){
+    public void legendaryBlind(LivingEntity entity) {
 
         genericUseMethods.sendBossMessage(entity, config.getStringList("messages.bossmessage.blind")
                 .get(rnd.nextInt(config.getStringList("messages.bossmessage.blind").size())));
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 2));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void legendaryWeakness(LivingEntity entity){
+    public void legendaryWeakness(LivingEntity entity) {
 
         genericUseMethods.sendBossMessage(entity, config.getStringList("messages.bossmessage.weakness")
                 .get(rnd.nextInt(config.getStringList("messages.bossmessage.weakness").size())));
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(!(currentContracts.isContract(entity))){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 100, 2));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
 
-    public String randomLegendaryEffect(LivingEntity entity){
+    public String randomLegendaryEffect(LivingEntity entity) {
         int chance = rnd.nextInt(8);
         String effect = "";
-        switch(chance){
+        switch (chance) {
             case 0:
                 legendaryFire(entity);
                 effect = "Fire";
@@ -237,7 +237,7 @@ public class LegendaryEffects {
                 effect = "Weakness";
                 break;
         }
-        if(config.getBoolean("settings.legendary.enable-hunger-two")) legendaryHunger(entity);
+        if (config.getBoolean("settings.legendary.enable-hunger-two")) legendaryHunger(entity);
         return effect;
     }
 }

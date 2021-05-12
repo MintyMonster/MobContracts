@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
 import uk.co.minty_studios.mobcontracts.events.ContractKillEvent;
-import uk.co.minty_studios.mobcontracts.levelsystem.LevellingSystem;
+import uk.co.minty_studios.mobcontracts.level.LevellingSystem;
 import uk.co.minty_studios.mobcontracts.utils.ContractType;
 import uk.co.minty_studios.mobcontracts.utils.CurrentContracts;
 import uk.co.minty_studios.mobcontracts.utils.GenericUseMethods;
@@ -29,8 +29,8 @@ public class ContractKillListener implements Listener {
     }
 
     @EventHandler
-    public void onContractKill(ContractKillEvent event){
-        if(plugin.getConfig().getBoolean("settings.general.announce-contract-kill")){
+    public void onContractKill(ContractKillEvent event) {
+        if (plugin.getConfig().getBoolean("settings.general.announce-contract-kill")) {
             genericUseMethods.sendGlobalMessagePrefix(plugin.getConfig().getString("messages.event.contract-kill")
                     .replace("%player%", event.getKiller().getName())
                     .replace("%entity%", event.getEntity().getCustomName())
@@ -40,13 +40,7 @@ public class ContractKillListener implements Listener {
 
         levellingSystem.levels(event.getKiller(), event.getTier());
 
-        if(event.getTier().equalsIgnoreCase("Common"))
-            database.addCommon(event.getKiller().getUniqueId());
-        else if(event.getTier().equalsIgnoreCase("Epic"))
-            database.addEpic(event.getKiller().getUniqueId());
-        else if(event.getTier().equalsIgnoreCase("Legendary"))
-            database.addLegendary(event.getKiller().getUniqueId());
-
+        database.addContract(event.getKiller().getUniqueId(), event.getTier());
 
         contractType.removeContract(event.getEntity().getUniqueId());
         currentContracts.removePlayerContract(event.getKiller());

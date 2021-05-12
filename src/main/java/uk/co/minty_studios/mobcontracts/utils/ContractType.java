@@ -1,6 +1,7 @@
 package uk.co.minty_studios.mobcontracts.utils;
 
 import org.bukkit.entity.EntityType;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -15,40 +16,40 @@ public class ContractType {
         }
     }
 
-    public void removeContract(UUID uuid){
-        if(contractExists(uuid))
+    public void removeContract(UUID uuid) {
+        if (contractExists(uuid))
             stats.remove(uuid);
     }
 
-    public void removeAllContracts(){
-        for(Map.Entry<UUID, ContractStats> entry : stats.entrySet())
+    public void removeAllContracts() {
+        for (Map.Entry<UUID, ContractStats> entry : stats.entrySet())
             stats.remove(entry.getKey());
     }
 
-    public Boolean contractExists(UUID uuid){
-        for(Map.Entry<UUID, ContractStats> entry : stats.entrySet())
-            if(entry.getKey().equals(uuid))
+    public Boolean contractExists(UUID uuid) {
+        for (Map.Entry<UUID, ContractStats> entry : stats.entrySet())
+            if (entry.getKey().equals(uuid))
                 return true;
         return false;
     }
 
-    public String getContractTier(UUID uuid){
-        for(Map.Entry<UUID, ContractStats> entry : stats.entrySet())
-            if(entry.getKey().equals(uuid))
+    public String getContractTier(UUID uuid) {
+        for (Map.Entry<UUID, ContractStats> entry : stats.entrySet())
+            if (entry.getKey().equals(uuid))
                 return entry.getValue().getTier();
         return "Empty";
     }
 
-    public String getEffectType(UUID uuid){
-        for(Map.Entry<UUID, ContractStats> entry : stats.entrySet())
-            if(entry.getKey().equals(uuid))
+    public String getEffectType(UUID uuid) {
+        for (Map.Entry<UUID, ContractStats> entry : stats.entrySet())
+            if (entry.getKey().equals(uuid))
                 return entry.getValue().getType();
         return "No effect";
     }
 
-    public EntityType getEntityType(UUID uuid){
-        for(Map.Entry<UUID, ContractStats> entry : stats.entrySet())
-            if(entry.getKey().equals(uuid))
+    public EntityType getEntityType(UUID uuid) {
+        for (Map.Entry<UUID, ContractStats> entry : stats.entrySet())
+            if (entry.getKey().equals(uuid))
                 return entry.getValue().getMobType();
         return null;
     }

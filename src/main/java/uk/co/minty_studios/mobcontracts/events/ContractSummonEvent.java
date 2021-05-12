@@ -5,22 +5,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class ContractSummonEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-    private String name;
-    private double damage;
-    private double speed;
-    private double health;
-    private double armor;
-    private String tier;
-    private String mobType;
-    private Player player;
-    private Entity entity;
-    private String effect;
+    private final String name;
+    private final double damage;
+    private final double speed;
+    private final double health;
+    private final double armor;
+    private final String tier;
+    private final String mobType;
+    private final Player player;
+    private final Entity entity;
+    private final String effect;
+    private final UUID uuid;
 
-    public ContractSummonEvent(Entity entity, String name, double damage, double speed, double health, double armor, String tier, String effect, String mobType, Player player){
+    public ContractSummonEvent(Entity entity, UUID uuid, String name, double damage, double speed, double health, double armor, String tier, String effect, String mobType, Player player) {
         this.name = name;
         this.damage = damage;
         this.speed = speed;
@@ -31,54 +32,57 @@ public class ContractSummonEvent extends Event {
         this.player = player;
         this.entity = entity;
         this.effect = effect;
+        this.uuid = uuid;
     }
 
-    public String getEffect(){
+    public String getEffect() {
         return effect;
     }
 
-    public Entity getEntity(){
+    public Entity getEntity() {
         return entity;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public double getDamage(){
+    public double getDamage() {
         return damage;
     }
 
-    public double getSpeed(){
+    public double getSpeed() {
         return speed;
     }
 
-    public double getHealth(){
+    public double getHealth() {
         return health;
     }
 
-    public double getArmor(){
+    public double getArmor() {
         return armor;
     }
 
-    public String getTier(){
+    public String getTier() {
         return tier;
     }
 
-    public String getMobType(){
+    public String getMobType() {
         return mobType;
     }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return player;
     }
+
+    public UUID getUuid() { return uuid; }
 
 
     public HandlerList getHandlers() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList(){
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

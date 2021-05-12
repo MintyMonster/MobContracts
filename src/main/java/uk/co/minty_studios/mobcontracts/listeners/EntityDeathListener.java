@@ -1,6 +1,5 @@
 package uk.co.minty_studios.mobcontracts.listeners;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -22,12 +21,12 @@ public class EntityDeathListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event){
+    public void onEntityDeath(EntityDeathEvent event) {
 
-        if(event.getEntity().getKiller() == null)
+        if (event.getEntity().getKiller() == null)
             return;
 
-        if(currentContracts.isContract(event.getEntity())){
+        if (currentContracts.isContract(event.getEntity())) {
             event.getDrops().clear();
             ContractKillEvent contractKillEvent = new ContractKillEvent(contractType, event.getEntity().getKiller(), event.getEntity());
             plugin.getServer().getPluginManager().callEvent(contractKillEvent);

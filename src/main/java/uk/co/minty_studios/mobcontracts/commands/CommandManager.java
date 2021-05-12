@@ -6,15 +6,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import uk.co.minty_studios.mobcontracts.MobContracts;
-import uk.co.minty_studios.mobcontracts.commands.subcommands.GiveCommand;
-import uk.co.minty_studios.mobcontracts.commands.subcommands.RemoveCommand;
-import uk.co.minty_studios.mobcontracts.commands.subcommands.StartCommand;
+import uk.co.minty_studios.mobcontracts.commands.subcommands.*;
 import uk.co.minty_studios.mobcontracts.contracts.CommonContract;
 import uk.co.minty_studios.mobcontracts.contracts.EpicContract;
 import uk.co.minty_studios.mobcontracts.contracts.LegendaryContract;
 import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
 import uk.co.minty_studios.mobcontracts.database.Database;
+import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
+import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
 import uk.co.minty_studios.mobcontracts.utils.ContractType;
+import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 import uk.co.minty_studios.mobcontracts.utils.CurrentContracts;
 import uk.co.minty_studios.mobcontracts.utils.GenericUseMethods;
 
@@ -33,6 +34,9 @@ public class CommandManager implements CommandExecutor {
     private final CurrentContracts currentContracts;
     private final Database database;
     private final ContractType contractType;
+    private final CreateCustomGuiItem createCustomGuiItem;
+    private final PlayerDataDatabase playerDataDatabase;
+    private final MobDataDatabase mobDataDatabase;
 
     public CommandManager(MobContracts plugin,
                           GenericUseMethods genericUseMethods,
@@ -41,7 +45,10 @@ public class CommandManager implements CommandExecutor {
                           CommonContract commonContract,
                           ContractStorageDatabase contractStorageDatabase,
                           CurrentContracts currentContracts,
-                          Database database, ContractType contractType) {
+                          Database database, ContractType contractType,
+                          CreateCustomGuiItem createCustomGuiItem,
+                          PlayerDataDatabase playerDataDatabase,
+                          MobDataDatabase mobDataDatabase) {
 
         this.plugin = plugin;
         this.genericUseMethods = genericUseMethods;
@@ -52,6 +59,9 @@ public class CommandManager implements CommandExecutor {
         this.currentContracts = currentContracts;
         this.database = database;
         this.contractType = contractType;
+        this.createCustomGuiItem = createCustomGuiItem;
+        this.playerDataDatabase = playerDataDatabase;
+        this.mobDataDatabase = mobDataDatabase;
 
         plugin.getCommand("mobcontracts").setExecutor(this);
 
@@ -59,17 +69,18 @@ public class CommandManager implements CommandExecutor {
         addCommands("mobcontracts",
                 new StartCommand("start", genericUseMethods, commonContract, epicContract, legendaryContract, contractStorageDatabase, plugin, currentContracts),
                 new RemoveCommand("clear", genericUseMethods, currentContracts, plugin),
-                new GiveCommand("give", genericUseMethods, plugin, contractStorageDatabase)
+                new GiveCommand("give", genericUseMethods, plugin, contractStorageDatabase),
+                new LeaderboardsCommand("leaderboard", plugin, createCustomGuiItem, playerDataDatabase, this.mobDataDatabase, contractStorageDatabase)
         );
     }
 
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof Player)) return true;
+        if (!(sender instanceof Player)) return true;
         Player player = (Player) sender;
 
-        if(!(database.dataSourceExists())){
+        if (!(database.dataSourceExists())) {
             genericUseMethods.sendMessageWithPrefix(player, "&cDatabase error: Are you connected?");
             genericUseMethods.sendMessageWithPrefix(player, "&cPlease check config and try again. You may need to restart.");
             plugin.sendConsoleError("Database error: Are you connected? Please check config and try again.");
@@ -81,20 +92,21 @@ public class CommandManager implements CommandExecutor {
             if (master != null) {
                 for (ChildCommand child : master.getChildCommands().values())
                     if (args[0].equalsIgnoreCase(child.getName()))
-                        if(player.hasPermission(child.getPermission()))
+                        if (player.hasPermission(child.getPermission()))
                             child.perform(player, args);
                         else
                             genericUseMethods.sendMessageWithPrefix(player, "&cPermission denied");
 
                 return true;
             }
-        }else{
+        } else {
             MasterCommand master = commands.get(command.getName().toLowerCase());
-            if(master != null){
+            if (master != null) {
+                player.sendMessage(ChatColor.DARK_GRAY + "-------------------------------------");
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', " &8 | &6&lMobContracts &r&7-> Made by &bMintyMonster"));
                 player.sendMessage(ChatColor.DARK_GRAY + "-------------------------------------");
                 master.getChildCommands().values().forEach(c -> {
-                    if(player.hasPermission(c.getPermission()))
+                    if (player.hasPermission(c.getPermission()))
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8- &6" + c.getSyntax() + " &8- &7" + c.getDescription()));
                 });
             }

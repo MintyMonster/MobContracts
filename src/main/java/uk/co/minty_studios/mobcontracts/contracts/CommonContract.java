@@ -17,7 +17,7 @@ public class CommonContract {
     private final MobContracts plugin;
     private final MobFeatures mobFeatures;
     private final ContractType contractType;
-    private static Random rnd = new Random();
+    private static final Random rnd = new Random();
 
     public CommonContract(MobContracts plugin, MobFeatures mobFeatures, ContractType contractType) {
         this.plugin = plugin;
@@ -25,8 +25,9 @@ public class CommonContract {
         this.contractType = contractType;
     }
 
-    public void summonCommonContract(Player player){
+    public void summonCommonContract(Player player) {
         UUID uuid = player.getUniqueId();
+        UUID mobUuid = UUID.randomUUID();
         double maxHp = plugin.getConfig().getDouble("settings.common.max-health");
         double minHp = plugin.getConfig().getDouble("settings.common.min-health");
         double maxDmg = plugin.getConfig().getDouble("settings.common.max-damage");
@@ -58,14 +59,14 @@ public class CommonContract {
         spawned.setCustomName(fullName);
         spawned.setCustomNameVisible(true);
 
-        if(plugin.getConfig().getBoolean("settings.common.allow-weapon"))
+        if (plugin.getConfig().getBoolean("settings.common.allow-weapon"))
             mobFeatures.giveWeapons(spawned);
 
-        if(plugin.getConfig().getBoolean("settings.common.allow-targeting"))
+        if (plugin.getConfig().getBoolean("settings.common.allow-targeting"))
             mobFeatures.getTarget((Creature) spawned);
 
         contractType.addContract(spawned.getUniqueId(), "Common", "No effect", spawned.getType());
-        ContractSummonEvent event = new ContractSummonEvent(spawned, spawned.getCustomName(), damage, speed, health, armor, "Common", "No effect", spawned.getType().name(), player);
+        ContractSummonEvent event = new ContractSummonEvent(spawned, mobUuid, spawned.getCustomName(), damage, speed, health, armor, "Common", "No effect", spawned.getType().name(), player);
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 }

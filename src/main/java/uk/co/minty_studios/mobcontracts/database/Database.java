@@ -5,21 +5,24 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.scheduler.BukkitRunnable;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Database {
 
     private static Connection connection;
     private static Statement statement;
     private final MobContracts plugin;
-    private static HikariConfig config = new HikariConfig();
+    private static final HikariConfig config = new HikariConfig();
     private static HikariDataSource dataSource;
 
     public Database(MobContracts plugin) {
         this.plugin = plugin;
     }
 
-    public void connect(){
+    public void connect() {
         config.setJdbcUrl("jdbc:mysql://" + plugin.getConfig().getString("settings.database.host")
                 + ":" + plugin.getConfig().getInt("settings.database.port")
                 + "/" + plugin.getConfig().getString("settings.database.database-name"));
@@ -27,16 +30,16 @@ public class Database {
         config.setPassword(plugin.getConfig().getString("settings.database.password"));
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         dataSource = new HikariDataSource(config);
     }
 
-    public void disconnect(){
-        if(dataSource != null)
+    public void disconnect() {
+        if (dataSource != null)
             dataSource.close();
     }
 
-    public Boolean dataSourceExists(){
+    public Boolean dataSourceExists() {
         return dataSource != null;
     }
 
@@ -44,21 +47,7 @@ public class Database {
         return dataSource.getConnection();
     }
 
-    public static interface ConnectionCallBack<T>{
-        public T doInConnection(Connection con) throws SQLException;
-    }
-
-    public static <T> T execute(ConnectionCallBack<T> callback){
-        try(Connection con = dataSource.getConnection()){
-            return callback.doInConnection(con);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public void createPlayerDatabase(){
+    public void createPlayerDatabase() {
         String sql = "CREATE TABLE IF NOT EXISTS PLAYERDATA (" +
                 "ID INT AUTO_INCREMENT NOT NULL, " +
                 "UUID VARCHAR(255) NOT NULL, " +
@@ -71,23 +60,26 @@ public class Database {
                 "TOTALXP INT NOT NULL, " +
                 "PRIMARY KEY (ID));";
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                execute((con) -> {
+            public void run() {
+                try (Connection con = getConnected()) {
                     PreparedStatement prep = con.prepareStatement(sql);
                     prep.executeUpdate();
                     prep.close();
-                    return null;
-                });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                    plugin.getLogger().severe("PlayerData database ran into an error.");
+                }
             }
         }.runTaskAsynchronously(plugin);
     }
 
-    public void createSlainDatabase(){
+    public void createSlainDatabase() {
         String sql = "CREATE TABLE IF NOT EXISTS MOBDATA (" +
                 "ID INT AUTO_INCREMENT NOT NULL, " +
                 "UUID VARCHAR(255) NOT NULL, " +
+                "MOBUUID VARCHAR(255) NOT NULL, " +
                 "DISPLAYNAME VARCHAR(255) NOT NULL, " +
                 "CONTRACTTYPE TEXT NOT NULL, " +
                 "TYPE TEXT NOT NULL, " +
@@ -96,20 +88,22 @@ public class Database {
                 "DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                 "PRIMARY KEY(ID));";
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                execute((con) -> {
+            public void run() {
+                try (Connection con = getConnected()) {
                     PreparedStatement prep = con.prepareStatement(sql);
                     prep.executeUpdate();
                     prep.close();
-                    return null;
-                });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                    plugin.getLogger().severe("MobData database ran into an error.");
+                }
             }
         }.runTaskAsynchronously(plugin);
     }
 
-    public void createContractStorage(){
+    public void createContractStorage() {
         String sql = "CREATE TABLE IF NOT EXISTS CONTRACTSTORAGE (" +
                 "ID INT AUTO_INCREMENT NOT NULL, " +
                 "UUID VARCHAR(255) NOT NULL, " +
@@ -118,15 +112,17 @@ public class Database {
                 "LEGENDARY INT NOT NULL, " +
                 "PRIMARY KEY(ID));";
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                execute((con) -> {
+            public void run() {
+                try (Connection con = getConnected()) {
                     PreparedStatement prep = con.prepareStatement(sql);
                     prep.executeUpdate();
                     prep.close();
-                    return null;
-                });
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                    plugin.getLogger().severe("ContractStorage database ran into an error.");
+                }
             }
         }.runTaskAsynchronously(plugin);
     }

@@ -17,9 +17,9 @@ public class PlayerLeaveListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent event){
-        if(plugin.getConfig().getBoolean("settings.general.kill-contract-on-leave")){
-            if(currentContracts.inContract(event.getPlayer())){
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        if (plugin.getConfig().getBoolean("settings.general.kill-contract-on-leave")) {
+            if (currentContracts.inContract(event.getPlayer())) {
                 currentContracts.removePlayerContract(event.getPlayer());
             }
         }

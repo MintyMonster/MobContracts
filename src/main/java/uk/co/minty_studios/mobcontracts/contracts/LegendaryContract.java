@@ -3,11 +3,12 @@ package uk.co.minty_studios.mobcontracts.contracts;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.craftbukkit.v1_16_R3.attribute.CraftAttributeInstance;
 import org.bukkit.entity.*;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
 import uk.co.minty_studios.mobcontracts.events.ContractSummonEvent;
-import uk.co.minty_studios.mobcontracts.mobeffects.LegendaryEffects;
+import uk.co.minty_studios.mobcontracts.effects.LegendaryEffects;
 import uk.co.minty_studios.mobcontracts.mobs.MobFeatures;
 import uk.co.minty_studios.mobcontracts.utils.ContractType;
 
@@ -21,7 +22,7 @@ public class LegendaryContract {
     private final MobDataDatabase mobDataDatabase;
     private final LegendaryEffects legendaryEffects;
     private final ContractType contractType;
-    private static Random rnd = new Random();
+    private static final Random rnd = new Random();
 
     public LegendaryContract(MobContracts plugin, MobFeatures mobFeatures, MobDataDatabase mobDataDatabase, LegendaryEffects legendaryEffects, ContractType contractType) {
         this.plugin = plugin;
@@ -31,8 +32,9 @@ public class LegendaryContract {
         this.contractType = contractType;
     }
 
-    public void summonLegendaryContract(Player player){
+    public void summonLegendaryContract(Player player) {
         UUID uuid = player.getUniqueId();
+        UUID mobUuid = UUID.randomUUID();
         double maxHp = plugin.getConfig().getDouble("settings.legendary.max-health");
         double minHp = plugin.getConfig().getDouble("settings.legendary.min-health");
         double maxDmg = plugin.getConfig().getDouble("settings.legendary.max-damage");
@@ -64,20 +66,18 @@ public class LegendaryContract {
         spawned.setCustomName(fullName);
         spawned.setCustomNameVisible(true);
 
-
-
-        String effect = "No effect";
-        if(plugin.getConfig().getBoolean("settings.legendary.allow-weapon"))
+        if (plugin.getConfig().getBoolean("settings.legendary.allow-weapon"))
             mobFeatures.giveWeapons(spawned);
 
-        if(plugin.getConfig().getBoolean("settings.legendary.allow-targeting"))
+        if (plugin.getConfig().getBoolean("settings.legendary.allow-targeting"))
             mobFeatures.getTarget((Creature) spawned);
 
-        if(plugin.getConfig().getBoolean("settings.legendary.enable-aoe-effects"))
+        String effect = "No effect";
+        if (plugin.getConfig().getBoolean("settings.legendary.enable-aoe-effects"))
             effect = legendaryEffects.randomLegendaryEffect(spawned);
 
         contractType.addContract(spawned.getUniqueId(), "Legendary", effect, spawned.getType());
-        ContractSummonEvent event = new ContractSummonEvent(spawned, spawned.getCustomName(), damage, speed, health, armor, "Legendary", effect,  spawned.getType().name(), player);
+        ContractSummonEvent event = new ContractSummonEvent(spawned, mobUuid, spawned.getCustomName(), damage, speed, health, armor, "Legendary", effect, spawned.getType().name(), player);
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 }

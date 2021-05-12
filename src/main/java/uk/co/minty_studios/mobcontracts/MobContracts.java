@@ -1,5 +1,6 @@
 package uk.co.minty_studios.mobcontracts;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import uk.co.minty_studios.mobcontracts.commands.CommandManager;
@@ -10,12 +11,16 @@ import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
 import uk.co.minty_studios.mobcontracts.database.Database;
 import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
 import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
-import uk.co.minty_studios.mobcontracts.levelsystem.LevellingSystem;
+import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
+import uk.co.minty_studios.mobcontracts.level.LevellingSystem;
 import uk.co.minty_studios.mobcontracts.listeners.*;
-import uk.co.minty_studios.mobcontracts.mobeffects.EpicEffects;
-import uk.co.minty_studios.mobcontracts.mobeffects.LegendaryEffects;
+import uk.co.minty_studios.mobcontracts.effects.EpicEffects;
+import uk.co.minty_studios.mobcontracts.effects.LegendaryEffects;
 import uk.co.minty_studios.mobcontracts.mobs.MobFeatures;
 import uk.co.minty_studios.mobcontracts.utils.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MobContracts extends JavaPlugin {
 
@@ -35,56 +40,56 @@ public class MobContracts extends JavaPlugin {
     private ContractType contractType;
     private LevellingSystem levellingSystem;
     private ContractStats contractStats;
+    private CreateCustomGuiItem createCustomGuiItem;
+
+    private static final Map<Player, GuiUtil> playerMap = new HashMap<>();
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
         this.saveDefaultConfig();
 
         getLogger().info("Loading all of the things!");
-        this.database = new Database(this);
-        this.contractType = new ContractType();
-        this.currentContracts = new CurrentContracts();
-        this.playerDataDatabase = new PlayerDataDatabase(this, database);
-        this.contractStorageDatabase = new ContractStorageDatabase(this, database);
-        this.genericUseMethods = new GenericUseMethods(this);
-        this.levellingSystem = new LevellingSystem(this, playerDataDatabase, genericUseMethods);
-        this.legendaryEffects = new LegendaryEffects(this, genericUseMethods, currentContracts);
-        this.epicEffects = new EpicEffects(this, currentContracts);
-        this.mobDataDatabase = new MobDataDatabase(this, database);
-        this.mobFeatures = new MobFeatures(this, genericUseMethods);
-        this.legendaryContract = new LegendaryContract(this, mobFeatures, mobDataDatabase, legendaryEffects, contractType);
-        this.commonContract = new CommonContract(this, mobFeatures, contractType);
-        this.epicContract = new EpicContract(this, mobFeatures, epicEffects, contractType);
-        this.commandManager = new CommandManager(this,
+        database = new Database(this);
+        contractType = new ContractType();
+        currentContracts = new CurrentContracts();
+        playerDataDatabase = new PlayerDataDatabase(this, database);
+        contractStorageDatabase = new ContractStorageDatabase(this, database);
+        genericUseMethods = new GenericUseMethods(this);
+        levellingSystem = new LevellingSystem(this, playerDataDatabase, genericUseMethods);
+        legendaryEffects = new LegendaryEffects(this, genericUseMethods, currentContracts);
+        epicEffects = new EpicEffects(this, currentContracts);
+        createCustomGuiItem = new CreateCustomGuiItem(this);
+        mobDataDatabase = new MobDataDatabase(this, database);
+        mobFeatures = new MobFeatures(this, genericUseMethods);
+        legendaryContract = new LegendaryContract(this, mobFeatures, mobDataDatabase, legendaryEffects, contractType);
+        commonContract = new CommonContract(this, mobFeatures, contractType);
+        epicContract = new EpicContract(this, mobFeatures, epicEffects, contractType);
+        commandManager = new CommandManager(this,
                 genericUseMethods,
                 legendaryContract,
                 epicContract,
                 commonContract,
                 contractStorageDatabase,
-                currentContracts, database, contractType);
+                currentContracts, database, contractType, createCustomGuiItem, playerDataDatabase, mobDataDatabase);
 
         getLogger().info("All of the things are loaded!");
 
         getLogger().info("Connecting to database.");
 
-        try{
-            database.connect();
-            getLogger().info("Connected to database!");
+        database.connect();
+        getLogger().info("Connected to database!");
 
-            getLogger().info("Checking databases exist...");
-            // Do create things ya know
 
-            database.createSlainDatabase();
-            getLogger().info("Mob database exists/created!");
-            database.createPlayerDatabase();
-            getLogger().info("Player database exists/created!");
-            database.createContractStorage();
-            getLogger().info("Contract storage database exists/created!");
-            getLogger().info("Databases are A-okay!");
+        getLogger().info("Checking databases exist...");
+        // Do create things ya know
 
-        }catch(Exception e){
-            getLogger().severe("Database connection not successful. Do you have the correct details? Check config.yml");
-        }
+        database.createSlainDatabase();
+        getLogger().info("Mob database exists/created!");
+        database.createPlayerDatabase();
+        getLogger().info("Player database exists/created!");
+        database.createContractStorage();
+        getLogger().info("Contract storage database exists/created!");
+        getLogger().info("Databases are A-okay!");
 
         getLogger().info("Registering events...");
         PluginManager pluginManager = getServer().getPluginManager();
@@ -96,12 +101,13 @@ public class MobContracts extends JavaPlugin {
         pluginManager.registerEvents(new ContractKillListener(this, genericUseMethods, levellingSystem, currentContracts, contractType, playerDataDatabase), this);
         pluginManager.registerEvents(new EntityDamageListener(this), this);
         pluginManager.registerEvents(new EntityTransformListener(), this);
+        pluginManager.registerEvents(new GuiClickListener(), this);
         getLogger().info("Events registered");
 
-        getLogger().info("Enabled! <3 ~Minty");
+        getLogger().info("Everything is now enabled. Hopefully we don't explode! ~Minty");
     }
 
-    public void onDisable(){
+    public void onDisable() {
         currentContracts.removeAllContracts();
         getLogger().info("Contracts removed.");
         contractType.removeAllContracts();
@@ -112,11 +118,24 @@ public class MobContracts extends JavaPlugin {
         getLogger().info("Disabled");
     }
 
-    public void sendConsoleError(String message){
+    public void sendConsoleError(String message) {
         getLogger().severe(message);
     }
 
-    public void sendConsoleMessage(String message){
+    public void sendConsoleMessage(String message) {
         getLogger().info(message);
+    }
+
+    public GuiUtil getMenuUtil(Player p){
+        GuiUtil util;
+
+        if(playerMap.containsKey(p))
+            return playerMap.get(p);
+        else{
+            util = new GuiUtil(p);
+            playerMap.put(p, util);
+
+            return util;
+        }
     }
 }
