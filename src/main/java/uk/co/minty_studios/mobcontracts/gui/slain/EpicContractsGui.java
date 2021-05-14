@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
 import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
@@ -13,6 +12,7 @@ import uk.co.minty_studios.mobcontracts.gui.MainMenu;
 import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
 import uk.co.minty_studios.mobcontracts.gui.handler.PaginatedGui;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
+import uk.co.minty_studios.mobcontracts.utils.PlayerObject;
 
 import java.util.*;
 
@@ -27,11 +27,11 @@ public class EpicContractsGui extends PaginatedGui {
 
 
     public EpicContractsGui(GuiUtil guiUtil,
-                              MobContracts plugin,
-                              PlayerDataDatabase playerDataDatabase,
-                              CreateCustomGuiItem createCustomGuiItem,
-                              ContractStorageDatabase contractStorageDatabase,
-                              MobDataDatabase mobDataDatabase) {
+                            MobContracts plugin,
+                            PlayerDataDatabase playerDataDatabase,
+                            CreateCustomGuiItem createCustomGuiItem,
+                            ContractStorageDatabase contractStorageDatabase,
+                            MobDataDatabase mobDataDatabase) {
         super(guiUtil);
         this.plugin = plugin;
         this.playerDataDatabase = playerDataDatabase;
@@ -53,23 +53,23 @@ public class EpicContractsGui extends PaginatedGui {
     @Override
     public void handleMenu(InventoryClickEvent e) {
 
-        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalEpicSlainMap().entrySet());
+        ArrayList<Map.Entry<UUID, PlayerObject>> sorted = new ArrayList<>(playerDataDatabase.getPlayerMap().entrySet());
 
-        if(e.getCurrentItem().getType().equals(Material.PAPER)){
-            if(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Previous page")){
-                if(page != 0){
+        if (e.getCurrentItem().getType().equals(Material.PAPER)) {
+            if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Previous page")) {
+                if (page != 0) {
                     page -= 1;
                     super.open();
-                }else{
-                    new MainMenu(plugin.getMenuUtil((Player)e.getWhoClicked()), createCustomGuiItem, plugin, playerDataDatabase, mobDataDatabase, contractStorageDatabase).open();
+                } else {
+                    new MainMenu(plugin.getMenuUtil((Player) e.getWhoClicked()), createCustomGuiItem, plugin, playerDataDatabase, mobDataDatabase, contractStorageDatabase).open();
                 }
-            }else if(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Next page")){
-                if(!((index + 1) >= sorted.size())){
+            } else if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Next page")) {
+                if (!((index + 1) >= sorted.size())) {
                     page += 1;
                     super.open();
                 }
             }
-        }else if(e.getCurrentItem().getType().equals(Material.BARRIER)){
+        } else if (e.getCurrentItem().getType().equals(Material.BARRIER)) {
             e.getWhoClicked().closeInventory();
         }
     }
@@ -79,25 +79,26 @@ public class EpicContractsGui extends PaginatedGui {
 
         addBottomRow();
 
-        ArrayList<Map.Entry<UUID, Integer>> sorted = new ArrayList<>(playerDataDatabase.getTotalEpicSlainMap().entrySet());
-        sorted.sort(Collections.reverseOrder(Comparator.comparingInt(Map.Entry::getValue)));
+        ArrayList<Map.Entry<UUID, PlayerObject>> sorted = new ArrayList<>(playerDataDatabase.getPlayerMap().entrySet());
+        sorted.sort(Collections.reverseOrder(Comparator.comparing(e -> e.getValue().getEpicSlain())));
 
-        for(int i = 0; i < super.maxItemsPerPage; i++){
+        for (int i = 0; i < super.maxItemsPerPage; i++) {
             index = super.maxItemsPerPage * page + i;
-            if(index >= sorted.size()) break;
-            if(sorted.get(index) != null){
-                ItemStack head = null;
-                UUID uuid = sorted.get(index).getKey();
+            if (index >= sorted.size()) break;
+            if (sorted.get(index) != null) {
 
-                head = createCustomGuiItem.getPlayerHead(uuid,
+                UUID uuid = sorted.get(index).getKey();
+                int slain = sorted.get(index).getValue().getEpicSlain();
+                int level = sorted.get(index).getValue().getCurrentLevel();
+                int experience = sorted.get(index).getValue().getCurrentXp();
+
+                inventory.addItem(createCustomGuiItem.getPlayerHead(uuid,
                         "&8➟ &aEpic slain",
-                        "&7Total: &6" + playerDataDatabase.getEpic(uuid) + " &7slain",
+                        "&7Total: &6" + slain + " &7slain",
                         "",
                         "&8➟ &aStats",
-                        "&7Level: &e" + playerDataDatabase.getPlayerLevel(uuid),
-                        "&7Experience: &e" + playerDataDatabase.getPlayerXp(uuid) + "&7xp");
-
-                inventory.addItem(head);
+                        "&7Level: &e" + level,
+                        "&7Experience: &e" + experience + "&7xp"));
             }
         }
     }

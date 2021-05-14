@@ -20,14 +20,14 @@ public class ContractStorageDatabase {
     }
 
     // COMMON EPIC LEGENDARY
-    public int getTotalStat(String column){
+    public int getTotalStat(String column) {
         String sql = "SELECT * FROM CONTRACTSTORAGE";
         int total = 0;
 
-        try(Connection con = database.getConnected()){
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 total += rs.getInt(column.toUpperCase());
             }
 

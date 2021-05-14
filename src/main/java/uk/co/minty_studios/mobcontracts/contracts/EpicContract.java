@@ -5,8 +5,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import uk.co.minty_studios.mobcontracts.MobContracts;
-import uk.co.minty_studios.mobcontracts.events.ContractSummonEvent;
 import uk.co.minty_studios.mobcontracts.effects.EpicEffects;
+import uk.co.minty_studios.mobcontracts.events.ContractSummonEvent;
 import uk.co.minty_studios.mobcontracts.mobs.MobFeatures;
 import uk.co.minty_studios.mobcontracts.utils.ContractType;
 

@@ -75,7 +75,9 @@ public class ContractSummonEvent extends Event {
         return player;
     }
 
-    public UUID getUuid() { return uuid; }
+    public UUID getUuid() {
+        return uuid;
+    }
 
 
     public HandlerList getHandlers() {

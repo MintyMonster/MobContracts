@@ -4,23 +4,22 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PaginatedGui extends Gui{
+public abstract class PaginatedGui extends Gui {
 
     protected int page = 0;
     protected int maxItemsPerPage = 45;
 
-    public PaginatedGui(GuiUtil guiUtil){
+    public PaginatedGui(GuiUtil guiUtil) {
         super(guiUtil);
     }
     // 46 - 54
     // 51 49
 
-    public void addBottomRow(){
+    public void addBottomRow() {
 
         // Buttons
         ItemStack next = new ItemStack(Material.PAPER, 1);
@@ -34,7 +33,7 @@ public abstract class PaginatedGui extends Gui{
         backmeta.setDisplayName(ChatColor.GRAY + "" + ChatColor.BOLD + "Previous page");
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.DARK_GRAY + "[Back to main menu]");
-        if(page == 0){
+        if (page == 0) {
             backmeta.setLore(lore);
         }
         back.setItemMeta(backmeta);
@@ -54,8 +53,8 @@ public abstract class PaginatedGui extends Gui{
         // add back to main menu button
 
         // Bottom row fillers
-        for(int i = 45; i < 54; i++) {
-            if(inventory.getItem(i) == null){
+        for (int i = 45; i < 54; i++) {
+            if (inventory.getItem(i) == null) {
                 inventory.setItem(i, filler);
             }
         }

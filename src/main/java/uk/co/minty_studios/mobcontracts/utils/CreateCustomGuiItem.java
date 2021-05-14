@@ -4,8 +4,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -20,12 +18,13 @@ import java.util.stream.Collectors;
 public class CreateCustomGuiItem {
 
     private final MobContracts plugin;
+    //private static Map<String, ItemStack> customHeads = new HashMap<>();
 
     public CreateCustomGuiItem(MobContracts plugin) {
         this.plugin = plugin;
     }
 
-    public ItemStack getCustomSkull(final String displayName, String texture, final String... lore){
+    public ItemStack getCustomSkull(final String displayName, String texture, final String... lore) {
         texture = "http://textures.minecraft.net/texture/" + texture;
 
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
@@ -40,7 +39,7 @@ public class CreateCustomGuiItem {
         profile.getProperties().put("textures", new Property("textures", new String(data)));
         Field profileField = null;
 
-        try{
+        try {
             profileField = skullMeta.getClass().getDeclaredField("profile");
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
@@ -49,7 +48,7 @@ public class CreateCustomGuiItem {
         assert profileField != null;
         profileField.setAccessible(true);
 
-        try{
+        try {
             profileField.set(skullMeta, profile);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -59,7 +58,7 @@ public class CreateCustomGuiItem {
         return skull;
     }
 
-    public ItemStack getCustomItem(final Material material, final String displayName, final String... lore){
+    public ItemStack getCustomItem(final Material material, final String displayName, final String... lore) {
         final ItemStack item = new ItemStack(material, 1);
         final ItemMeta meta = item.getItemMeta();
 
@@ -71,17 +70,17 @@ public class CreateCustomGuiItem {
     }
 
     // create singular method
-    public ItemStack getPlayerHead(final UUID uuid, final String... lore){
+    public ItemStack getPlayerHead(final UUID uuid, final String... lore) {
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
 
-        if(plugin.getServer().getPlayer(uuid) != null){
-            meta.setOwningPlayer(plugin.getServer().getPlayer(uuid));
-            meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + plugin.getServer().getPlayer(uuid).getDisplayName());
-        }else{
-            meta.setOwningPlayer(plugin.getServer().getOfflinePlayer(uuid));
-            meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + plugin.getServer().getOfflinePlayer(uuid).getName());
-        }
+        meta.setOwningPlayer(plugin.getServer().getPlayer(uuid) != null
+                ? plugin.getServer().getPlayer(uuid)
+                : plugin.getServer().getOfflinePlayer(uuid));
+
+        meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + (plugin.getServer().getPlayer(uuid) != null
+                ? plugin.getServer().getPlayer(uuid).getName()
+                : plugin.getServer().getOfflinePlayer(uuid).getName()));
 
         meta.setLore(Arrays.stream(lore).map(line -> ChatColor.translateAlternateColorCodes('&', line)).collect(Collectors.toList()));
         skull.setItemMeta(meta);
@@ -118,13 +117,13 @@ public class CreateCustomGuiItem {
         PIGLIN_BRUTE("3e300e9027349c4907497438bac29e3a4c87a848c50b34c21242727b57f4e1cf"),
         NONE("eb7af9e4411217c7de9c60acbd3c3fd6519783332a1b3bc56fbfce90721ef35");
 
-        private String base;
+        private final String base;
 
-        MobType(String base){
+        MobType(String base) {
             this.base = base;
         }
 
-        public String getBase(){
+        public String getBase() {
             return this.base;
         }
     }

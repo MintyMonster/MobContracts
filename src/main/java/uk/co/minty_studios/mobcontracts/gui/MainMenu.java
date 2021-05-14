@@ -49,7 +49,7 @@ public class MainMenu extends Gui {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
-        switch(e.getSlot()){
+        switch (e.getSlot()) {
             case 3:
                 new AllContractsGui(plugin.getMenuUtil((Player) e.getWhoClicked()), mobDataDatabase, createCustomGuiItem, plugin, contractStorageDatabase, playerDataDatabase).open();
                 break;
@@ -79,8 +79,8 @@ public class MainMenu extends Gui {
 
     @Override
     public void setItems() {
-        for(int i = 0; i < getSlots(); i++){
-            if(i == 5){
+        for (int i = 0; i < getSlots(); i++) {
+            if (i == 5) {
                 ItemStack skull = createCustomGuiItem.getCustomSkull("&e&lSERVER STATS &r&8[Click]",
                         "ac9f813ae82cd688574a849ab9ab441346763adb9ce7cf1b1c727de795df9b",
                         "&8➟ &7Server-wide statistics!");
@@ -89,7 +89,7 @@ public class MainMenu extends Gui {
                 continue;
             }
 
-            if(i == 3){
+            if (i == 3) {
                 ItemStack skull = createCustomGuiItem.getCustomItem(Material.WITHER_SKELETON_SKULL, "&6&lALL CONTRACTS &8[Click]",
                         "&8➟ &7Every contract!",
                         "&8➟ &a" + mobDataDatabase.getTotalCountContracts() + " &7total contracts!");
@@ -98,7 +98,7 @@ public class MainMenu extends Gui {
                 continue;
             }
 
-            if(i == 12){
+            if (i == 12) {
                 ItemStack skull = createCustomGuiItem.getCustomSkull("&e&lCONTRACTS KILLED",
                         "c493130537fc4d358cdb387c9db08088846b8be54f1c11c256a37eb4c638c0",
                         "&8➟ &aLeaderboard &8[Click]",
@@ -109,7 +109,7 @@ public class MainMenu extends Gui {
                 continue;
             }
 
-            if(i == 13){
+            if (i == 13) {
                 ItemStack skull = createCustomGuiItem.getCustomSkull("&f&lTOTAL EXPERIENCE",
                         "d62379ce9ab2b7376bfa18b01655b2d58f95875740f2d4972ccb7e4781141",
                         "&8➟ &aLeaderboard &8[Click]",
@@ -120,7 +120,7 @@ public class MainMenu extends Gui {
                 continue;
             }
 
-            if(i == 14){
+            if (i == 14) {
                 ItemStack skull = createCustomGuiItem.getCustomSkull("&6&lPLAYER LEVEL",
                         "e3e45831c1ea817f7477bcaebfa3d2ee3a936ee8ea2b8bde29006b7e9bdf58",
                         "&8➟ &aLeaderboard &8[Click]",
@@ -131,7 +131,7 @@ public class MainMenu extends Gui {
                 continue;
             }
 
-            if(i == 21){
+            if (i == 21) {
                 ItemStack item = createCustomGuiItem.getCustomItem(Material.PAPER, "&7&lCOMMON CONTRACTS",
                         "&8➟ &aLeaderboard &8[Click]",
                         "&7Click to view the top players",
@@ -141,7 +141,7 @@ public class MainMenu extends Gui {
                 continue;
             }
 
-            if(i == 22){
+            if (i == 22) {
                 ItemStack item = createCustomGuiItem.getCustomItem(Material.MAP, "&5&lEPIC CONTRACTS",
                         "&8➟ &aLeaderboard &8[Click]",
                         "&7Click to view the top players",
@@ -151,7 +151,7 @@ public class MainMenu extends Gui {
                 continue;
             }
 
-            if(i == 23){
+            if (i == 23) {
                 ItemStack item = createCustomGuiItem.getCustomItem(Material.BLAZE_POWDER, "&6&lLEGENDARY CONTRACTS",
                         "&8➟ &aLeaderboard &8[Click]",
                         "&7Click to view the top players",
@@ -161,7 +161,7 @@ public class MainMenu extends Gui {
                 continue;
             }
 
-            if((i == 0) || (i == 8) || (i == 26) || (i == 18)){
+            if ((i == 0) || (i == 8) || (i == 26) || (i == 18)) {
                 ItemStack item = createCustomGuiItem.getCustomItem(Material.YELLOW_STAINED_GLASS_PANE, "&8");
                 inventory.setItem(i, item);
                 continue;

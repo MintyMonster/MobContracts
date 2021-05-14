@@ -1,26 +1,28 @@
 package uk.co.minty_studios.mobcontracts.database;
 
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import uk.co.minty_studios.mobcontracts.MobContracts;
+import uk.co.minty_studios.mobcontracts.utils.ContractObject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.text.SimpleDateFormat;
 
 public class MobDataDatabase {
 
     private final MobContracts plugin;
     private final Database database;
-    private static final Map<UUID, Date> total = new HashMap<>();
+    private static final Map<UUID, ContractObject> contractMap = new HashMap<>();
 
     public MobDataDatabase(MobContracts plugin, Database database) {
         this.plugin = plugin;
@@ -51,17 +53,67 @@ public class MobDataDatabase {
         }.runTaskAsynchronously(plugin);
     }
 
-    public String getOwner(UUID uuid){
+    public void loadHashMap() {
+        String sql = "SELECT * FROM MOBDATA";
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        try (Connection con = database.getConnected()) {
+            PreparedStatement prep = con.prepareStatement(sql);
+            ResultSet rs = prep.executeQuery();
+            while (rs.next()) {
+                UUID uuid = UUID.fromString(rs.getString("UUID"));
+                UUID mobUuid = UUID.fromString(rs.getString("MOBUUID"));
+                String displayName = rs.getString("DISPLAYNAME");
+                String tier = rs.getString("CONTRACTTYPE");
+                EntityType type = EntityType.valueOf(rs.getString("TYPE"));
+                int health = rs.getInt("HEALTH");
+                int damage = rs.getInt("DAMAGE");
+                Date date = formatter.parse(rs.getString("DATE"));
+
+                String name = plugin.getServer().getPlayer(uuid) != null
+                        ? plugin.getServer().getPlayer(uuid).getName()
+                        : plugin.getServer().getOfflinePlayer(uuid).getName();
+
+                contractMap.put(mobUuid, new ContractObject(uuid, name, mobUuid, displayName, tier, type, health, damage, date));
+            }
+
+            plugin.getLogger().info("Contract data loaded!");
+
+        } catch (SQLException | ParseException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void unloadHashMap() {
+        contractMap.clear();
+    }
+
+    public void addToHashMap(UUID uuid, String name, UUID mobUuid, String displayName, String tier, EntityType type, int health, int damage) {
+        try {
+            contractMap.put(mobUuid, new ContractObject(
+                    uuid, name, mobUuid, displayName, tier, type, health, damage,
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(LocalDate.now().toString() + " " + LocalTime.now().toString())
+            ));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Map<UUID, ContractObject> getContractMap() {
+        return contractMap;
+    }
+
+    public String getOwner(UUID uuid) {
         String sql = "SELECT * FROM MOBDATA WHERE MOBUUID = '" + uuid + "'";
         String name = null;
-        try(Connection con = database.getConnected()){
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
             rs.next();
             UUID playerUuid = UUID.fromString(rs.getString("UUID"));
-            if(plugin.getServer().getPlayer(playerUuid) != null){
+            if (plugin.getServer().getPlayer(playerUuid) != null) {
                 name = plugin.getServer().getPlayer(playerUuid).getName();
-            }else{
+            } else {
                 name = plugin.getServer().getOfflinePlayer(playerUuid).getName();
             }
 
@@ -72,11 +124,11 @@ public class MobDataDatabase {
         return name == null ? "Null" : name;
     }
 
-    public String getTier(UUID uuid){
+    public String getTier(UUID uuid) {
         String sql = "SELECT * FROM MOBDATA WHERE MOBUUID = '" + uuid + "'";
         String type = null;
 
-        try(Connection con = database.getConnected()){
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
             rs.next();
@@ -89,32 +141,11 @@ public class MobDataDatabase {
         return type == null ? "Empty" : type;
     }
 
-    public Map<UUID, Date> getTotalMobs(){
-        String sql = "SELECT * FROM MOBDATA";
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        total.clear();
-
-        try(Connection con = database.getConnected()){
-            PreparedStatement prep = con.prepareStatement(sql);
-            ResultSet rs = prep.executeQuery();
-            while(rs.next()){
-                Date date = formatter.parse(rs.getString("DATE"));
-                UUID uuid = UUID.fromString(rs.getString("MOBUUID"));
-                total.put(uuid, date);
-            }
-
-        } catch (SQLException | ParseException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return total;
-    }
-
-    public String getName(UUID uuid){
+    public String getName(UUID uuid) {
         String sql = "SELECT * FROM MOBDATA WHERE MOBUUID = '" + uuid + "'";
         String name = null;
 
-        try(Connection con = database.getConnected()){
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
             rs.next();
@@ -126,11 +157,11 @@ public class MobDataDatabase {
         return name == null ? "&cNo name" : name;
     }
 
-    public int getDamage(UUID uuid){
+    public int getDamage(UUID uuid) {
         String sql = "SELECT * FROM MOBDATA WHERE MOBUUID = '" + uuid + "'";
         int damage = 0;
 
-        try(Connection con = database.getConnected()){
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
             rs.next();
@@ -142,11 +173,11 @@ public class MobDataDatabase {
         return damage;
     }
 
-    public int getHealth(UUID uuid){
+    public int getHealth(UUID uuid) {
         String sql = "SELECT * FROM MOBDATA WHERE MOBUUID = '" + uuid + "'";
         int health = 0;
 
-        try(Connection con = database.getConnected()){
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
             rs.next();
@@ -158,11 +189,11 @@ public class MobDataDatabase {
         return health;
     }
 
-    public String getDate(UUID uuid){
+    public String getDate(UUID uuid) {
         String sql = "SELECT * FROM MOBDATA WHERE MOBUUID = '" + uuid + "'";
         String date = null;
 
-        try(Connection con = database.getConnected()) {
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
             rs.next();
@@ -175,11 +206,11 @@ public class MobDataDatabase {
         return date == null ? "Null" : date;
     }
 
-    public String getType(UUID uuid){
+    public String getType(UUID uuid) {
         String sql = "SELECT * FROM MOBDATA WHERE MOBUUID = '" + uuid + "'";
         String type = null;
 
-        try(Connection con = database.getConnected()) {
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
             rs.next();
@@ -193,14 +224,14 @@ public class MobDataDatabase {
     }
 
     // HEALTH DAMAGE
-    public int getTotalStat(String column){
+    public int getTotalStat(String column) {
         String sql = "SELECT * FROM MOBDATA";
         int total = 0;
 
-        try(Connection con = database.getConnected()){
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 total += rs.getInt(column.toUpperCase());
             }
 
@@ -218,7 +249,7 @@ public class MobDataDatabase {
         try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 total++;
             }
 

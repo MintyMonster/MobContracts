@@ -6,7 +6,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import uk.co.minty_studios.mobcontracts.MobContracts;
-import uk.co.minty_studios.mobcontracts.commands.subcommands.*;
+import uk.co.minty_studios.mobcontracts.commands.subcommands.GiveCommand;
+import uk.co.minty_studios.mobcontracts.commands.subcommands.LeaderboardsCommand;
+import uk.co.minty_studios.mobcontracts.commands.subcommands.RemoveCommand;
+import uk.co.minty_studios.mobcontracts.commands.subcommands.StartCommand;
 import uk.co.minty_studios.mobcontracts.contracts.CommonContract;
 import uk.co.minty_studios.mobcontracts.contracts.EpicContract;
 import uk.co.minty_studios.mobcontracts.contracts.LegendaryContract;
@@ -69,7 +72,7 @@ public class CommandManager implements CommandExecutor {
         addCommands("mobcontracts",
                 new StartCommand("start", genericUseMethods, commonContract, epicContract, legendaryContract, contractStorageDatabase, plugin, currentContracts),
                 new RemoveCommand("clear", genericUseMethods, currentContracts, plugin),
-                new GiveCommand("give", genericUseMethods, plugin, contractStorageDatabase),
+                new GiveCommand("give", genericUseMethods, plugin, contractStorageDatabase, playerDataDatabase),
                 new LeaderboardsCommand("leaderboard", plugin, createCustomGuiItem, playerDataDatabase, this.mobDataDatabase, contractStorageDatabase)
         );
     }
@@ -106,7 +109,7 @@ public class CommandManager implements CommandExecutor {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', " &8 | &6&lMobContracts &r&7-> Made by &bMintyMonster"));
                 player.sendMessage(ChatColor.DARK_GRAY + "-------------------------------------");
                 master.getChildCommands().values().forEach(c -> {
-                    if (player.hasPermission(c.getPermission()))
+                    if (player.hasPermission(c.getPermission()) || player.isOp())
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8- &6" + c.getSyntax() + " &8- &7" + c.getDescription()));
                 });
             }

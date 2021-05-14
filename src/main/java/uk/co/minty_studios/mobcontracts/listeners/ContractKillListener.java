@@ -2,6 +2,7 @@ package uk.co.minty_studios.mobcontracts.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
 import uk.co.minty_studios.mobcontracts.events.ContractKillEvent;
@@ -45,5 +46,12 @@ public class ContractKillListener implements Listener {
         contractType.removeContract(event.getEntity().getUniqueId());
         currentContracts.removePlayerContract(event.getKiller());
         // rewards
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                database.updatePlayer(event.getKiller().getUniqueId());
+            }
+        }.runTaskLater(plugin, 30);
     }
 }

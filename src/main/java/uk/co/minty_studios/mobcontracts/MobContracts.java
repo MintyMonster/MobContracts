@@ -11,11 +11,11 @@ import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
 import uk.co.minty_studios.mobcontracts.database.Database;
 import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
 import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.effects.EpicEffects;
+import uk.co.minty_studios.mobcontracts.effects.LegendaryEffects;
 import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
 import uk.co.minty_studios.mobcontracts.level.LevellingSystem;
 import uk.co.minty_studios.mobcontracts.listeners.*;
-import uk.co.minty_studios.mobcontracts.effects.EpicEffects;
-import uk.co.minty_studios.mobcontracts.effects.LegendaryEffects;
 import uk.co.minty_studios.mobcontracts.mobs.MobFeatures;
 import uk.co.minty_studios.mobcontracts.utils.*;
 
@@ -52,7 +52,7 @@ public class MobContracts extends JavaPlugin {
         database = new Database(this);
         contractType = new ContractType();
         currentContracts = new CurrentContracts();
-        playerDataDatabase = new PlayerDataDatabase(this, database);
+        playerDataDatabase = new PlayerDataDatabase(this, database, contractStorageDatabase);
         contractStorageDatabase = new ContractStorageDatabase(this, database);
         genericUseMethods = new GenericUseMethods(this);
         levellingSystem = new LevellingSystem(this, playerDataDatabase, genericUseMethods);
@@ -91,7 +91,13 @@ public class MobContracts extends JavaPlugin {
         getLogger().info("Contract storage database exists/created!");
         getLogger().info("Databases are A-okay!");
 
+        getLogger().info("Loading leaderboard dependants");
+        mobDataDatabase.loadHashMap();
+        playerDataDatabase.loadPlayers();
+        getLogger().info("Leaderboard dependants loaded");
         getLogger().info("Registering events...");
+
+
         PluginManager pluginManager = getServer().getPluginManager();
 
         pluginManager.registerEvents(new PlayerJoinListener(playerDataDatabase, contractStorageDatabase), this);
@@ -109,8 +115,8 @@ public class MobContracts extends JavaPlugin {
 
     public void onDisable() {
         currentContracts.removeAllContracts();
-        getLogger().info("Contracts removed.");
         contractType.removeAllContracts();
+        getLogger().info("Contracts removed.");
         database.disconnect();
         getLogger().info("Database disconnected.");
         reloadConfig();
@@ -126,12 +132,12 @@ public class MobContracts extends JavaPlugin {
         getLogger().info(message);
     }
 
-    public GuiUtil getMenuUtil(Player p){
+    public GuiUtil getMenuUtil(Player p) {
         GuiUtil util;
 
-        if(playerMap.containsKey(p))
+        if (playerMap.containsKey(p))
             return playerMap.get(p);
-        else{
+        else {
             util = new GuiUtil(p);
             playerMap.put(p, util);
 

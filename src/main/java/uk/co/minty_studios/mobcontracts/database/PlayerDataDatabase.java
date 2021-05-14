@@ -3,6 +3,7 @@ package uk.co.minty_studios.mobcontracts.database;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import uk.co.minty_studios.mobcontracts.MobContracts;
+import uk.co.minty_studios.mobcontracts.utils.PlayerObject;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -15,11 +16,13 @@ public class PlayerDataDatabase {
     private static Statement statement;
     private final MobContracts plugin;
     private final Database database;
-    private static final Map<UUID, Integer> totalMap = new HashMap<>();
+    private final ContractStorageDatabase contractStorageDatabase;
+    private static final Map<UUID, PlayerObject> playerMap = new HashMap<>();
 
-    public PlayerDataDatabase(MobContracts plugin, Database database) {
+    public PlayerDataDatabase(MobContracts plugin, Database database, ContractStorageDatabase contractStorageDatabase) {
         this.plugin = plugin;
         this.database = database;
+        this.contractStorageDatabase = contractStorageDatabase;
     }
 
     public void addPlayer(Player player) {
@@ -47,6 +50,67 @@ public class PlayerDataDatabase {
         }.runTaskAsynchronously(plugin);
     }
 
+    public void loadPlayers() {
+        String sql = "SELECT * FROM PLAYERDATA";
+
+        try (Connection con = database.getConnected()) {
+            PreparedStatement prep = con.prepareStatement(sql);
+            ResultSet rs = prep.executeQuery();
+            while (rs.next()) {
+                UUID uuid = UUID.fromString(rs.getString("UUID"));
+                String name = plugin.getServer().getPlayer(uuid) != null
+                        ? plugin.getServer().getPlayer(uuid).getName()
+                        : plugin.getServer().getOfflinePlayer(uuid).getName();
+                int commonSlain = rs.getInt("COMMON");
+                int epicSlain = rs.getInt("EPIC");
+                int legendarySlain = rs.getInt("LEGENDARY");
+                int totalSlain = rs.getInt("TOTAL");
+                int currentXp = rs.getInt("XP");
+                int currentLevel = rs.getInt("LEVEL");
+                int totalXp = rs.getInt("TOTALXP");
+                playerMap.put(uuid, new PlayerObject(
+                        uuid, name, commonSlain, epicSlain, legendarySlain, totalSlain, currentXp, currentLevel, totalXp
+                ));
+            }
+            plugin.getLogger().info("Players loaded!");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void updatePlayer(final UUID uuid) {
+        String sql = "SELECT * FROM PLAYERDATA WHERE UUID = '" + uuid + "'";
+        playerMap.remove(uuid);
+
+        try (Connection con = database.getConnected()) {
+            PreparedStatement prep = con.prepareStatement(sql);
+            ResultSet rs = prep.executeQuery();
+            rs.next();
+            String name = plugin.getServer().getPlayer(uuid) != null
+                    ? plugin.getServer().getPlayer(uuid).getName()
+                    : plugin.getServer().getOfflinePlayer(uuid).getName();
+            int commonSlain = rs.getInt("COMMON");
+            int epicSlain = rs.getInt("EPIC");
+            int legendarySlain = rs.getInt("LEGENDARY");
+            int totalSlain = rs.getInt("TOTAL");
+            int currentXp = rs.getInt("XP");
+            int currentLevel = rs.getInt("LEVEL");
+            int totalXp = rs.getInt("TOTALXP");
+            playerMap.put(uuid, new PlayerObject(
+                    uuid, name, commonSlain, epicSlain, legendarySlain, totalSlain, currentXp, currentLevel, totalXp
+            ));
+
+            plugin.getLogger().info("Player - " + name + " updated!");
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public Map<UUID, PlayerObject> getPlayerMap() {
+        return playerMap;
+    }
+
     public Boolean uuidExists(UUID uuid) {
         String sql = "SELECT * FROM PLAYERDATA WHERE UUID = '" + uuid + "';";
 
@@ -68,7 +132,7 @@ public class PlayerDataDatabase {
         try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 amount++;
             }
 
@@ -142,129 +206,12 @@ public class PlayerDataDatabase {
         return 0;
     }
 
-    public Map<UUID, Integer> getTotalSlainMap() {
-        String sql = "SELECT * FROM PLAYERDATA";
-        totalMap.clear();
-        try (Connection con = database.getConnected()) {
-            PreparedStatement prep = con.prepareStatement(sql);
-            ResultSet rs = prep.executeQuery();
-            while (rs.next()) {
-                String uuid = rs.getString("UUID");
-                int total = rs.getInt("TOTAL");
-                totalMap.put(UUID.fromString(uuid), total);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return totalMap;
-    }
-
-    public Map<UUID, Integer> getTotalExperienceMap(){
-        String sql = "SELECT * FROM PLAYERDATA";
-        totalMap.clear();
-        try(Connection con = database.getConnected()){
-            PreparedStatement prep = con.prepareStatement(sql);
-            ResultSet rs = prep.executeQuery();
-            while(rs.next()){
-                String uuid = rs.getString("UUID");
-                int totalxp = rs.getInt("TOTALXP");
-                totalMap.put(UUID.fromString(uuid), totalxp);
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return totalMap;
-    }
-
-    public Map<UUID, Integer> getTotalLevelMap(){
-        totalMap.clear();
-        String sql = "SELECT * FROM PLAYERDATA";
-
-        try(Connection con = database.getConnected()){
-            PreparedStatement prep = con.prepareStatement(sql);
-            ResultSet rs = prep.executeQuery();
-            while(rs.next()){
-                String uuid = rs.getString("UUID");
-                int level = rs.getInt("LEVEL");
-                totalMap.put(UUID.fromString(uuid), level);
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return totalMap;
-    }
-
-    public Map<UUID, Integer> getTotalCommonSlainMap(){
-        totalMap.clear();
-        String sql = "SELECT * FROM PLAYERDATA";
-
-        try(Connection con = database.getConnected()){
-            PreparedStatement prep = con.prepareStatement(sql);
-            ResultSet rs = prep.executeQuery();
-            while(rs.next()){
-                String uuid = rs.getString("UUID");
-                int common = rs.getInt("COMMON");
-                totalMap.put(UUID.fromString(uuid), common);
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return totalMap;
-    }
-
-    public Map<UUID, Integer> getTotalEpicSlainMap(){
-        totalMap.clear();
-        String sql = "SELECT * FROM PLAYERDATA";
-
-        try(Connection con = database.getConnected()){
-            PreparedStatement prep = con.prepareStatement(sql);
-            ResultSet rs = prep.executeQuery();
-            while(rs.next()){
-                String uuid = rs.getString("UUID");
-                int slain = rs.getInt("EPIC");
-                totalMap.put(UUID.fromString(uuid), slain);
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return totalMap;
-    }
-
-    public Map<UUID, Integer> getTotalLegendarySlainMap(){
-        totalMap.clear();
-        String sql = "SELECT * FROM PLAYERDATA";
-
-        try(Connection con = database.getConnected()){
-            PreparedStatement prep = con.prepareStatement(sql);
-            ResultSet rs = prep.executeQuery();
-            while(rs.next()){
-                String uuid = rs.getString("UUID");
-                int slain = rs.getInt("LEGENDARY");
-                totalMap.put(UUID.fromString(uuid), slain);
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return totalMap;
-    }
-
-    public void addContract(UUID uuid, String contract){
+    public void addContract(UUID uuid, String contract) {
         String sql = "UPDATE PLAYERDATA SET " + contract.toUpperCase() + " = " + contract.toUpperCase() + " + 1 WHERE UUID = '" + uuid + "'";
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                try(Connection con = database.getConnected()){
+            public void run() {
+                try (Connection con = database.getConnected()) {
                     PreparedStatement prep = con.prepareStatement(sql);
                     prep.executeUpdate();
                 } catch (SQLException throwables) {
@@ -481,14 +428,14 @@ public class PlayerDataDatabase {
 
     // SLAIN COMMON EPIC LEGENDARY
     // LEVELS EXP
-    public int getTotalStat(String column){
+    public int getTotalStat(String column) {
         String sql = "SELECT * FROM PLAYERDATA";
         int total = 0;
 
-        try(Connection con = database.getConnected()){
+        try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
             ResultSet rs = prep.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 total += rs.getInt(column.toUpperCase());
             }
 

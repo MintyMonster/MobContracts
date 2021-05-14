@@ -23,5 +23,7 @@ public class PlayerJoinListener implements Listener {
 
         if (!(contractStorageDatabase.uuidExists(event.getPlayer().getUniqueId())))
             contractStorageDatabase.addPlayer(event.getPlayer());
+
+        playerDataDatabase.updatePlayer(event.getPlayer().getUniqueId());
     }
 }

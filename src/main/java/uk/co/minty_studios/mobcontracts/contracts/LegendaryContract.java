@@ -3,12 +3,11 @@ package uk.co.minty_studios.mobcontracts.contracts;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.craftbukkit.v1_16_R3.attribute.CraftAttributeInstance;
 import org.bukkit.entity.*;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
-import uk.co.minty_studios.mobcontracts.events.ContractSummonEvent;
 import uk.co.minty_studios.mobcontracts.effects.LegendaryEffects;
+import uk.co.minty_studios.mobcontracts.events.ContractSummonEvent;
 import uk.co.minty_studios.mobcontracts.mobs.MobFeatures;
 import uk.co.minty_studios.mobcontracts.utils.ContractType;
 

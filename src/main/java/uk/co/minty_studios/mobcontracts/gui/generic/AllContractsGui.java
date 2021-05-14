@@ -12,10 +12,10 @@ import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
 import uk.co.minty_studios.mobcontracts.gui.MainMenu;
 import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
 import uk.co.minty_studios.mobcontracts.gui.handler.PaginatedGui;
+import uk.co.minty_studios.mobcontracts.utils.ContractObject;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 
 import java.util.*;
-import java.text.SimpleDateFormat;
 
 public class AllContractsGui extends PaginatedGui {
 
@@ -53,23 +53,23 @@ public class AllContractsGui extends PaginatedGui {
     @Override
     public void handleMenu(InventoryClickEvent e) {
 
-        ArrayList<Map.Entry<UUID, Date>> mobs = new ArrayList<>(database.getTotalMobs().entrySet());
+        ArrayList<Map.Entry<UUID, ContractObject>> mobs = new ArrayList<>(database.getContractMap().entrySet());
 
-        if(e.getCurrentItem().getType().equals(Material.PAPER)){
-            if(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Previous page")){
-                if(page != 0){
+        if (e.getCurrentItem().getType().equals(Material.PAPER)) {
+            if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Previous page")) {
+                if (page != 0) {
                     page -= 1;
                     super.open();
-                }else{
+                } else {
                     new MainMenu(plugin.getMenuUtil((Player) e.getWhoClicked()), createCustomGuiItem, plugin, playerDataDatabase, database, contractStorageDatabase).open();
                 }
-            }else if(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Next page")){
-                if(!((index + 1) >= mobs.size())){
+            } else if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Next page")) {
+                if (!((index + 1) >= mobs.size())) {
                     page += 1;
                     super.open();
                 }
             }
-        }else if(e.getCurrentItem().getType().equals(Material.BARRIER)){
+        } else if (e.getCurrentItem().getType().equals(Material.BARRIER)) {
             e.getWhoClicked().closeInventory();
         }
     }
@@ -79,35 +79,40 @@ public class AllContractsGui extends PaginatedGui {
 
         addBottomRow();
 
-        ArrayList<Map.Entry<UUID, Date>> sorted = new ArrayList<>(database.getTotalMobs().entrySet());
-        sorted.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
+        ArrayList<Map.Entry<UUID, ContractObject>> sorted = new ArrayList<>(database.getContractMap().entrySet());
+        //sorted.sort(Collections.reverseOrder((Comparator) Map.Entry.comparingByValue()));
+        sorted.sort(Collections.reverseOrder(Comparator.comparing(d -> d.getValue().getDate())));
 
-        if(sorted == null && sorted.isEmpty())
-            return;
-
-        for(int i = 0; i < super.maxItemsPerPage; i++){
+        for (int i = 0; i < super.maxItemsPerPage; i++) {
             index = super.maxItemsPerPage * page + i;
-            if(index >= sorted.size()) break;
-            if(sorted.get(index) != null){
+            if (index >= sorted.size()) break;
+            if (sorted.get(index) != null) {
 
-                UUID uuid = sorted.get(index).getKey();
-                String color = "&7";
-                String tier = database.getTier(uuid);
+                UUID mobUuid = sorted.get(index).getKey();
+                String tier = sorted.get(index).getValue().getTier();
+                String type = sorted.get(index).getValue().getMobType().name();
+                String name = sorted.get(index).getValue().getDisplayName();
+                String summonerName = sorted.get(index).getValue().getSummonerName();
+                int health = sorted.get(index).getValue().getHealth();
+                int damage = sorted.get(index).getValue().getDamage();
+                Date date = sorted.get(index).getValue().getDate();
 
-                color = tier.equalsIgnoreCase("Legendary") ? "&6" : tier.equalsIgnoreCase("Epic") ? "&5" : "&7";
-                String base = CreateCustomGuiItem.MobType.valueOf(database.getType(uuid)).getBase();
-                String type = WordUtils.capitalizeFully(database.getType(uuid).replace("_", " "));
-                inventory.addItem(createCustomGuiItem.getCustomSkull(database.getName(uuid)
+                String color = tier.equalsIgnoreCase("Legendary") ? "&6" : tier.equalsIgnoreCase("Epic") ? "&5" : "&7";
+                String base = CreateCustomGuiItem.MobType.valueOf(type).getBase();
+                String formattedType = WordUtils.capitalizeFully(type.replace("_", " "));
+
+                inventory.addItem(createCustomGuiItem.getCustomSkull(name
                                 .replace("§", "&")
                                 .replace("[", "")
-                                .replace("]", ""), base,
+                                .replace("]", ""),
+                        base,
                         "&8➟ &aStats",
-                        "&7Summoner: &c" + database.getOwner(uuid),
-                        "&7Health: &e" + database.getHealth(uuid),
-                        "&7Damage: &e" + database.getDamage(uuid),
+                        "&7Summoner: &c" + summonerName,
+                        "&7Health: &e" + health + "&7hp",
+                        "&7Damage: &e" + damage + " Per hit",
                         "&7Type: " + color + tier,
-                        "&7Entity: &e" + type,
-                        "&7Date: " + database.getDate(uuid)));
+                        "&7Entity: &e" + formattedType,
+                        "&7Date: " + date));
             }
         }
     }

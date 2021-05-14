@@ -10,7 +10,7 @@ public abstract class Gui implements InventoryHolder {
     protected Inventory inventory;
     protected GuiUtil menuUtil;
 
-    public Gui(GuiUtil menuUtil){
+    public Gui(GuiUtil menuUtil) {
         this.menuUtil = menuUtil;
     }
 
@@ -22,7 +22,7 @@ public abstract class Gui implements InventoryHolder {
 
     public abstract void setItems();
 
-    public void open(){
+    public void open() {
         inventory = Bukkit.createInventory(this, getSlots(), getMenuName());
 
         this.setItems();

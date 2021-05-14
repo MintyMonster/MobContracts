@@ -27,5 +27,9 @@ public class ContractSummonListener implements Listener {
                 event.getEntity().getType().name(),
                 event.getHealth(),
                 event.getDamage());
+
+        mobDataDatabase.addToHashMap(event.getPlayer().getUniqueId(), event.getPlayer().getName(), event.getUuid(), event.getName(),
+                event.getTier(), event.getEntity().getType(), (int) Math.round(event.getHealth()), (int) Math.round(event.getDamage()));
+
     }
 }
