@@ -1,6 +1,24 @@
 # MobContracts
 # Written by MintyMonster
 
+# /////// INFO ///////
+# // 🪓 ⚔
+
+# Placeholders:
+# To use placeholders, you'll need to have PlaceholderAPI installed :)
+
+# Player level: %mobcontracts_player_level%
+# Player experience: %mobcontracts_player_experience%
+# Player total experience: %mobcontracts_player_total_experience%
+# Common contracts owned: %mobcontracts_common_owned%
+# Epic contracts owned: %mobcontracts_epic_owned%
+# Legendary contracts owned: %mobcontracts_legendary_owned%
+# Total contracts owned: %mobcontracts_total_owned%
+# Common contracts slain: %mobcontracts_common_slain%
+# Epic contracts slain: %mobcontracts_epic_slain%
+# Legendary contracts slain: %mobcontracts_legendary_slain%
+# Total contracts slain: %mobcontracts_total_slain%
+
 # The prefix for all messages
 prefix: '&6Contracts &8➟ '
 
@@ -38,11 +56,11 @@ contract-type:
 settings:
 
   database:
-    host: 'na01-sql.pebblehost.com'
+    host: 'host'
     port: 3306
-    database-name: 'customer_119398_general'
-    username: 'customer_119398_general'
-    password: 'jXxJw-1NB-@0FIbUM#TF'
+    database-name: 'db_name'
+    username: 'username'
+    password: 'password'
 
   general:
     # When the player leaves, should we kill the contract?
@@ -96,6 +114,16 @@ settings:
   common:
     # Name format for spawned mob (Reference name lists below)
     name-format: '&7[&e%name% &ethe &e%adjective%&7]'
+    # Set to true if you want the epic mobs to have AOE effects
+    enable-aoe-effects: true
+    # Distance between player and entity in blocks before effected by AOE
+    distance-from-entity: 2
+    # Time in ticks for AOE repeat check for players
+    repeat-check: 300
+    # Amplification level of effect
+    effect-amplifier: 1
+    # Duration of effect in ticks
+    effect-duration: 100
     # The range of which the health randomiser picks between (Max 1024)
     max-health: 220
     min-health: 100
@@ -123,6 +151,10 @@ settings:
     distance-from-entity: 2
     # Time in ticks for AOE repeat check for players
     repeat-check: 200
+    # Amplification level of effect
+    effect-amplifier: 1
+    # Duration of effect in ticks
+    effect-duration: 100
     # The range of which the health randomiser picks between (Max 1024)
     max-health: 550
     min-health: 300
@@ -152,6 +184,10 @@ settings:
     distance-from-entity: 6
     # Time in ticks for AOE repeat check for players
     repeat-check: 140
+    # Amplification level of effect
+    effect-amplifier: 2
+    # Duration of effect in ticks
+    effect-duration: 100
     # Set to true if you want legendary contracts to say a 'quote' when spawned.
     enable-boss-message: true
     # Set to true if you want quotes to be sent globally
@@ -256,6 +292,226 @@ settings:
       - 'Vigorous'
       - 'Wretched'
 
+# GUI configuration
+# something to note:
+# 'Material' can have a material passed to it, or a head-id from (https://minecraft-heads.com/)
+# Material needs to be the official material name, such as "BLACK_STAINED_GLASS_PANE"
+# Head-Id needs to be 'Minecraft-URL' to grab from http://textures.minecraft.net/texture/, such as "abe2dd537cb7434c390d0482fa47247ca3eb56f19a93c04c6c8581352b8d9538'
+
+gui:
+  main-menu:
+    accent-item: 'YELLOW_STAINED_GLASS_PANE'
+    filler-item: 'BLACK_STAINED_GLASS_PANE'
+    server-stats:
+      material: 'ac9f813ae82cd688574a849ab9ab441346763adb9ce7cf1b1c727de795df9b'
+      name: '&e&lSERVER STATS &r&8[Click]'
+      lore:
+        - '&8➟ &7Server-wide statistics!'
+    all-contracts:
+      material: 'WITHER_SKELETON_SKULL'
+      name: '&6&lALL CONTRACTS &8[Click]'
+      lore:
+        - '&8➟ &7Every contract!'
+        - '&8➟ &a%total_contracts% &7total contracts!'
+    contracts-killed:
+      material: 'c493130537fc4d358cdb387c9db08088846b8be54f1c11c256a37eb4c638c0'
+      name: '&e&lCONTRACTS KILLED'
+      lore:
+        - '&8➟ &aLeaderboard &8[Click]'
+        - '&7Click to view the leaderboard'
+        - '&7for the total &econtracts killed&7!'
+    total-experience:
+      material: 'd62379ce9ab2b7376bfa18b01655b2d58f95875740f2d4972ccb7e4781141'
+      name: '&f&lTOTAL EXPERIENCE'
+      lore:
+        - '&8➟ &aLeaderboard &8[Click]'
+        - '&7Click to view the leaderboard'
+        - '&7for the total &fPlayer Experience&7!'
+    player-level:
+      material: 'e3e45831c1ea817f7477bcaebfa3d2ee3a936ee8ea2b8bde29006b7e9bdf58'
+      name: '&6&lPLAYER LEVEL'
+      lore:
+        - '&8➟ &aLeaderboard &8[Click]'
+        - '&7Click to view the leaderboard'
+        - '&7for all users'' &6Player Level&7!'
+    common-contracts:
+      material: 'PAPER'
+      name: '&7&lCOMMON CONTRACTS'
+      lore:
+        - '&8➟ &aLeaderboard &8[Click]'
+        - '&7Click to view the top players'
+        - '&7who''ve beat Common contracts!'
+    epic-contracts:
+      material: 'MAP'
+      name: '&5&lEPIC CONTRACTS'
+      lore:
+        - '&8➟ &aLeaderboard &8[Click]'
+        - '&7Click to view the top players'
+        - '&7who''ve beat &5Epic &7contracts!'
+    legendary-contracts:
+      material: 'BLAZE_POWDER'
+      name: '&6&lLEGENDARY CONTRACTS'
+      lore:
+        - '&8➟ &aLeaderboard &8[Click]'
+        - '&7Click to view the top players'
+        - '&7who''ve beat &6Legendary &7contracts!'
+    profiles:
+      name: '&9&lPROFILES &r&8[Click]'
+      lore:
+        - '&8➟ &7All player profiles!'
+
+  server-stats:
+    accent-item: 'YELLOW_STAINED_GLASS_PANE'
+    filler-item: 'BLACK_STAINED_GLASS_PANE'
+    back-button:
+      material: 'ARROW'
+      name: '&7Back'
+      lore:
+        - '&8➟ [Click for Main Menu]'
+    stats:
+      material: 'c9c8881e42915a9d29bb61a16fb26d059913204d265df5b439b3d792acd56'
+      name: '&e&lSERVER STATS'
+      lore:
+        - '&8➟ &6%total_players% &7Players'
+        - '&8➟ &a%total_contracts% &7contracts'
+    common-killed:
+      material: '149e48c0df7995e91db5bd3c930e5bcc0abcfaf31273732aeabf33c5d86491'
+      name: '&7&lCOMMON KILLED'
+      lore:
+        - '&8➟ &a%common_killed% &7killed'
+    epic-killed:
+      material: '95372c5f441c36d96a33a0c3cba514568049d811742b7a90c01ea1c1bc39'
+      name: '&5&lEPIC KILLED'
+      lore:
+        - '&8➟ &a%epic_killed% &7killed'
+    legendary-killed:
+      material: '597463d7181e83a143a6ced1a1f77f66d1f28e6f272fe8cd95e7fb89ea0dc69'
+      name: '&6&lLEGENDARY KILLED'
+      lore:
+        - '&8➟ &a%legendary_killed% &7killed'
+    common-stored:
+      material: 'PAPER'
+      name: '&7&lCOMMON STORED'
+      lore:
+        - '&8➟ &a%common_stored% &7contracts stored'
+    epic-stored:
+      material: 'MAP'
+      name: '&5&lEPIC STORED'
+      lore:
+        - '&8➟ &a%epic_stored% &7contracts stored'
+    legendary-stored:
+      material: 'BLAZE_POWDER'
+      name: '&6&lLEGENDARY STORED'
+      lore:
+        - '&8➟ &a%legendary_stored% &7contracts stored'
+    player-levels:
+      material: '6ccbf9883dd359fdf2385c90a459d737765382ec4117b04895ac4dc4b60fc'
+      name-color: '&6&l'
+      name: '&6&lPLAYER LEVELS'
+      lore:
+        - '&8➟ &a%level% &7Total levels'
+    total-experience:
+      material: 'f2fc23866523caaa8a9534566127a6f8389af3e76b8e3c33c2473cba6889c4'
+      name-color: '&6&l'
+      name: '&f&lTOTAL EXPERIENCE'
+      lore:
+        - '&8➟ &a%total_experience% &7total experience'
+    total-damage:
+      material: 'd6cc6b83763a67fcada1ea184c2d1752ad240746c6be258a73983d8b657f4bb5'
+      name-color: '&6&l'
+      name: '&9&lTOTAL DAMAGE'
+      lore:
+        - '&8➟ &a%damage% &7total damage'
+        - '&8➟ &7from all contracts'
+    total-health:
+      material: 'b837f3db13a40d4979de77179e18af6e0bc3cc39ea6aba518bb080a6f01a40'
+      name-color: '&6&l'
+      name: '&c&lTOTAL HEALTH'
+      lore:
+        - '&8➟ &a%health% &7total health'
+        - '&8➟ &7from all contracts'
+  all-contracts:
+    lore:
+      - '&8➟ &aStats'
+      - '&7Summoner: &c%name'
+      - '&7Health: &e%health%&7hp'
+      - '&7Damage: &e%damage%&7Per hit'
+      - '&7Type: %color%%tier%'
+      - '&7Entity: &e%entity_type%'
+      - '&7Date: %date%'
+  contracts-killed:
+    name-color: '&6&l'
+    lore:
+      - '&8➟ &aSlain'
+      - '&7Total: &6%total_slain%&7 slain'
+      - ''
+      - '&8➟ &aStats'
+      - '&7Level: &e%level%'
+      - '&7Experience: &e%xp%&7xp'
+  player-level:
+    name-color: '&6&l'
+    lore:
+      - '&8➟ &aLevels'
+      - '&7Level: &6%level%'
+      - ''
+      - '&8➟ &aStats'
+      - '&7Slain: &e%total_slain%'
+      - '&7Experience: &e%xp%&7xp'
+  total-experience:
+    name-color: '&6&l'
+    lore:
+      - '&8➟ &aExperience'
+      - '&7Total: &6%total%&7xp'
+      - ''
+      - '&8➟ &aStats'
+      - '&7Slain: &e%slain% &7contracts'
+      - '&7Level: &e%level%'
+  profiles:
+    name-color: '&6&l'
+    lore:
+      - '&8➟ &aStats'
+      - '&7Level: &e%level%'
+      - '&7Current xp: &e%xp%'
+      - '&7Total xp: &e%totalxp%'
+      - ''
+      - '&8➟ &aContracts slain'
+      - '&7Common: &e%common_slain%'
+      - '&7Epic: &5%epic_slain%'
+      - '&7Legendary: &6%legendary_slain%'
+      - ''
+      - '&8➟ &aContracts owned'
+      - '&7Common: &e%common_owned%'
+      - '&7Epic: &e%epic_owned%'
+      - '&7Legendary: &e%legendary_owned%'
+  common-slain:
+    name-color: '&6&l'
+    lore:
+      - '&8➟ &aCommon slain'
+      - '&7Total: &6%slain% &7slain'
+      - ''
+      - '&8➟ &aStats'
+      - '&7Level: &e%level%'
+      - '&7Experience: &e%xp%&7xp'
+  epic-slain:
+    name-color: '&6&l'
+    lore:
+      - '&8➟ &aEpic slain'
+      - '&7Total: &6%slain% &7slain'
+      - ''
+      - '&8➟ &aStats'
+      - '&7Level: &e%level%'
+      - '&7Experience: &e%xp%&7xp'
+  legendary-slain:
+    name-color: '&6&l'
+    lore:
+      - '&8➟ &aLegendary slain'
+      - '&7Total: &6%slain% &7slain'
+      - ''
+      - '&8➟ &aStats'
+      - '&7Level: &e%level%'
+      - '&7Experience: &e%xp%&7xp'
+
+
 messages:
   event:
     # %player% -> Killer
@@ -287,6 +543,14 @@ messages:
     received-legendary: '&7You have received &a%amount% &6Legendary &7contract(s)!'
     received-epic: '&7You have received &a%amount% &5Epic &7contract(s)!'
     received-common: '&7You have received &a%amount% &eCommon &7contract(s)!'
+    # Messages for level commands
+    level-add: '&7You have added &e%amount% &7level(s) to &e%player%'
+    level-set: '&7You have set &e%player%&7''s level to &e%amount%'
+    level-removed: '&7You have removed &e%amount% &7level(s) from &e%player%'
+
+    level-add-received: '&e%player% &7has added &e%amount% &7levels to you!'
+    level-set-received: '&e%player% &7has set your level to &e%amount%'
+    level-removed-received: '&e%player% &7has removed &e%amount% &7levels from you!'
 
   # %entity% -> Contract's custom name
   # %player% -> Player's name

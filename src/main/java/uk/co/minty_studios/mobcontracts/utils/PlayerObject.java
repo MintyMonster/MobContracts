@@ -5,15 +5,19 @@ import java.util.UUID;
 
 public class PlayerObject {
 
-    private final UUID uuid;
-    private final String name;
-    private final int commonSlain;
-    private final int epicSlain;
-    private final int legendarySlain;
-    private final int totalSlain;
-    private final int currentXp;
-    private final int currentLevel;
-    private final int totalXp;
+    private UUID uuid;
+    private String name;
+    private int commonSlain;
+    private int epicSlain;
+    private int legendarySlain;
+    private int totalSlain;
+    private int currentXp;
+    private int currentLevel;
+    private int totalXp;
+    private int commonOwned;
+    private int epicOwned;
+    private int legendaryOwned;
+    private int totalOwned;
 
     public PlayerObject(UUID uuid,
                         String name,
@@ -23,7 +27,11 @@ public class PlayerObject {
                         int totalSlain,
                         int currentXp,
                         int currentLevel,
-                        int totalXp) {
+                        int totalXp,
+                        int commonOwned,
+                        int epicOwned,
+                        int legendaryOwned,
+                        int totalOwned) {
 
         this.uuid = uuid;
         this.name = name;
@@ -34,6 +42,24 @@ public class PlayerObject {
         this.currentXp = currentXp;
         this.currentLevel = currentLevel;
         this.totalXp = totalXp;
+        this.commonOwned = commonOwned;
+        this.epicOwned = epicOwned;
+        this.legendaryOwned = legendaryOwned;
+        this.totalOwned = totalOwned;
+    }
+
+    public void updatePlayer(int cslain, int eslain, int lslain, int tslain, int xp, int level, int txp, int cowned, int eowned, int lowned, int towned){
+        this.commonSlain = cslain;
+        this.epicSlain = eslain;
+        this.legendarySlain = lslain;
+        this.totalSlain = tslain;
+        this.currentXp = xp;
+        this.currentLevel = level;
+        this.totalXp = txp;
+        this.commonOwned = cowned;
+        this.epicOwned = eowned;
+        this.legendaryOwned = lowned;
+        this.totalOwned = towned;
     }
 
     public UUID getUuid() {
@@ -72,15 +98,19 @@ public class PlayerObject {
         return totalXp;
     }
 
-    /*public int getCommonOwned(){
-        return ownedCommon;
+    public int getCommonOwned(){
+        return commonOwned;
     }
 
     public int getEpicOwned(){
-        return ownedEpic;
+        return epicOwned;
     }
 
     public int getLegendaryOwned(){
-        return ownedLegendary;
-    }*/
+        return legendaryOwned;
+    }
+
+    public int getTotalOwned(){
+        return totalOwned;
+    }
 }

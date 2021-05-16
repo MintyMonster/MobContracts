@@ -54,4 +54,8 @@ public class CurrentContracts {
             }
         contracts.remove(player.getUniqueId());
     }
+
+    public Map<UUID, Entity> getContracts(){
+        return contracts;
+    }
 }

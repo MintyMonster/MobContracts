@@ -30,28 +30,29 @@ public class MobFeatures {
     }
 
     public void giveWeapons(LivingEntity entity) {
-        int chance = rnd.nextInt() * (5 - 1) + 1;
-        int damage = rnd.nextInt() * (5 - 1) + 1;
-        int effect = rnd.nextInt() * (3 - 1) + 1;
+        int damage = rnd.nextInt(5 - 1) + 1;
+        int effect = rnd.nextInt(3 - 1) + 1;
         EntityType type = entity.getType();
-        if (chance == 1) {
-            if (type.equals(EntityType.SKELETON)) {
-                entity.getEquipment().setItemInMainHand(new ItemStack(Material.BOW));
-                ItemStack main = entity.getEquipment().getItemInMainHand();
-                main.addEnchantment(Enchantment.ARROW_DAMAGE, damage);
-                main.addEnchantment(Enchantment.ARROW_KNOCKBACK, effect);
-                main.addEnchantment(Enchantment.ARROW_FIRE, 2);
-            } else if (type.equals(EntityType.WITHER_SKELETON)
-                    || type.equals(EntityType.ZOMBIE)) {
-                entity.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_SWORD));
-                ItemStack main = entity.getEquipment().getItemInMainHand();
-                main.addEnchantment(Enchantment.DAMAGE_ALL, damage);
-                main.addEnchantment(Enchantment.KNOCKBACK, effect);
-                main.addEnchantment(Enchantment.FIRE_ASPECT, 2);
-            } else if (type.equals(EntityType.PILLAGER)) {
-                entity.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_AXE));
-                entity.getEquipment().getItemInMainHand().addEnchantment(Enchantment.DAMAGE_ALL, damage);
-            }
+        if (type.equals(EntityType.SKELETON)
+                || type.equals(EntityType.STRAY)) {
+            ItemStack main = new ItemStack(Material.BOW);
+            main.addEnchantment(Enchantment.ARROW_DAMAGE, damage);
+            main.addEnchantment(Enchantment.ARROW_KNOCKBACK, effect);
+            main.addEnchantment(Enchantment.ARROW_FIRE, 2);
+            entity.getEquipment().setItemInMainHand(main);
+
+        } else if (type.equals(EntityType.WITHER_SKELETON)
+                || type.equals(EntityType.ZOMBIE)) {
+            ItemStack main = new ItemStack(Material.DIAMOND_SWORD);
+            main.addEnchantment(Enchantment.DAMAGE_ALL, damage);
+            main.addEnchantment(Enchantment.KNOCKBACK, effect);
+            main.addEnchantment(Enchantment.FIRE_ASPECT, 2);
+            entity.getEquipment().setItemInMainHand(main);
+
+        } else if (type.equals(EntityType.PILLAGER)) {
+            ItemStack main = new ItemStack(Material.DIAMOND_AXE);
+            main.addEnchantment(Enchantment.DAMAGE_ALL, damage);
+            entity.getEquipment().setItemInMainHand(main);
         }
     }
 

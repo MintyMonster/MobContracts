@@ -1,4 +1,4 @@
-package uk.co.minty_studios.mobcontracts.gui.slain;
+package uk.co.minty_studios.mobcontracts.gui.generic;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,10 +14,13 @@ import uk.co.minty_studios.mobcontracts.gui.handler.PaginatedGui;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 import uk.co.minty_studios.mobcontracts.utils.PlayerObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class CommonContractsGui extends PaginatedGui {
+public class ProfilesGui extends PaginatedGui {
+
     private final MobContracts plugin;
     private final PlayerDataDatabase playerDataDatabase;
     private final CreateCustomGuiItem createCustomGuiItem;
@@ -26,12 +29,11 @@ public class CommonContractsGui extends PaginatedGui {
     private int index;
 
 
-    public CommonContractsGui(GuiUtil guiUtil,
-                              MobContracts plugin,
-                              PlayerDataDatabase playerDataDatabase,
-                              CreateCustomGuiItem createCustomGuiItem,
-                              ContractStorageDatabase contractStorageDatabase,
-                              MobDataDatabase mobDataDatabase) {
+    public ProfilesGui(GuiUtil guiUtil, MobContracts plugin,
+                       PlayerDataDatabase playerDataDatabase,
+                       CreateCustomGuiItem createCustomGuiItem,
+                       ContractStorageDatabase contractStorageDatabase,
+                       MobDataDatabase mobDataDatabase) {
         super(guiUtil);
         this.plugin = plugin;
         this.playerDataDatabase = playerDataDatabase;
@@ -42,7 +44,7 @@ public class CommonContractsGui extends PaginatedGui {
 
     @Override
     public String getMenuName() {
-        return "Leaderboard: Common contracts slain";
+        return "Profiles";
     }
 
     @Override
@@ -79,25 +81,36 @@ public class CommonContractsGui extends PaginatedGui {
 
         addBottomRow();
 
-        ArrayList<Map.Entry<UUID, PlayerObject>> sorted = new ArrayList<>(playerDataDatabase.getPlayerMap().entrySet());
-        sorted.sort(Collections.reverseOrder(Comparator.comparing(c -> c.getValue().getCommonSlain())));
+        ArrayList<Map.Entry<UUID, PlayerObject>> profiles = new ArrayList<>(playerDataDatabase.getPlayerMap().entrySet());
 
         for (int i = 0; i < super.maxItemsPerPage; i++) {
             index = super.maxItemsPerPage * page + i;
-            if (index >= sorted.size()) break;
-            if (sorted.get(index) != null) {
+            if (index >= profiles.size()) break;
+            if (profiles.get(index) != null) {
 
-                UUID uuid = sorted.get(index).getKey();
-                int slain = sorted.get(index).getValue().getCommonSlain();
-                int level = sorted.get(index).getValue().getCurrentLevel();
-                int experience = sorted.get(index).getValue().getCurrentXp();
+                UUID uuid = profiles.get(index).getKey();
+                int commonSlain = profiles.get(index).getValue().getCommonSlain();
+                int epicSlain = profiles.get(index).getValue().getEpicSlain();
+                int legendarySlain = profiles.get(index).getValue().getLegendarySlain();
+                int level = profiles.get(index).getValue().getCurrentLevel();
+                int xp = profiles.get(index).getValue().getCurrentXp();
+                int totalXp = profiles.get(index).getValue().getTotalXp();
+                int commonOwned = profiles.get(index).getValue().getCommonOwned();
+                int epicOwned = profiles.get(index).getValue().getEpicOwned();
+                int legendaryOwned = profiles.get(index).getValue().getLegendaryOwned();
 
                 inventory.addItem(createCustomGuiItem.getPlayerHead(uuid,
-                        plugin.getConfig().getString("gui.common-slain.name-color"),
-                        plugin.getConfig().getStringList("gui.common-slain.lore")
-                        .stream().map(s -> s.replace("%slain%", String.valueOf(slain))
-                        .replace("%level%", String.valueOf(level))
-                        .replace("%xp%", String.valueOf(experience)))
+                        plugin.getConfig().getString("gui.profiles.name-color"),
+                        plugin.getConfig().getStringList("gui.profiles.lore")
+                        .stream().map(s -> s.replace("%level%", String.valueOf(level))
+                        .replace("%xp%", String.valueOf(xp))
+                        .replace("%totalxp%", String.valueOf(totalXp))
+                        .replace("%common_slain%", String.valueOf(commonSlain))
+                        .replace("%epic_slain%", String.valueOf(epicSlain))
+                        .replace("%legendary_slain%", String.valueOf(legendarySlain))
+                        .replace("%common_owned%", String.valueOf(commonOwned))
+                        .replace("%epic_owned%", String.valueOf(epicOwned))
+                        .replace("%legendary_owned%", String.valueOf(legendaryOwned)))
                                 .collect(Collectors.toList())));
             }
         }

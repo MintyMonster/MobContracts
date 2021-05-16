@@ -9,9 +9,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -24,14 +26,33 @@ public class CreateCustomGuiItem {
         this.plugin = plugin;
     }
 
-    public ItemStack getCustomSkull(final String displayName, String texture, final String... lore) {
+    public ItemStack checkMaterial(final String material, final String displayName, @Nullable List<String> lore){
+
+        if(lore != null){
+            if(Material.matchMaterial(material) != null){
+                return getCustomItem(Material.valueOf(material), displayName, lore);
+            }else{
+                return getCustomSkull(displayName, material, lore);
+            }
+        }
+        ItemStack item = new ItemStack(Material.valueOf(material));
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public ItemStack getCustomSkull(final String displayName, String texture, List<String> lore) {
         texture = "http://textures.minecraft.net/texture/" + texture;
+        String[] newLore = lore.stream().toArray(String[]::new);
 
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
 
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
-        skullMeta.setLore(Arrays.stream(lore).map(line -> ChatColor.translateAlternateColorCodes('&', line)).collect(Collectors.toList()));
+        skullMeta.setLore(Arrays.stream(newLore).map(line ->
+                ChatColor.translateAlternateColorCodes('&', line
+                        .replace("[", "").replace("]", ""))).collect(Collectors.toList()));
         //skullMeta.setLore(Arrays.asList(lore));
 
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
@@ -58,31 +79,38 @@ public class CreateCustomGuiItem {
         return skull;
     }
 
-    public ItemStack getCustomItem(final Material material, final String displayName, final String... lore) {
+    public ItemStack getCustomItem(final Material material, final String displayName, List<String> lore) {
         final ItemStack item = new ItemStack(material, 1);
         final ItemMeta meta = item.getItemMeta();
+        String[] newLore = lore.stream().toArray(String[]::new);
 
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
-        meta.setLore(Arrays.stream(lore).map(line -> ChatColor.translateAlternateColorCodes('&', line)).collect(Collectors.toList()));
+        meta.setLore(Arrays.stream(newLore).map(line ->
+                ChatColor.translateAlternateColorCodes('&', line
+                .replace("[", "").replace("]", ""))).collect(Collectors.toList()));
         item.setItemMeta(meta);
 
         return item;
     }
 
     // create singular method
-    public ItemStack getPlayerHead(final UUID uuid, final String... lore) {
+    public ItemStack getPlayerHead(final UUID uuid, String color, List<String> lore) {
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
+
+        String[] newLore = lore.stream().toArray(String[]::new);
 
         meta.setOwningPlayer(plugin.getServer().getPlayer(uuid) != null
                 ? plugin.getServer().getPlayer(uuid)
                 : plugin.getServer().getOfflinePlayer(uuid));
 
-        meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + (plugin.getServer().getPlayer(uuid) != null
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', color + (plugin.getServer().getPlayer(uuid) != null
                 ? plugin.getServer().getPlayer(uuid).getName()
-                : plugin.getServer().getOfflinePlayer(uuid).getName()));
+                : plugin.getServer().getOfflinePlayer(uuid).getName())));
 
-        meta.setLore(Arrays.stream(lore).map(line -> ChatColor.translateAlternateColorCodes('&', line)).collect(Collectors.toList()));
+        meta.setLore(Arrays.stream(newLore).map(line ->
+                ChatColor.translateAlternateColorCodes('&', line
+                .replace("[", "").replace("]", ""))).collect(Collectors.toList()));
         skull.setItemMeta(meta);
 
         return skull;

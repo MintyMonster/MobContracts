@@ -68,9 +68,13 @@ public class PlayerDataDatabase {
                 int currentXp = rs.getInt("XP");
                 int currentLevel = rs.getInt("LEVEL");
                 int totalXp = rs.getInt("TOTALXP");
+                int commonOwned = contractStorageDatabase.getCommonContracts(uuid);
+                int epicOwned = contractStorageDatabase.getEpicContracts(uuid);
+                int legendaryOwned = contractStorageDatabase.getLegendaryContracts(uuid);
+                int totalOwned = contractStorageDatabase.getTotalContracts(uuid);
                 playerMap.put(uuid, new PlayerObject(
-                        uuid, name, commonSlain, epicSlain, legendarySlain, totalSlain, currentXp, currentLevel, totalXp
-                ));
+                        uuid, name, commonSlain, epicSlain, legendarySlain, totalSlain, currentXp, currentLevel, totalXp,
+                        commonOwned, epicOwned, legendaryOwned, totalOwned));
             }
             plugin.getLogger().info("Players loaded!");
         } catch (SQLException throwables) {
@@ -80,7 +84,6 @@ public class PlayerDataDatabase {
 
     public void updatePlayer(final UUID uuid) {
         String sql = "SELECT * FROM PLAYERDATA WHERE UUID = '" + uuid + "'";
-        playerMap.remove(uuid);
 
         try (Connection con = database.getConnected()) {
             PreparedStatement prep = con.prepareStatement(sql);
@@ -96,9 +99,12 @@ public class PlayerDataDatabase {
             int currentXp = rs.getInt("XP");
             int currentLevel = rs.getInt("LEVEL");
             int totalXp = rs.getInt("TOTALXP");
-            playerMap.put(uuid, new PlayerObject(
-                    uuid, name, commonSlain, epicSlain, legendarySlain, totalSlain, currentXp, currentLevel, totalXp
-            ));
+            int commonOwned = contractStorageDatabase.getCommonContracts(uuid);
+            int epicOwned = contractStorageDatabase.getEpicContracts(uuid);
+            int legendaryOwned = contractStorageDatabase.getLegendaryContracts(uuid);
+            int totalOwned = contractStorageDatabase.getTotalContracts(uuid);
+
+            playerMap.get(uuid).updatePlayer(commonSlain, epicSlain, legendarySlain, totalSlain, currentXp, currentLevel, totalXp, commonOwned, epicOwned, legendaryOwned, totalOwned);
 
             plugin.getLogger().info("Player - " + name + " updated!");
 

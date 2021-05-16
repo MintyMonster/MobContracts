@@ -1,5 +1,6 @@
 package uk.co.minty_studios.mobcontracts.commands.subcommands;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.commands.ChildCommand;
@@ -9,6 +10,9 @@ import uk.co.minty_studios.mobcontracts.contracts.LegendaryContract;
 import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
 import uk.co.minty_studios.mobcontracts.utils.CurrentContracts;
 import uk.co.minty_studios.mobcontracts.utils.GenericUseMethods;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class StartCommand extends ChildCommand {
 
@@ -89,5 +93,13 @@ public class StartCommand extends ChildCommand {
                         .replace("%type%", "Common"));
             }
         }
+    }
+
+    @Override
+    public List<String> onTab(CommandSender sender, String... args) {
+        if(args.length == 2){
+            return Arrays.asList("Common", "Epic", "Legendary");
+        }
+        return null;
     }
 }

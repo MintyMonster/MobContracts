@@ -15,6 +15,7 @@ import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 import uk.co.minty_studios.mobcontracts.utils.PlayerObject;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EpicContractsGui extends PaginatedGui {
 
@@ -93,12 +94,12 @@ public class EpicContractsGui extends PaginatedGui {
                 int experience = sorted.get(index).getValue().getCurrentXp();
 
                 inventory.addItem(createCustomGuiItem.getPlayerHead(uuid,
-                        "&8➟ &aEpic slain",
-                        "&7Total: &6" + slain + " &7slain",
-                        "",
-                        "&8➟ &aStats",
-                        "&7Level: &e" + level,
-                        "&7Experience: &e" + experience + "&7xp"));
+                        plugin.getConfig().getString("gui.epic-slain.name-color"),
+                        plugin.getConfig().getStringList("gui.epic-slain.lore")
+                        .stream().map(s -> s.replace("%slain%", String.valueOf(slain))
+                        .replace("%level%", String.valueOf(level))
+                        .replace("%xp%", String.valueOf(experience)))
+                                .collect(Collectors.toList())));
             }
         }
     }

@@ -15,6 +15,7 @@ import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 import uk.co.minty_studios.mobcontracts.utils.PlayerObject;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TotalExperienceGui extends PaginatedGui {
 
@@ -96,12 +97,12 @@ public class TotalExperienceGui extends PaginatedGui {
                 int level = sorted.get(index).getValue().getCurrentLevel();
 
                 inventory.addItem(createCustomGuiItem.getPlayerHead(uuid,
-                        "&8➟ &aExperience",
-                        "&7Total: &6" + total + "&7xp",
-                        "",
-                        "&8➟ &aStats",
-                        "&7Slain: &e" + slain + " &7contracts",
-                        "&7Level: &e" + level));
+                        plugin.getConfig().getString("gui.total-experience.name-color"),
+                        plugin.getConfig().getStringList("gui.total-experience.lore")
+                        .stream().map(s -> s.replace("%total%", String.valueOf(total))
+                        .replace("%slain%", String.valueOf(slain))
+                        .replace("%level%", String.valueOf(level)))
+                                .collect(Collectors.toList())));
             }
         }
     }

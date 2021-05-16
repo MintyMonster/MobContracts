@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import uk.co.minty_studios.mobcontracts.MobContracts;
+import uk.co.minty_studios.mobcontracts.effects.CommonEffects;
 import uk.co.minty_studios.mobcontracts.events.ContractSummonEvent;
 import uk.co.minty_studios.mobcontracts.mobs.MobFeatures;
 import uk.co.minty_studios.mobcontracts.utils.ContractType;
@@ -17,12 +18,14 @@ public class CommonContract {
     private final MobContracts plugin;
     private final MobFeatures mobFeatures;
     private final ContractType contractType;
+    private final CommonEffects commonEffects;
     private static final Random rnd = new Random();
 
-    public CommonContract(MobContracts plugin, MobFeatures mobFeatures, ContractType contractType) {
+    public CommonContract(MobContracts plugin, MobFeatures mobFeatures, ContractType contractType, CommonEffects commonEffects) {
         this.plugin = plugin;
         this.mobFeatures = mobFeatures;
         this.contractType = contractType;
+        this.commonEffects = commonEffects;
     }
 
     public void summonCommonContract(Player player) {
@@ -65,8 +68,12 @@ public class CommonContract {
         if (plugin.getConfig().getBoolean("settings.common.allow-targeting"))
             mobFeatures.getTarget((Creature) spawned);
 
-        contractType.addContract(spawned.getUniqueId(), "Common", "No effect", spawned.getType());
-        ContractSummonEvent event = new ContractSummonEvent(spawned, mobUuid, spawned.getCustomName(), damage, speed, health, armor, "Common", "No effect", spawned.getType().name(), player);
+        String effect = "No effect";
+        if (plugin.getConfig().getBoolean("settings.common.enable-aoe-effects"))
+            effect = commonEffects.randomCommonEffect(spawned);
+
+        contractType.addContract(spawned.getUniqueId(), "Common", effect, spawned.getType());
+        ContractSummonEvent event = new ContractSummonEvent(spawned, mobUuid, spawned.getCustomName(), damage, speed, health, armor, "Common", effect, spawned.getType().name(), player);
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 }

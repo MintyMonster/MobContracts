@@ -1,10 +1,16 @@
 package uk.co.minty_studios.mobcontracts.commands.subcommands;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.commands.ChildCommand;
 import uk.co.minty_studios.mobcontracts.utils.CurrentContracts;
 import uk.co.minty_studios.mobcontracts.utils.GenericUseMethods;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RemoveCommand extends ChildCommand {
 
@@ -54,5 +60,17 @@ public class RemoveCommand extends ChildCommand {
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.no-contract-remove"));
             }
         }
+    }
+
+    @Override
+    public List<String> onTab(CommandSender sender, String... args) {
+        if(args.length == 2){
+            List<String> players = new ArrayList<>();
+            players.add("all");
+            players.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()));
+            return players;
+        }
+
+        return null;
     }
 }

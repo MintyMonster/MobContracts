@@ -29,7 +29,7 @@ public class ContractObject {
         this.summonerName = summonerName;
     }
 
-    public UUID getSummoner() {
+    public UUID getSummonerUuid() {
         return playerUuid;
     }
 

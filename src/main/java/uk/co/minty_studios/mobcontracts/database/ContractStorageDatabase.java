@@ -124,6 +124,26 @@ public class ContractStorageDatabase {
         return 0;
     }
 
+    public int getTotalContracts(UUID uuid){
+        String sql = "SELECT * FROM CONTRACTSTORAGE WHERE UUID = '" + uuid + "'";
+
+        try(Connection con = database.getConnected()){
+            PreparedStatement prep = con.prepareStatement(sql);
+            ResultSet rs = prep.executeQuery();
+            rs.next();
+            int common = rs.getInt(3);
+            int epic = rs.getInt(4);
+            int legendary = rs.getInt(5);
+
+            return (common + epic + legendary);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return 0;
+    }
+
     public void useCommonContract(UUID uuid) {
         String sql = "UPDATE CONTRACTSTORAGE SET COMMON = COMMON - 1 WHERE UUID = '" + uuid + "'";
 

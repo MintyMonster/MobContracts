@@ -1,6 +1,9 @@
 package uk.co.minty_studios.mobcontracts.commands;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public abstract class ChildCommand {
 
@@ -21,4 +24,6 @@ public abstract class ChildCommand {
     public abstract String getSyntax();
 
     public abstract void perform(Player player, String[] args);
+
+    public abstract List<String> onTab(CommandSender sender, String... args);
 }

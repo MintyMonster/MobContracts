@@ -21,6 +21,8 @@ public class LegendaryEffects {
     private final CurrentContracts currentContracts;
     private final int distance;
     private final long repeat;
+    private final int duration;
+    private final int amplifier;
     private static final Random rnd = new Random();
 
     public LegendaryEffects(MobContracts plugin, GenericUseMethods genericUseMethods, CurrentContracts currentContracts) {
@@ -29,6 +31,8 @@ public class LegendaryEffects {
         this.currentContracts = currentContracts;
         this.distance = config.getInt("settings.legendary.distance-from-entity");
         this.repeat = config.getLong("settings.legendary.repeat-check");
+        this.duration = config.getInt("settings.legendary.effect-duration");
+        this.amplifier = config.getInt("settings.legendary.effect-amplifier");
         this.genericUseMethods = genericUseMethods;
     }
 
@@ -41,8 +45,8 @@ public class LegendaryEffects {
                     return;
                 }
                 for (Player p : Bukkit.getOnlinePlayers())
-                    if (p.getLocation().distance(entity.getLocation()) <= repeat)
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 100, 2));
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
@@ -61,7 +65,7 @@ public class LegendaryEffects {
                 }
                 for (Player p : Bukkit.getOnlinePlayers())
                     if (p.getLocation().distance(entity.getLocation()) <= distance)
-                        p.setFireTicks(200);
+                        p.setFireTicks(duration);
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
@@ -80,7 +84,7 @@ public class LegendaryEffects {
                 }
                 for (Player p : Bukkit.getOnlinePlayers())
                     if (p.getLocation().distance(entity.getLocation()) <= distance)
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 100, 2));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
@@ -99,7 +103,7 @@ public class LegendaryEffects {
                 }
                 for (Player p : Bukkit.getOnlinePlayers())
                     if (p.getLocation().distance(entity.getLocation()) <= distance)
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 100, 2));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
@@ -118,7 +122,7 @@ public class LegendaryEffects {
                 }
                 for (Player p : Bukkit.getOnlinePlayers())
                     if (p.getLocation().distance(entity.getLocation()) <= distance)
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 2));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
@@ -137,7 +141,7 @@ public class LegendaryEffects {
                 }
                 for (Player p : Bukkit.getOnlinePlayers())
                     if (p.getLocation().distance(entity.getLocation()) <= distance)
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 100, 2));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
@@ -175,7 +179,7 @@ public class LegendaryEffects {
                 }
                 for (Player p : Bukkit.getOnlinePlayers())
                     if (p.getLocation().distance(entity.getLocation()) <= distance)
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 2));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
@@ -194,7 +198,7 @@ public class LegendaryEffects {
                 }
                 for (Player p : Bukkit.getOnlinePlayers())
                     if (p.getLocation().distance(entity.getLocation()) <= distance)
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 100, 2));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }

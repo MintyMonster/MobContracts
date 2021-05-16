@@ -11,12 +11,15 @@ import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
 import uk.co.minty_studios.mobcontracts.database.Database;
 import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
 import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.effects.CommonEffects;
 import uk.co.minty_studios.mobcontracts.effects.EpicEffects;
 import uk.co.minty_studios.mobcontracts.effects.LegendaryEffects;
 import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
 import uk.co.minty_studios.mobcontracts.level.LevellingSystem;
 import uk.co.minty_studios.mobcontracts.listeners.*;
 import uk.co.minty_studios.mobcontracts.mobs.MobFeatures;
+import uk.co.minty_studios.mobcontracts.papi.MobContractsPlaceholderExpansion;
+import uk.co.minty_studios.mobcontracts.papi.placeholders.*;
 import uk.co.minty_studios.mobcontracts.utils.*;
 
 import java.util.HashMap;
@@ -41,6 +44,8 @@ public class MobContracts extends JavaPlugin {
     private LevellingSystem levellingSystem;
     private ContractStats contractStats;
     private CreateCustomGuiItem createCustomGuiItem;
+    private MobContractsPlaceholderExpansion expansion;
+    private CommonEffects commonEffects;
 
     private static final Map<Player, GuiUtil> playerMap = new HashMap<>();
 
@@ -48,21 +53,22 @@ public class MobContracts extends JavaPlugin {
     public void onEnable() {
         this.saveDefaultConfig();
 
-        getLogger().info("Loading all of the things!");
+        getLogger().info("Loading classes...");
         database = new Database(this);
         contractType = new ContractType();
         currentContracts = new CurrentContracts();
-        playerDataDatabase = new PlayerDataDatabase(this, database, contractStorageDatabase);
         contractStorageDatabase = new ContractStorageDatabase(this, database);
+        playerDataDatabase = new PlayerDataDatabase(this, database, contractStorageDatabase);
         genericUseMethods = new GenericUseMethods(this);
         levellingSystem = new LevellingSystem(this, playerDataDatabase, genericUseMethods);
+        commonEffects = new CommonEffects(this);
         legendaryEffects = new LegendaryEffects(this, genericUseMethods, currentContracts);
         epicEffects = new EpicEffects(this, currentContracts);
         createCustomGuiItem = new CreateCustomGuiItem(this);
         mobDataDatabase = new MobDataDatabase(this, database);
         mobFeatures = new MobFeatures(this, genericUseMethods);
         legendaryContract = new LegendaryContract(this, mobFeatures, mobDataDatabase, legendaryEffects, contractType);
-        commonContract = new CommonContract(this, mobFeatures, contractType);
+        commonContract = new CommonContract(this, mobFeatures, contractType, commonEffects);
         epicContract = new EpicContract(this, mobFeatures, epicEffects, contractType);
         commandManager = new CommandManager(this,
                 genericUseMethods,
@@ -72,7 +78,7 @@ public class MobContracts extends JavaPlugin {
                 contractStorageDatabase,
                 currentContracts, database, contractType, createCustomGuiItem, playerDataDatabase, mobDataDatabase);
 
-        getLogger().info("All of the things are loaded!");
+        getLogger().info("Classes loaded!");
 
         getLogger().info("Connecting to database.");
 
@@ -109,6 +115,39 @@ public class MobContracts extends JavaPlugin {
         pluginManager.registerEvents(new EntityTransformListener(), this);
         pluginManager.registerEvents(new GuiClickListener(), this);
         getLogger().info("Events registered");
+
+        if(pluginManager.getPlugin("PlaceholderAPI") != null){
+            getLogger().info("Registering placeholders...");
+            expansion = new MobContractsPlaceholderExpansion(this);
+
+            // %mobcontracts_player_level%
+            expansion.registerPlaceholders(new PlayerLevelPlaceholder(playerDataDatabase));
+            // %mobcontracts_player_experience%
+            expansion.registerPlaceholders(new PlayerCurrentXpPlaceholder(playerDataDatabase));
+            // %mobcontracts_player_total_experience%
+            expansion.registerPlaceholders(new PlayerTotalXpPlaceholder(playerDataDatabase));
+            // %mobcontracts_common_owned%
+            expansion.registerPlaceholders(new CommonOwnedPlaceholder(playerDataDatabase));
+            // %mobcontracts_epic_owned%
+            expansion.registerPlaceholders(new EpicOwnedPlaceholder(playerDataDatabase));
+            // %mobcontracts_legendary_owned%
+            expansion.registerPlaceholders(new LegendaryOwnedPlaceholder(playerDataDatabase));
+            // %mobcontracts_total_owned%
+            expansion.registerPlaceholders(new TotalOwnedPlaceholder(playerDataDatabase));
+            // %mobcontracts_common_slain%
+            expansion.registerPlaceholders(new CommonSlainPlaceholder(playerDataDatabase));
+            // %mobcontracts_epic_slain%
+            expansion.registerPlaceholders(new EpicSlainPlaceholder(playerDataDatabase));
+            // %mobcontracts_legendary_slain%
+            expansion.registerPlaceholders(new LegendarySlainPlaceholder(playerDataDatabase));
+            // %mobcontracts_total_slain%
+            expansion.registerPlaceholders(new TotalSlainPlaceholder(playerDataDatabase));
+
+            getLogger().info("Placeholders registered!");
+            getLogger().info("Placeholders ready to use!");
+        }else{
+            getLogger().warning("To use my placeholders, please install PlaceholderAPI and restart the server! :)");
+        }
 
         getLogger().info("Everything is now enabled. Hopefully we don't explode! ~Minty");
     }

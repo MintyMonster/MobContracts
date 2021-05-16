@@ -15,6 +15,7 @@ import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 import uk.co.minty_studios.mobcontracts.utils.PlayerObject;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ContractsKilledGui extends PaginatedGui {
 
@@ -111,13 +112,11 @@ public class ContractsKilledGui extends PaginatedGui {
                 int xp = sorted.get(index).getValue().getCurrentXp();
 
                 inventory.addItem(createCustomGuiItem.getPlayerHead(uuid,
-                        "&8➟ &aSlain",
-                        "&7Total: &6" + totalSlain + "&7 slain",
-                        "",
-                        "&8➟ &aStats",
-                        "&7Level: &e" + level,
-                        "&7Experience: &e" + xp + "&7xp"));
-
+                        plugin.getConfig().getString("gui.contracts-killed.name-color"),
+                        plugin.getConfig().getStringList("gui.contracts-killed.lore")
+                        .stream().map(s -> s.replace("%total_slain%", String.valueOf(totalSlain))
+                        .replace("%level%", String.valueOf(level))
+                        .replace("%xp%", String.valueOf(xp))).collect(Collectors.toList())));
 
                 // Get UUID from player's head for future profile
                 /*ItemMeta meta = head.getItemMeta();

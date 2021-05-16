@@ -1,6 +1,7 @@
 package uk.co.minty_studios.mobcontracts.gui.stats;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import uk.co.minty_studios.mobcontracts.MobContracts;
@@ -12,6 +13,10 @@ import uk.co.minty_studios.mobcontracts.gui.handler.Gui;
 import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ServerStatsGui extends Gui {
 
     private final MobContracts plugin;
@@ -19,6 +24,7 @@ public class ServerStatsGui extends Gui {
     private final MobDataDatabase mobDataDatabase;
     private final ContractStorageDatabase contractStorageDatabase;
     private final CreateCustomGuiItem createCustomGuiItem;
+    private final FileConfiguration config;
 
     public ServerStatsGui(GuiUtil menuUtil,
                           MobContracts plugin,
@@ -32,6 +38,7 @@ public class ServerStatsGui extends Gui {
         this.mobDataDatabase = mobDataDatabase;
         this.contractStorageDatabase = contractStorageDatabase;
         this.createCustomGuiItem = createCustomGuiItem;
+        this.config = plugin.getConfig();
     }
 
     @Override
@@ -47,7 +54,7 @@ public class ServerStatsGui extends Gui {
     @Override
     public void handleMenu(InventoryClickEvent e) {
 
-        if (e.getCurrentItem().getType().equals(Material.ARROW))
+        if (e.getSlot() == 39)
             new MainMenu(plugin.getMenuUtil((Player) e.getWhoClicked()), createCustomGuiItem, plugin, playerDataDatabase, mobDataDatabase, contractStorageDatabase).open();
 
     }
@@ -56,85 +63,96 @@ public class ServerStatsGui extends Gui {
     public void setItems() {
         for (int i = 0; i < getSlots(); i++) {
             if (i == 4) {
-                inventory.setItem(i, createCustomGuiItem.getCustomSkull("&e&lSERVER STATS", "c9c8881e42915a9d29bb61a16fb26d059913204d265df5b439b3d792acd56",
-                        "&8➟ &6" + playerDataDatabase.getTotalCountPlayers() + " &7Players",
-                        "&8➟ &a" + mobDataDatabase.getTotalCountContracts() + " &7Contracts"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.stats.material"),
+                        config.getString("gui.server-stats.stats.name"), config.getStringList("gui.server-stats.stats.lore")
+                                .stream().map(s -> s.replace("%total_players%", String.valueOf(playerDataDatabase.getTotalCountPlayers()))
+                                .replace("%total_contracts%", String.valueOf(mobDataDatabase.getTotalCountContracts()))).collect(Collectors.toList())));
                 continue;
             }
 
             if (i == 12) {
-                inventory.setItem(i, createCustomGuiItem.getCustomSkull("&7&lCOMMON KILLED", "149e48c0df7995e91db5bd3c930e5bcc0abcfaf31273732aeabf33c5d86491",
-                        "&8➟ &a" + playerDataDatabase.getTotalStat("COMMON") + " &7Killed"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.common-killed.material"),
+                        config.getString("gui.server-stats.common-killed.name"), config.getStringList("gui.server-stats.common-killed.lore")
+                                .stream().map(s -> s.replace("%common_killed%", String.valueOf(playerDataDatabase.getTotalStat("COMMON")))).collect(Collectors.toList())));
                 continue;
             }
 
             if (i == 13) {
-                inventory.setItem(i, createCustomGuiItem.getCustomSkull("&5&lEPIC KILLED", "95372c5f441c36d96a33a0c3cba514568049d811742b7a90c01ea1c1bc39",
-                        "&8➟ &a" + playerDataDatabase.getTotalStat("EPIC") + " &7Killed"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.epic-killed.material"),
+                        config.getString("gui.server-stats.epic-killed.name"), config.getStringList("gui.server-stats.epic-killed.lore")
+                                .stream().map(s -> s.replace("%epic_killed%", String.valueOf(playerDataDatabase.getTotalStat("EPIC")))).collect(Collectors.toList())));
                 continue;
             }
 
             if (i == 14) {
-                inventory.setItem(i, createCustomGuiItem.getCustomSkull("&6&lLEGENDARY KILLED", "597463d7181e83a143a6ced1a1f77f66d1f28e6f272fe8cd95e7fb89ea0dc69",
-                        "&8➟ &a" + playerDataDatabase.getTotalStat("LEGENDARY") + " &7Killed"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.legendary-killed.material"),
+                        config.getString("gui.server-stats.legendary-killed.name"), config.getStringList("gui.server-stats.legendary-killed.lore")
+                                .stream().map(s -> s.replace("%legendary_killed%", String.valueOf(playerDataDatabase.getTotalStat("LEGENDARY")))).collect(Collectors.toList())));
                 continue;
             }
 
             if (i == 21) {
-                inventory.setItem(i, createCustomGuiItem.getCustomItem(Material.PAPER, "&7&lCOMMON STORED",
-                        "&8➟ &a" + contractStorageDatabase.getTotalStat("COMMON") + " &7Contracts stored"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.common-stored.material"),
+                        config.getString("gui.server-stats.common-stored.name"), config.getStringList("gui.server-stats.common-stored.lore")
+                                .stream().map(s -> s.replace("%common_stored%", String.valueOf(contractStorageDatabase.getTotalStat("COMMON")))).collect(Collectors.toList())));
                 continue;
             }
 
             if (i == 22) {
-                inventory.setItem(i, createCustomGuiItem.getCustomItem(Material.MAP, "&5&lEPIC STORED",
-                        "&8➟ &a" + contractStorageDatabase.getTotalStat("EPIC") + " &7Contracts stored"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.epic-stored.material"),
+                        config.getString("gui.server-stats.epic-stored.name"), config.getStringList("gui.server-stats.epic-stored.lore")
+                                .stream().map(s -> s.replace("%epic_stored%", String.valueOf(contractStorageDatabase.getTotalStat("EPIC")))).collect(Collectors.toList())));
                 continue;
             }
 
             if (i == 23) {
-                inventory.setItem(i, createCustomGuiItem.getCustomItem(Material.BLAZE_POWDER, "&6&lLEGENDARY STORED",
-                        "&8➟ &a" + contractStorageDatabase.getTotalStat("LEGENDARY") + " &7Contracts stored"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.legendary-stored.material"),
+                        config.getString("gui.server-stats.legendary-stored.name"), config.getStringList("gui.server-stats.legendary-stored.lore")
+                                .stream().map(s -> s.replace("%legendary_stored%", String.valueOf(contractStorageDatabase.getTotalStat("LEGENDARY")))).collect(Collectors.toList())));
                 continue;
             }
 
             if (i == 30) {
-                inventory.setItem(i, createCustomGuiItem.getCustomSkull("&6&lPLAYER LEVELS", "6ccbf9883dd359fdf2385c90a459d737765382ec4117b04895ac4dc4b60fc",
-                        "&8➟ &a" + playerDataDatabase.getTotalStat("LEVEL") + " &7Total levels"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.player-levels.material"),
+                        config.getString("gui.server-stats.player-levels.name"), config.getStringList("gui.server-stats.player-levels.lore")
+                                .stream().map(s -> s.replace("%level%", String.valueOf(playerDataDatabase.getTotalStat("LEVEL")))).collect(Collectors.toList())));
                 continue;
             }
 
             if (i == 31) {
-                inventory.setItem(i, createCustomGuiItem.getCustomSkull("&f&lTOTAL EXPERIENCE", "f2fc23866523caaa8a9534566127a6f8389af3e76b8e3c33c2473cba6889c4",
-                        "&8➟ &a" + playerDataDatabase.getTotalStat("TOTALXP") + " &7Total experience"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.total-experience.material"),
+                        config.getString("gui.server-stats.total-experience.name"), config.getStringList("gui.server-stats.total-experience.lore")
+                                .stream().map(s -> s.replace("%total_experience%", String.valueOf(playerDataDatabase.getTotalStat("TOTALXP")))).collect(Collectors.toList())));
                 continue;
             }
 
             if (i == 32) {
-                inventory.setItem(i, createCustomGuiItem.getCustomSkull("&9&lTOTAL DAMAGE", "d6cc6b83763a67fcada1ea184c2d1752ad240746c6be258a73983d8b657f4bb5",
-                        "&8➟ &a" + mobDataDatabase.getTotalStat("DAMAGE") + " &7Total damage",
-                        "&8➟ &7from all contracts"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.total-damage.material"),
+                        config.getString("gui.server-stats.total-damage.name"), config.getStringList("gui.server-stats.total-damage.lore")
+                                .stream().map(s -> s.replace("%damage%", String.valueOf(mobDataDatabase.getTotalStat("DAMAGE")))).collect(Collectors.toList())));
+
                 continue;
             }
 
             if (i == 39) {
-                inventory.setItem(i, createCustomGuiItem.getCustomItem(Material.ARROW, "&7Back", "&8➟ [Click for Main Menu]"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.back-button.material"),
+                        config.getString("gui.server-stats.back-button.name"), config.getStringList("gui.server-stats.back-button.lore")));
                 continue;
             }
 
             if (i == 41) {
-                inventory.setItem(i, createCustomGuiItem.getCustomSkull("&c&lTOTAL HEALTH", "b837f3db13a40d4979de77179e18af6e0bc3cc39ea6aba518bb080a6f01a40",
-                        "&8➟ &a" + mobDataDatabase.getTotalStat("HEALTH") + " &7Total health",
-                        "&8➟ &7from all contracts"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.total-health.material"),
+                        config.getString("gui.server-stats.total-health.name"), config.getStringList("gui.server-stats.total-health.lore")
+                                .stream().map(s -> s.replace("%health%", String.valueOf(mobDataDatabase.getTotalStat("HEALTH")))).collect(Collectors.toList())));
                 continue;
             }
 
             if ((i == 0) || (i == 8) || (i == 36) || (i == 44)) {
-                inventory.setItem(i, createCustomGuiItem.getCustomItem(Material.YELLOW_STAINED_GLASS_PANE, "&7"));
+                inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.accent-item"), "&7", null));
                 continue;
             }
 
-            inventory.setItem(i, createCustomGuiItem.getCustomItem(Material.BLACK_STAINED_GLASS_PANE, "&8"));
+            inventory.setItem(i, createCustomGuiItem.checkMaterial(config.getString("gui.server-stats.filler-item"), "&7", null));
         }
     }
 }

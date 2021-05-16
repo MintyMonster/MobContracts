@@ -16,6 +16,7 @@ import uk.co.minty_studios.mobcontracts.utils.ContractObject;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AllContractsGui extends PaginatedGui {
 
@@ -105,14 +106,15 @@ public class AllContractsGui extends PaginatedGui {
                                 .replace("§", "&")
                                 .replace("[", "")
                                 .replace("]", ""),
-                        base,
-                        "&8➟ &aStats",
-                        "&7Summoner: &c" + summonerName,
-                        "&7Health: &e" + health + "&7hp",
-                        "&7Damage: &e" + damage + " Per hit",
-                        "&7Type: " + color + tier,
-                        "&7Entity: &e" + formattedType,
-                        "&7Date: " + date));
+                        base, plugin.getConfig().getStringList("gui.all-contracts.lore")
+                        .stream().map(s -> s.replace("%name%", summonerName)
+                                .replace("%health%", String.valueOf(health))
+                                .replace("%damage%", String.valueOf(damage))
+                                .replace("%color%", color)
+                                .replace("%tier%", tier)
+                                .replace("%entity_type%", formattedType)
+                                .replace("%date%", String.valueOf(date)))
+                                .collect(Collectors.toList())));
             }
         }
     }
