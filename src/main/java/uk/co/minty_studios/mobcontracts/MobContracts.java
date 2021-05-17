@@ -3,6 +3,7 @@ package uk.co.minty_studios.mobcontracts;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import uk.co.minty_studios.mobcontracts.commands.CommandManager;
 import uk.co.minty_studios.mobcontracts.contracts.CommonContract;
 import uk.co.minty_studios.mobcontracts.contracts.EpicContract;
@@ -97,16 +98,20 @@ public class MobContracts extends JavaPlugin {
         getLogger().info("Contract storage database exists/created!");
         getLogger().info("Databases are A-okay!");
 
-        getLogger().info("Loading leaderboard dependants");
-        mobDataDatabase.loadHashMap();
-        playerDataDatabase.loadPlayers();
-        getLogger().info("Leaderboard dependants loaded");
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                getLogger().info("Loading leaderboard dependants");
+                mobDataDatabase.loadHashMap();
+                playerDataDatabase.loadPlayers();
+                getLogger().info("Leaderboard dependants loaded");
+            }
+        }.runTaskLater(this, 100);
+
         getLogger().info("Registering events...");
-
-
         PluginManager pluginManager = getServer().getPluginManager();
 
-        pluginManager.registerEvents(new PlayerJoinListener(playerDataDatabase, contractStorageDatabase), this);
+        pluginManager.registerEvents(new PlayerJoinListener(playerDataDatabase, contractStorageDatabase, this), this);
         pluginManager.registerEvents(new PlayerLeaveListener(currentContracts, this), this);
         pluginManager.registerEvents(new ContractSummonListener(currentContracts, mobDataDatabase), this);
         pluginManager.registerEvents(new EntityDeathListener(this, contractType, currentContracts), this);

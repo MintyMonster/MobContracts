@@ -89,29 +89,10 @@ public class ProfilesGui extends PaginatedGui {
             if (profiles.get(index) != null) {
 
                 UUID uuid = profiles.get(index).getKey();
-                int commonSlain = profiles.get(index).getValue().getCommonSlain();
-                int epicSlain = profiles.get(index).getValue().getEpicSlain();
-                int legendarySlain = profiles.get(index).getValue().getLegendarySlain();
-                int level = profiles.get(index).getValue().getCurrentLevel();
-                int xp = profiles.get(index).getValue().getCurrentXp();
-                int totalXp = profiles.get(index).getValue().getTotalXp();
-                int commonOwned = profiles.get(index).getValue().getCommonOwned();
-                int epicOwned = profiles.get(index).getValue().getEpicOwned();
-                int legendaryOwned = profiles.get(index).getValue().getLegendaryOwned();
 
                 inventory.addItem(createCustomGuiItem.getPlayerHead(uuid,
                         plugin.getConfig().getString("gui.profiles.name-color"),
-                        plugin.getConfig().getStringList("gui.profiles.lore")
-                        .stream().map(s -> s.replace("%level%", String.valueOf(level))
-                        .replace("%xp%", String.valueOf(xp))
-                        .replace("%totalxp%", String.valueOf(totalXp))
-                        .replace("%common_slain%", String.valueOf(commonSlain))
-                        .replace("%epic_slain%", String.valueOf(epicSlain))
-                        .replace("%legendary_slain%", String.valueOf(legendarySlain))
-                        .replace("%common_owned%", String.valueOf(commonOwned))
-                        .replace("%epic_owned%", String.valueOf(epicOwned))
-                        .replace("%legendary_owned%", String.valueOf(legendaryOwned)))
-                                .collect(Collectors.toList())));
+                        createCustomGuiItem.parsePlayerLore(profiles, index, plugin.getConfig().getStringList("gui.profiles.lore"))));
             }
         }
     }

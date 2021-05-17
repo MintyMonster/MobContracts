@@ -104,7 +104,13 @@ public class PlayerDataDatabase {
             int legendaryOwned = contractStorageDatabase.getLegendaryContracts(uuid);
             int totalOwned = contractStorageDatabase.getTotalContracts(uuid);
 
-            playerMap.get(uuid).updatePlayer(commonSlain, epicSlain, legendarySlain, totalSlain, currentXp, currentLevel, totalXp, commonOwned, epicOwned, legendaryOwned, totalOwned);
+            if(playerMap.containsKey(uuid))
+                playerMap.get(uuid).updatePlayer(commonSlain, epicSlain, legendarySlain, totalSlain, currentXp,
+                        currentLevel, totalXp, commonOwned, epicOwned, legendaryOwned, totalOwned);
+            else
+                playerMap.put(uuid, new PlayerObject(uuid, name, commonSlain, epicSlain, legendarySlain, totalSlain, currentXp,
+                        currentLevel, totalXp, commonOwned, epicOwned, legendaryOwned, totalOwned));
+
 
             plugin.getLogger().info("Player - " + name + " updated!");
 
@@ -376,11 +382,7 @@ public class PlayerDataDatabase {
     }
 
     public Boolean setPlayerLevel(UUID uuid, int amount) {
-        int currentLevel = getPlayerLevel(uuid);
         String sql = "UPDATE PLAYERDATA SET LEVEL = " + amount + " WHERE UUID = '" + uuid + "'";
-
-        if (currentLevel > plugin.getConfig().getInt("settings.levels.max-level"))
-            return false;
 
         new BukkitRunnable() {
             @Override

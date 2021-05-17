@@ -76,7 +76,8 @@ public class CommandManager implements TabExecutor {
                 new LeaderboardsCommand("leaderboard", plugin, createCustomGuiItem, playerDataDatabase, this.mobDataDatabase, contractStorageDatabase),
                 new LevelCommand("level", plugin, playerDataDatabase, genericUseMethods),
                 new ActiveCommand("active", plugin, playerDataDatabase, currentContracts, genericUseMethods),
-                new ListCommand("list", contractStorageDatabase)
+                new ListCommand("list", contractStorageDatabase),
+                new ExperienceCommand("xp", playerDataDatabase, genericUseMethods, plugin)
         );
     }
 

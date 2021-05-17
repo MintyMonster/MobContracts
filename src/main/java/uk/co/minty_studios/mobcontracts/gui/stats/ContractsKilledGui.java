@@ -107,16 +107,10 @@ public class ContractsKilledGui extends PaginatedGui {
             if (sorted.get(index) != null) {
 
                 UUID uuid = sorted.get(index).getKey();
-                int totalSlain = sorted.get(index).getValue().getTotalSlain();
-                int level = sorted.get(index).getValue().getCurrentLevel();
-                int xp = sorted.get(index).getValue().getCurrentXp();
 
                 inventory.addItem(createCustomGuiItem.getPlayerHead(uuid,
                         plugin.getConfig().getString("gui.contracts-killed.name-color"),
-                        plugin.getConfig().getStringList("gui.contracts-killed.lore")
-                        .stream().map(s -> s.replace("%total_slain%", String.valueOf(totalSlain))
-                        .replace("%level%", String.valueOf(level))
-                        .replace("%xp%", String.valueOf(xp))).collect(Collectors.toList())));
+                        createCustomGuiItem.parsePlayerLore(sorted, index, plugin.getConfig().getStringList("gui.contracts-killed.lore"))));
 
                 // Get UUID from player's head for future profile
                 /*ItemMeta meta = head.getItemMeta();

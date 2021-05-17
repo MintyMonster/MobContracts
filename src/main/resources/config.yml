@@ -56,11 +56,11 @@ contract-type:
 settings:
 
   database:
-    host: 'host'
+    host: 'na01-sql.pebblehost.com'
     port: 3306
-    database-name: 'db_name'
-    username: 'username'
-    password: 'password'
+    database-name: 'customer_119398_general'
+    username: 'customer_119398_general'
+    password: 'jXxJw-1NB-@0FIbUM#TF'
 
   general:
     # When the player leaves, should we kill the contract?
@@ -298,8 +298,12 @@ settings:
 # Material needs to be the official material name, such as "BLACK_STAINED_GLASS_PANE"
 # Head-Id needs to be 'Minecraft-URL' to grab from http://textures.minecraft.net/texture/, such as "abe2dd537cb7434c390d0482fa47247ca3eb56f19a93c04c6c8581352b8d9538'
 
+
+# Add full list of placeholders
 gui:
   main-menu:
+    # No placeholders for Main-Menu.
+    # Want placeholders in here? Provide a suggestion on the spigot page!
     accent-item: 'YELLOW_STAINED_GLASS_PANE'
     filler-item: 'BLACK_STAINED_GLASS_PANE'
     server-stats:
@@ -312,7 +316,7 @@ gui:
       name: '&6&lALL CONTRACTS &8[Click]'
       lore:
         - '&8➟ &7Every contract!'
-        - '&8➟ &a%total_contracts% &7total contracts!'
+        - '&8➟ &7View all slain contracts!'
     contracts-killed:
       material: 'c493130537fc4d358cdb387c9db08088846b8be54f1c11c256a37eb4c638c0'
       name: '&e&lCONTRACTS KILLED'
@@ -360,6 +364,20 @@ gui:
       lore:
         - '&8➟ &7All player profiles!'
 
+  # Server-stats placeholders: (Can be used on any of the items in the below GUIS)
+
+  # %total_players% -> Total count of all players online + offline
+  # %total_contracts% -> Total count of all contracts slain
+  # %common_killed% -> Total count of all Common contracts slain
+  # %epic_killed% -> Total count of all Epic contracts slain
+  # %legendary_killed% -> Total count of all Legendary contracts slain
+  # %common_stored% -> Total count of all Common contracts owned by players
+  # %epic_stored% -> Total count of all Epic contracts owned by players
+  # %legendary_stored% -> Total count of all Legendary contracts owned by players
+  # %total_levels% -> Total count of all levels from players
+  # %global_total_experience% -> Total count of all experience from players
+  # %total_damage% -> Total count of all damage across all contracts slain
+  # %total_health% -> Total count of all health across all contracts slain
   server-stats:
     accent-item: 'YELLOW_STAINED_GLASS_PANE'
     filler-item: 'BLACK_STAINED_GLASS_PANE'
@@ -409,36 +427,57 @@ gui:
       name-color: '&6&l'
       name: '&6&lPLAYER LEVELS'
       lore:
-        - '&8➟ &a%level% &7Total levels'
+        - '&8➟ &a%total_levels% &7Total levels'
     total-experience:
       material: 'f2fc23866523caaa8a9534566127a6f8389af3e76b8e3c33c2473cba6889c4'
       name-color: '&6&l'
       name: '&f&lTOTAL EXPERIENCE'
       lore:
-        - '&8➟ &a%total_experience% &7total experience'
+        - '&8➟ &a%global_total_experience% &7total experience'
     total-damage:
       material: 'd6cc6b83763a67fcada1ea184c2d1752ad240746c6be258a73983d8b657f4bb5'
       name-color: '&6&l'
       name: '&9&lTOTAL DAMAGE'
       lore:
-        - '&8➟ &a%damage% &7total damage'
+        - '&8➟ &a%total_damage% &7total damage'
         - '&8➟ &7from all contracts'
     total-health:
       material: 'b837f3db13a40d4979de77179e18af6e0bc3cc39ea6aba518bb080a6f01a40'
       name-color: '&6&l'
       name: '&c&lTOTAL HEALTH'
       lore:
-        - '&8➟ &a%health% &7total health'
+        - '&8➟ &a%total_health% &7total health'
         - '&8➟ &7from all contracts'
+
+  # 'All-contracts' placeholders:
+  # %name% -> name of summoning player
+  # %health% -> Health of entity
+  # %damage% -> Damage of entity
+  # %color% -> Color of tier (Legendary: &6, Epic: &5, Common: &7) This can be removed if you want custom colors
+  # %tier% -> Tier of contract (Legendary/Epic/Common)
+  # %entity_type% -> Type of entity ("Wither Skeleton") <- Formatted like this
+  # %date% -> Date of contract summon
   all-contracts:
     lore:
       - '&8➟ &aStats'
-      - '&7Summoner: &c%name'
+      - '&7Summoner: &c%name%'
       - '&7Health: &e%health%&7hp'
-      - '&7Damage: &e%damage%&7Per hit'
+      - '&7Damage: &e%damage% &7Per hit'
       - '&7Type: %color%%tier%'
       - '&7Entity: &e%entity_type%'
       - '&7Date: %date%'
+
+  # Player based placeholders:
+  # %level% -> Player's level
+  # %total_slain% -> player's total slain contracts
+  # %xp% -> Player's current experience
+  # %total_experience% -> Player's total experience
+  # %common_slain% -> Player's total common slain
+  # %epic_slain% -> Player's total epic slain
+  # %legendary_slain% -> Player's total legendary slain
+  # %common_owned% -> Player's total common contracts owned
+  # %epic_owned% -> Player's total epic contracts owned
+  # %legendary_owned% -> Player's total legendary contracts owned
   contracts-killed:
     name-color: '&6&l'
     lore:
@@ -461,10 +500,10 @@ gui:
     name-color: '&6&l'
     lore:
       - '&8➟ &aExperience'
-      - '&7Total: &6%total%&7xp'
+      - '&7Total: &6%total_experience%&7xp'
       - ''
       - '&8➟ &aStats'
-      - '&7Slain: &e%slain% &7contracts'
+      - '&7Slain: &e%total_slain% &7contracts'
       - '&7Level: &e%level%'
   profiles:
     name-color: '&6&l'
@@ -472,7 +511,7 @@ gui:
       - '&8➟ &aStats'
       - '&7Level: &e%level%'
       - '&7Current xp: &e%xp%'
-      - '&7Total xp: &e%totalxp%'
+      - '&7Total xp: &e%total_experience%'
       - ''
       - '&8➟ &aContracts slain'
       - '&7Common: &e%common_slain%'
@@ -487,7 +526,7 @@ gui:
     name-color: '&6&l'
     lore:
       - '&8➟ &aCommon slain'
-      - '&7Total: &6%slain% &7slain'
+      - '&7Total: &6%common_slain% &7slain'
       - ''
       - '&8➟ &aStats'
       - '&7Level: &e%level%'
@@ -496,7 +535,7 @@ gui:
     name-color: '&6&l'
     lore:
       - '&8➟ &aEpic slain'
-      - '&7Total: &6%slain% &7slain'
+      - '&7Total: &6%epic_slain% &7slain'
       - ''
       - '&8➟ &aStats'
       - '&7Level: &e%level%'
@@ -505,7 +544,7 @@ gui:
     name-color: '&6&l'
     lore:
       - '&8➟ &aLegendary slain'
-      - '&7Total: &6%slain% &7slain'
+      - '&7Total: &6%legendary_slain% &7slain'
       - ''
       - '&8➟ &aStats'
       - '&7Level: &e%level%'

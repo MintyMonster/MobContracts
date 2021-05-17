@@ -106,8 +106,8 @@ public class AllContractsGui extends PaginatedGui {
                                 .replace("§", "&")
                                 .replace("[", "")
                                 .replace("]", ""),
-                        base, plugin.getConfig().getStringList("gui.all-contracts.lore")
-                        .stream().map(s -> s.replace("%name%", summonerName)
+                                base, plugin.getConfig().getStringList("gui.all-contracts.lore")
+                                .stream().map(s -> s.replace("%name%", summonerName)
                                 .replace("%health%", String.valueOf(health))
                                 .replace("%damage%", String.valueOf(damage))
                                 .replace("%color%", color)

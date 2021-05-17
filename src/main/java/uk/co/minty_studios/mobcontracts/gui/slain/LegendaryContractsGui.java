@@ -89,17 +89,10 @@ public class LegendaryContractsGui extends PaginatedGui {
             if (sorted.get(index) != null) {
 
                 UUID uuid = sorted.get(index).getKey();
-                int slain = sorted.get(index).getValue().getLegendarySlain();
-                int level = sorted.get(index).getValue().getCurrentLevel();
-                int experience = sorted.get(index).getValue().getCurrentXp();
 
                 inventory.addItem(createCustomGuiItem.getPlayerHead(uuid,
                         plugin.getConfig().getString("gui.legendary-slain.name-color"),
-                        plugin.getConfig().getStringList("gui.legendary-slain.lore")
-                                .stream().map(s -> s.replace("%slain%", String.valueOf(slain))
-                                .replace("%level%", String.valueOf(level))
-                                .replace("%xp%", String.valueOf(experience)))
-                                .collect(Collectors.toList())));
+                        createCustomGuiItem.parsePlayerLore(sorted, index, plugin.getConfig().getStringList("gui.legendary-slain.lore"))));
             }
         }
     }

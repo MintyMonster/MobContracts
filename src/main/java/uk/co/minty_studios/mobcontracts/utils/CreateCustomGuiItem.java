@@ -11,10 +11,7 @@ import uk.co.minty_studios.mobcontracts.MobContracts;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CreateCustomGuiItem {
@@ -40,6 +37,32 @@ public class CreateCustomGuiItem {
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
         item.setItemMeta(meta);
         return item;
+    }
+
+    public List<String> parsePlayerLore(ArrayList<Map.Entry<UUID, PlayerObject>> sorted, int index, List<String> lore){
+        int level = sorted.get(index).getValue().getCurrentLevel();
+        int xp = sorted.get(index).getValue().getCurrentXp();
+        int total_experience = sorted.get(index).getValue().getTotalXp();
+        int total_slain = sorted.get(index).getValue().getTotalSlain();
+        int common_slain = sorted.get(index).getValue().getCommonSlain();
+        int epic_slain = sorted.get(index).getValue().getEpicSlain();
+        int legendary_slain = sorted.get(index).getValue().getLegendarySlain();
+        int common_owned = sorted.get(index).getValue().getCommonOwned();
+        int epic_owned = sorted.get(index).getValue().getEpicOwned();
+        int legendary_owned = sorted.get(index).getValue().getLegendaryOwned();
+
+        return lore.stream().map(s ->
+                        s.replace("%level%", String.valueOf(level))
+                        .replace("%xp%", String.valueOf(xp))
+                        .replace("%total_experience%", String.valueOf(total_experience))
+                        .replace("%total_slain%", String.valueOf(total_slain))
+                        .replace("%common_slain%", String.valueOf(common_slain))
+                        .replace("%epic_slain%", String.valueOf(epic_slain))
+                        .replace("%legendary_slain%", String.valueOf(legendary_slain))
+                        .replace("%common_owned%", String.valueOf(common_owned))
+                        .replace("%epic_owned%", String.valueOf(epic_owned))
+                        .replace("%legendary_owned%", String.valueOf(legendary_owned)))
+                        .collect(Collectors.toList());
     }
 
     public ItemStack getCustomSkull(final String displayName, String texture, List<String> lore) {

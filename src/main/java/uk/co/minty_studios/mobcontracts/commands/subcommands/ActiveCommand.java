@@ -49,7 +49,7 @@ public class ActiveCommand extends ChildCommand {
     public void perform(Player player, String[] args) {
 
         if(currentContracts.getContracts().isEmpty()){
-            genericUseMethods.sendMessageWithPrefix(player, ChatColor.RED + "Error: No active contracts!");
+            genericUseMethods.sendMessageWithPrefix(player, "&cError: No active contracts!");
             return;
         }
 

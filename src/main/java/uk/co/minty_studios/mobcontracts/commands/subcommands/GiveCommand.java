@@ -48,7 +48,7 @@ public class GiveCommand extends ChildCommand {
     @Override
     public void perform(Player player, String[] args) {
         if (!(args.length >= 3)) {
-            genericUseMethods.sendMessageWithPrefix(player, "&c" + this.getSyntax());
+            genericUseMethods.sendMessageWithPrefix(player, "&e" + this.getSyntax());
             return;
         }
         int amount = args.length == 3 ? 1 : Integer.parseInt(args[3]);

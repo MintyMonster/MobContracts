@@ -30,7 +30,7 @@ public class LevelCommand extends ChildCommand {
 
     @Override
     public String getPermission() {
-        return "mobcontracts.core";
+        return "mobcontracts.admin";
     }
 
     @Override
@@ -45,7 +45,7 @@ public class LevelCommand extends ChildCommand {
 
     @Override
     public void perform(Player player, String[] args) {
-        if(!(args.length >= 3)){
+        if(!(args.length >= 4)){
             genericUseMethods.sendMessageWithPrefix(player, "&e" + this.getSyntax());
             return;
         }
@@ -84,8 +84,8 @@ public class LevelCommand extends ChildCommand {
                             .replace("%amount%", String.valueOf(amount)).replace("%player%", player.getName())));
 
         }else if(args[1].equalsIgnoreCase("set")){
-            playerDataDatabase.setPlayerLevel(p.getUniqueId(), amount);
             playerDataDatabase.setPlayerXp(p.getUniqueId(), 0);
+            playerDataDatabase.setPlayerLevel(p.getUniqueId(), amount);
 
             genericUseMethods.sendMessageWithPrefix(player,
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.level-set")

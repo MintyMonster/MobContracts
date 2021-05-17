@@ -100,10 +100,7 @@ public class MainMenu extends Gui {
             if (i == 3) {
                 ItemStack skull = createCustomGuiItem.checkMaterial(config.getString("gui.main-menu.all-contracts.material"),
                         config.getString("gui.main-menu.all-contracts.name"),
-                        config.getStringList("gui.main-menu.all-contracts.lore")
-                                .stream().map(s ->
-                                s.replace("%total_contracts%", String.valueOf(mobDataDatabase.getTotalCountContracts())))
-                                .collect(Collectors.toList()));
+                        config.getStringList("gui.main-menu.all-contracts.lore"));
 
                 inventory.setItem(i, skull);
                 continue;

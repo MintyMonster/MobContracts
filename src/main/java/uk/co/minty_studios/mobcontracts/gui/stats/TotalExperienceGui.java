@@ -92,17 +92,10 @@ public class TotalExperienceGui extends PaginatedGui {
             if (sorted.get(index) != null) {
 
                 UUID uuid = sorted.get(index).getKey();
-                int total = sorted.get(index).getValue().getTotalXp();
-                int slain = sorted.get(index).getValue().getTotalSlain();
-                int level = sorted.get(index).getValue().getCurrentLevel();
 
                 inventory.addItem(createCustomGuiItem.getPlayerHead(uuid,
                         plugin.getConfig().getString("gui.total-experience.name-color"),
-                        plugin.getConfig().getStringList("gui.total-experience.lore")
-                        .stream().map(s -> s.replace("%total%", String.valueOf(total))
-                        .replace("%slain%", String.valueOf(slain))
-                        .replace("%level%", String.valueOf(level)))
-                                .collect(Collectors.toList())));
+                        createCustomGuiItem.parsePlayerLore(sorted, index, plugin.getConfig().getStringList("gui.total-experience.lore"))));
             }
         }
     }
