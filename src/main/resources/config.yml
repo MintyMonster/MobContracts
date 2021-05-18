@@ -56,11 +56,11 @@ contract-type:
 settings:
 
   database:
-    host: 'na01-sql.pebblehost.com'
+    host: 'host'
     port: 3306
-    database-name: 'customer_119398_general'
-    username: 'customer_119398_general'
-    password: 'jXxJw-1NB-@0FIbUM#TF'
+    database-name: 'db-name'
+    username: 'username'
+    password: 'password'
 
   general:
     # When the player leaves, should we kill the contract?
@@ -549,6 +549,107 @@ gui:
       - '&8➟ &aStats'
       - '&7Level: &e%level%'
       - '&7Experience: &e%xp%&7xp'
+
+# Rewards:
+# Materials, reference here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+
+# Enchantments:
+# protection
+# fire_protection
+# feather_falling
+# blast_protection
+# projectile_protection
+# respiration
+# aqua_affinity
+# thorns
+# depth_strider
+# frost_walker
+# sharpness
+# smite
+# bane_of_arthropods
+# knockback
+# fire_aspect
+# looting
+# efficiency
+# silk_touch
+# unbreaking
+# fortune
+# power
+# punch
+# flame
+# infinity
+# luck_of_the_sea
+# lure
+# mending
+
+# Format:
+
+# items:
+#    common/epic/legendary: NEEDS to be one of the 3 tiers, otherwise will not register.
+#     {name}:
+#       material: NOT optional, must be from the link from above
+#       name: IS optional, supports any colours prefixed with '&'
+#       lore: IS optional, yaml list -> supports any colours prefixed with '&'
+#       amount: IS optional, but will default to 1
+#       enchantments: IS optional, use list above with vanilla Minecraft level values e.g Sharpness has max level of 5 (V)
+#       {enchant name}:
+#        enchantment-name: NOT optional if you have the 'enchantments' section. Use list above
+#        level: IS optional, but will default to 1
+
+
+# Add as many as you want
+rewards:
+  # If enabled, items listed will be dropped
+  # IMPORTANT NOTE: When enabled, every item listed here
+  items-enabled: true
+  items:
+    # legendary rewards
+    legendary:
+      mjolnir:
+        material: 'DIAMOND_AXE'
+        name: '&8II &b&lMjolnir &8II'
+        lore:
+          - '&8➟ &cThe most powerful axe'
+          - '&8➟ &cin all the realms!'
+        enchantments:
+          sharpness:
+            enchantment-name: 'sharpness'
+            level: 5
+          efficiency:
+            enchantment-name: 'efficiency'
+            level: 3
+          unbreaking:
+            enchantment-name: 'unbreaking'
+            level: 3
+    # epic rewards
+    epic:
+      apple:
+        material: 'ENCHANTED_GOLDEN_APPLE'
+        name: '&dApple of the Gods!'
+        amount: 10
+
+      bedrock:
+        material: 'BEDROCK'
+        amount: 64
+    # common rewards
+    common:
+      apple: 'DIRT'
+      name: '&5Sacred dirt!'
+      amount: 64
+
+  commands-enabled: false
+  commands:
+    legendary:
+      commands:
+
+    epic:
+      commands:
+
+    common:
+      commands:
+
+
+
 
 
 messages:

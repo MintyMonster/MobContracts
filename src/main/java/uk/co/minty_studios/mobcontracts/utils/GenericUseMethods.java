@@ -2,6 +2,7 @@ package uk.co.minty_studios.mobcontracts.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import uk.co.minty_studios.mobcontracts.MobContracts;
@@ -46,5 +47,68 @@ public class GenericUseMethods {
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', fullMessage));
         });
+    }
+
+    public Enchantment parseEnchantment(String enchant){
+
+        enchant = enchant.toLowerCase();
+        switch(enchant){
+            case "protection":
+                return Enchantment.PROTECTION_ENVIRONMENTAL;
+            case "fire_protection":
+                return Enchantment.PROTECTION_FIRE;
+            case "feather_falling":
+                return Enchantment.PROTECTION_FALL;
+            case "blast_protection":
+                return Enchantment.PROTECTION_EXPLOSIONS;
+            case "projectile_protection":
+                return Enchantment.PROTECTION_PROJECTILE;
+            case "respiration":
+                return Enchantment.OXYGEN;
+            case "aqua_affinity":
+                return Enchantment.WATER_WORKER;
+            case "thorns":
+                return Enchantment.THORNS;
+            case "depth_strider":
+                return Enchantment.DEPTH_STRIDER;
+            case "frost_walker":
+                return Enchantment.FROST_WALKER;
+            case "sharpness":
+                return Enchantment.DAMAGE_ALL;
+            case "smite":
+                return Enchantment.DAMAGE_UNDEAD;
+            case "bane_of_arthropods":
+                return Enchantment.DAMAGE_ARTHROPODS;
+            case "knockback":
+                return Enchantment.KNOCKBACK;
+            case "fire_aspect":
+                return Enchantment.FIRE_ASPECT;
+            case "looting":
+                return Enchantment.LOOT_BONUS_MOBS;
+            case "efficiency":
+                return Enchantment.DIG_SPEED;
+            case "silk_touch":
+                return Enchantment.SILK_TOUCH;
+            case "unbreaking":
+                return Enchantment.DURABILITY;
+            case "fortune":
+                return Enchantment.LOOT_BONUS_BLOCKS;
+            case "power":
+                return Enchantment.ARROW_DAMAGE;
+            case "punch":
+                return Enchantment.ARROW_KNOCKBACK;
+            case "flame":
+                return Enchantment.ARROW_FIRE;
+            case "infinity":
+                return Enchantment.ARROW_INFINITE;
+            case "luck_of_the_sea":
+                return Enchantment.LUCK;
+            case "lure":
+                return Enchantment.LURE;
+            case "mending":
+                return Enchantment.MENDING;
+        }
+
+        return null;
     }
 }

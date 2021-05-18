@@ -46,7 +46,6 @@ public class ContractKillListener implements Listener {
         contractType.removeContract(event.getEntity().getUniqueId());
         currentContracts.removePlayerContract(event.getKiller());
         // rewards
-
         new BukkitRunnable() {
             @Override
             public void run() {

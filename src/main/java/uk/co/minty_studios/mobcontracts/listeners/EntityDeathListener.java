@@ -28,7 +28,7 @@ public class EntityDeathListener implements Listener {
 
         if (currentContracts.isContract(event.getEntity())) {
             event.getDrops().clear();
-            ContractKillEvent contractKillEvent = new ContractKillEvent(contractType, event.getEntity().getKiller(), event.getEntity());
+            ContractKillEvent contractKillEvent = new ContractKillEvent(contractType, event.getEntity().getKiller(), event.getEntity(), event.getDrops());
             plugin.getServer().getPluginManager().callEvent(contractKillEvent);
         }
     }

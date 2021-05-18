@@ -1,10 +1,13 @@
 package uk.co.minty_studios.mobcontracts.events;
 
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import uk.co.minty_studios.mobcontracts.utils.ContractType;
+
+import java.util.List;
 
 public class ContractKillEvent extends Event {
 
@@ -12,11 +15,13 @@ public class ContractKillEvent extends Event {
     private final ContractType contractType;
     private final Player player;
     private final Entity contract;
+    private final List<ItemStack> drops;
 
-    public ContractKillEvent(ContractType contractType, Player killer, Entity contract) {
+    public ContractKillEvent(ContractType contractType, Player killer, Entity contract, List<ItemStack> drops) {
         this.contractType = contractType;
         this.contract = contract;
         this.player = killer;
+        this.drops = drops;
     }
 
     public Player getKiller() {
@@ -33,6 +38,10 @@ public class ContractKillEvent extends Event {
 
     public String getEffect() {
         return contractType.getEffectType(contract.getUniqueId());
+    }
+
+    public List<ItemStack> getDrops(){
+        return drops;
     }
 
     public HandlerList getHandlers() {
