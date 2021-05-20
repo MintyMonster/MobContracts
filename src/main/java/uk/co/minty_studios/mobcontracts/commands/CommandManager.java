@@ -2,7 +2,6 @@ package uk.co.minty_studios.mobcontracts.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
@@ -70,7 +69,7 @@ public class CommandManager implements TabExecutor {
 
         // add commands here
         addCommands("mobcontracts",
-                new StartCommand("start", genericUseMethods, commonContract, epicContract, legendaryContract, contractStorageDatabase, plugin, currentContracts),
+                new StartCommand("start", genericUseMethods, commonContract, epicContract, legendaryContract, contractStorageDatabase, plugin, currentContracts, playerDataDatabase),
                 new RemoveCommand("clear", genericUseMethods, currentContracts, plugin),
                 new GiveCommand("give", genericUseMethods, plugin, contractStorageDatabase, playerDataDatabase),
                 new LeaderboardsCommand("leaderboard", plugin, createCustomGuiItem, playerDataDatabase, this.mobDataDatabase, contractStorageDatabase),

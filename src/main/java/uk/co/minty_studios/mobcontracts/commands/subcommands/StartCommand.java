@@ -2,12 +2,14 @@ package uk.co.minty_studios.mobcontracts.commands.subcommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.commands.ChildCommand;
 import uk.co.minty_studios.mobcontracts.contracts.CommonContract;
 import uk.co.minty_studios.mobcontracts.contracts.EpicContract;
 import uk.co.minty_studios.mobcontracts.contracts.LegendaryContract;
 import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
+import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
 import uk.co.minty_studios.mobcontracts.utils.CurrentContracts;
 import uk.co.minty_studios.mobcontracts.utils.GenericUseMethods;
 
@@ -23,8 +25,17 @@ public class StartCommand extends ChildCommand {
     private final ContractStorageDatabase contractStorageDatabase;
     private final MobContracts plugin;
     private final CurrentContracts currentContracts;
+    private final PlayerDataDatabase playerDataDatabase;
 
-    public StartCommand(String command, GenericUseMethods genericUseMethods, CommonContract commonContract, EpicContract epicContract, LegendaryContract legendaryContract, ContractStorageDatabase contractStorageDatabase, MobContracts plugin, CurrentContracts currentContracts) {
+    public StartCommand(String command,
+                        GenericUseMethods genericUseMethods,
+                        CommonContract commonContract,
+                        EpicContract epicContract,
+                        LegendaryContract legendaryContract,
+                        ContractStorageDatabase contractStorageDatabase,
+                        MobContracts plugin,
+                        CurrentContracts currentContracts,
+                        PlayerDataDatabase playerDataDatabase) {
         super(command);
         this.genericUseMethods = genericUseMethods;
         this.commonContract = commonContract;
@@ -33,6 +44,7 @@ public class StartCommand extends ChildCommand {
         this.contractStorageDatabase = contractStorageDatabase;
         this.plugin = plugin;
         this.currentContracts = currentContracts;
+        this.playerDataDatabase = playerDataDatabase;
     }
 
     @Override
@@ -93,6 +105,13 @@ public class StartCommand extends ChildCommand {
                         .replace("%type%", "Common"));
             }
         }
+
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                playerDataDatabase.updatePlayer(player.getUniqueId());
+            }
+        }.runTaskLater(plugin, 30L);
     }
 
     @Override

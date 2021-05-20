@@ -553,59 +553,54 @@ gui:
 # Rewards:
 # Materials, reference here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
 
-# Enchantments:
-# protection
-# fire_protection
-# feather_falling
-# blast_protection
-# projectile_protection
-# respiration
-# aqua_affinity
-# thorns
-# depth_strider
-# frost_walker
-# sharpness
-# smite
-# bane_of_arthropods
-# knockback
-# fire_aspect
-# looting
-# efficiency
-# silk_touch
-# unbreaking
-# fortune
-# power
-# punch
-# flame
-# infinity
-# luck_of_the_sea
-# lure
-# mending
-
 # Format:
 
 # items:
-#    common/epic/legendary: NEEDS to be one of the 3 tiers, otherwise will not register.
-#     {name}:
-#       material: NOT optional, must be from the link from above
-#       name: IS optional, supports any colours prefixed with '&'
-#       lore: IS optional, yaml list -> supports any colours prefixed with '&'
-#       amount: IS optional, but will default to 1
-#       enchantments: IS optional, use list above with vanilla Minecraft level values e.g Sharpness has max level of 5 (V)
-#       {enchant name}:
-#        enchantment-name: NOT optional if you have the 'enchantments' section. Use list above
-#        level: IS optional, but will default to 1
+#   {common/epic/legendary}:
+#     {custom name}:
+#       show-attributes:
+#       show-enchantments:
+#       unbreakable:
+#       show-unbreakable:
+#       material:
+#       name:
+#       lore:
+#       amount:
+#       enchantments:
+#         {any name}:
+#           enchantment-name:
+#           level:
 
+# {common/epic/legendary} -> Needs to be one of these 3 to identify which mob drops what item.
+# {custom name} -> Any name of your preference, doesn't need to be related
+# show-attributes -> Optional. Whether to show attributes or not. E.G "Damage". Defaults to true (shown)
+# show-enchantments -> Optional. Whether to show/hide enchantments on an item. Will default to "true" (shown)
+# unbreakable -> Optional. True/false > An unbreakable item doesn't lose durability. Will default to false.
+# show-unbreakable -> Optional. True/false. Whether the unbreakable "itemflag" will be shown or not. Will default to "true" (shown)
+# material -> This isn't optional, and cannot be null. Use link provided above for item names. (including all underscores, and full caps lock)
+# name -> Optional. Either configurate your own name, supports '&' colours. If not specified, will default to item name.
+# lore -> Optional. Formatted as a list (Like in the "Mjolnir" example). Supports '&' colours. If not specified, will default to nothing.
+# amount -> Optional. Integer. Will default to 1 if not specified.
+# enchantments -> Optional. If not specified, no enchantments are added
+# {any name} -> Any name for the enchantment
+# enchantment-name -> If enchantments are added, this cannot be empty or null otherwise big explosions and breaking.
+# level -> Optional. Can be anything that an "unsafe" enchantment can be. Even 2048! If not specified with an enchantment, will default to 1.
+
+# NOTE: If in doubt, follow the examples below!
 
 # Add as many as you want
 rewards:
   # If enabled, items listed will be dropped
-  # IMPORTANT NOTE: When enabled, every item listed here
+  # IMPORTANT NOTE: When enabled, every item listed here will be dropped.
   items-enabled: true
   items:
     # legendary rewards
     legendary:
       mjolnir:
+        show-attributes: false
+        show-enchantments: false
+        unbreakable: true
+        show-unbreakable: false
         material: 'DIAMOND_AXE'
         name: '&8II &b&lMjolnir &8II'
         lore:
@@ -621,32 +616,61 @@ rewards:
           unbreaking:
             enchantment-name: 'unbreaking'
             level: 3
+      diamond:
+        material: 'DIAMOND'
+        name: '&bDiamonds!!'
+        amount: 32
+      sword:
+        material: 'NETHERITE_SWORD'
+        name: '&dHonjo Masamune'
+        lore:
+          - ''
+          - '&7Created by master swordsmith'
+          - '&eGoro Nyudo Masamune'
+          - ''
+          - '&c"Never cut down the'
+          - '&cinnocent and undeserving"'
+        enchantments:
+          sharpness:
+            enchantment-name: 'sharpness'
+            level: 5
+          fire_aspect:
+            enchantment-name: 'fire_aspect'
+            level: 2
+
     # epic rewards
     epic:
-      apple:
-        material: 'ENCHANTED_GOLDEN_APPLE'
-        name: '&dApple of the Gods!'
-        amount: 10
+      trident:
+        material: 'TRIDENT'
+        name: '&b&lTrident of Poseidon'
+        enchantments:
+          loyalty:
+            enchantment-name: 'loyalty'
+            level: 3
 
-      bedrock:
-        material: 'BEDROCK'
-        amount: 64
     # common rewards
     common:
-      apple: 'DIRT'
-      name: '&5Sacred dirt!'
-      amount: 64
+      dirt:
+        material: 'DIRT'
+        name: 'Sacred dirt!'
+        amount: 10
 
+  # Set to true if you also want commands thrown when contract is killed.
+  # When enabled, every command in the list will be executed for the respective contract.
   commands-enabled: false
   commands:
     legendary:
       commands:
+        - 'give %player% diamond 100'
+        - 'give %player% emerald 10'
 
     epic:
       commands:
+        - 'give %player% diamond 10'
 
     common:
       commands:
+        - 'give %player% diamond 1'
 
 
 

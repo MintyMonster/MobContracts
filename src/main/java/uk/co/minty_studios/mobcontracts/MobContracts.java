@@ -115,7 +115,7 @@ public class MobContracts extends JavaPlugin {
         pluginManager.registerEvents(new PlayerLeaveListener(currentContracts, this), this);
         pluginManager.registerEvents(new ContractSummonListener(currentContracts, mobDataDatabase), this);
         pluginManager.registerEvents(new EntityDeathListener(this, contractType, currentContracts), this);
-        pluginManager.registerEvents(new ContractKillListener(this, genericUseMethods, levellingSystem, currentContracts, contractType, playerDataDatabase), this);
+        pluginManager.registerEvents(new ContractKillListener(this, genericUseMethods, levellingSystem, currentContracts, contractType, playerDataDatabase, mobFeatures), this);
         pluginManager.registerEvents(new EntityDamageListener(this), this);
         pluginManager.registerEvents(new EntityTransformListener(), this);
         pluginManager.registerEvents(new GuiClickListener(), this);

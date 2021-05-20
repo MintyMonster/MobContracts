@@ -1,6 +1,6 @@
 package uk.co.minty_studios.mobcontracts.gui.generic;
 
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
