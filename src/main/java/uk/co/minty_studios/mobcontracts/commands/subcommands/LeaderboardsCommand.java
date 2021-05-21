@@ -45,7 +45,14 @@ public class LeaderboardsCommand extends ChildCommand {
     }
 
     @Override
-    public void perform(Player player, String[] args) {
+    public Boolean consoleUse(){
+        return false;
+    }
+
+    @Override
+    public void perform(CommandSender sender, String[] args) {
+        if(!(sender instanceof Player)) return;
+        Player player = (Player) sender;
         new MainMenu(plugin.getMenuUtil(player), createCustomGuiItem, plugin, playerDataDatabase, mobDataDatabase, contractStorageDatabase).open();
     }
 

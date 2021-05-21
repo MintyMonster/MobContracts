@@ -1,8 +1,10 @@
 package uk.co.minty_studios.mobcontracts.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import uk.co.minty_studios.mobcontracts.MobContracts;
@@ -75,7 +77,7 @@ public class CommandManager implements TabExecutor {
                 new LeaderboardsCommand("leaderboard", plugin, createCustomGuiItem, playerDataDatabase, this.mobDataDatabase, contractStorageDatabase),
                 new LevelCommand("level", plugin, playerDataDatabase, genericUseMethods),
                 new ActiveCommand("active", plugin, playerDataDatabase, currentContracts, genericUseMethods),
-                new ListCommand("list", contractStorageDatabase),
+                new ListCommand("list", contractStorageDatabase, plugin, genericUseMethods),
                 new ExperienceCommand("xp", playerDataDatabase, genericUseMethods, plugin)
         );
     }
@@ -83,29 +85,36 @@ public class CommandManager implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) return true;
-        Player player = (Player) sender;
 
-        if (!(database.dataSourceExists())) {
-            genericUseMethods.sendMessageWithPrefix(player, "&cDatabase error: Are you connected?");
-            genericUseMethods.sendMessageWithPrefix(player, "&cPlease check config and try again. You may need to restart.");
+        if(!(database.dataSourceExists())){
+            genericUseMethods.sendVariedSenderMessage(sender, "&cDatabase error: Are you connected?");
+            genericUseMethods.sendVariedSenderMessage(sender, "&cPlease check config and try again. You may need to restart.");
             plugin.sendConsoleError("Database error: Are you connected? Please check config and try again.");
             return true;
         }
 
-        if (args.length > 0) {
+        if(args.length > 0){
             MasterCommand master = commands.get(command.getName().toLowerCase());
-            if (master != null) {
-                for (ChildCommand child : master.getChildCommands().values())
-                    if (args[0].equalsIgnoreCase(child.getName()))
-                        if (player.hasPermission(child.getPermission()))
-                            child.perform(player, args);
-                        else
-                            genericUseMethods.sendMessageWithPrefix(player, "&cPermission denied");
-
-                return true;
+            if(master != null){
+                for(ChildCommand child : master.getChildCommands().values()){
+                    if(args[0].equalsIgnoreCase(child.getName())){
+                        if(sender instanceof ConsoleCommandSender){
+                            if(child.consoleUse()){
+                                child.perform(sender, args);
+                            }else{
+                                Bukkit.getConsoleSender().sendMessage("This command cannot be used from console!");
+                            }
+                        } else if(sender instanceof Player){
+                            if(sender.hasPermission(child.getPermission())){
+                                child.perform(sender, args);
+                            }
+                        }
+                    }
+                }
             }
-        } else {
+        }else{
+            if(sender instanceof ConsoleCommandSender) return true;
+            Player player = (Player) sender;
             MasterCommand master = commands.get(command.getName().toLowerCase());
             if (master != null) {
                 player.sendMessage(ChatColor.DARK_GRAY + "-------------------------------------");

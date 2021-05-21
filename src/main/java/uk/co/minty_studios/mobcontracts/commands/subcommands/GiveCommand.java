@@ -46,25 +46,29 @@ public class GiveCommand extends ChildCommand {
     }
 
     @Override
-    public void perform(Player player, String[] args) {
+    public Boolean consoleUse(){
+        return true;
+    }
+
+    @Override
+    public void perform(CommandSender sender, String[] args) {
         if (!(args.length >= 3)) {
-            genericUseMethods.sendMessageWithPrefix(player, "&e" + this.getSyntax());
+            genericUseMethods.sendVariedSenderMessage(sender, "&e" + this.getSyntax());
             return;
         }
         int amount = args.length == 3 ? 1 : Integer.parseInt(args[3]);
 
-        String type = args[2];
         Player p = null;
 
         if (plugin.getServer().getPlayer(args[1]) == null) {
-            genericUseMethods.sendMessageWithPrefix(player, "&cError: Player is not online!");
+            genericUseMethods.sendVariedSenderMessage(sender, "&cError: Player is not online!");
             return;
         } else
             p = plugin.getServer().getPlayer(args[1]);
 
         if ((args[2].equalsIgnoreCase("legendary")) || (args[2].equalsIgnoreCase("leg")) || (args[2].equalsIgnoreCase("l"))) {
             contractStorageDatabase.addLegendaryContract(p.getUniqueId(), amount);
-            genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.give-legendary")
+            genericUseMethods.sendVariedSenderMessage(sender, plugin.getConfig().getString("messages.command.give-legendary")
                     .replace("%player%", p.getName())
                     .replace("%amount%", String.valueOf(amount)));
             genericUseMethods.sendMessageWithPrefix(p, plugin.getConfig().getString("messages.command.received-legendary")
@@ -72,7 +76,7 @@ public class GiveCommand extends ChildCommand {
 
         } else if ((args[2].equalsIgnoreCase("epic")) || (args[2].equalsIgnoreCase("ep")) || (args[2].equalsIgnoreCase("e"))) {
             contractStorageDatabase.addEpicContract(p.getUniqueId(), amount);
-            genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.give-epic")
+            genericUseMethods.sendVariedSenderMessage(sender, plugin.getConfig().getString("messages.command.give-epic")
                     .replace("%player%", p.getName())
                     .replace("%amount%", String.valueOf(amount)));
             genericUseMethods.sendMessageWithPrefix(p, plugin.getConfig().getString("messages.command.received-epic")
@@ -80,7 +84,7 @@ public class GiveCommand extends ChildCommand {
 
         } else if ((args[2].equalsIgnoreCase("common")) || (args[2].equalsIgnoreCase("com")) || (args[2].equalsIgnoreCase("c"))) {
             contractStorageDatabase.addCommonContract(p.getUniqueId(), amount);
-            genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.give-common")
+            genericUseMethods.sendVariedSenderMessage(sender, plugin.getConfig().getString("messages.command.give-common")
                     .replace("%player%", p.getName())
                     .replace("%amount%", String.valueOf(amount)));
             genericUseMethods.sendMessageWithPrefix(p, plugin.getConfig().getString("messages.command.received-common")

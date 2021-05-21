@@ -44,9 +44,14 @@ public class LevelCommand extends ChildCommand {
     }
 
     @Override
-    public void perform(Player player, String[] args) {
+    public Boolean consoleUse(){
+        return true;
+    }
+
+    @Override
+    public void perform(CommandSender sender, String[] args) {
         if(!(args.length >= 4)){
-            genericUseMethods.sendMessageWithPrefix(player, "&e" + this.getSyntax());
+            genericUseMethods.sendVariedSenderMessage(sender, "&e" + this.getSyntax());
             return;
         }
 
@@ -55,7 +60,7 @@ public class LevelCommand extends ChildCommand {
         Player p = null;
 
         if (plugin.getServer().getPlayer(args[3]) == null) {
-            genericUseMethods.sendMessageWithPrefix(player, "&cError: Player is not online!");
+            genericUseMethods.sendVariedSenderMessage(sender, "&cError: Player is not online!");
             return;
         } else
             p = plugin.getServer().getPlayer(args[3]);
@@ -63,37 +68,37 @@ public class LevelCommand extends ChildCommand {
         if(args[1].equalsIgnoreCase("add")){
             playerDataDatabase.addPlayerLevel(p.getUniqueId(), amount);
 
-            genericUseMethods.sendMessageWithPrefix(player,
+            genericUseMethods.sendVariedSenderMessage(sender,
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.level-add")
                             .replace("%amount%", String.valueOf(amount)).replace("%player%", p.getName())));
 
             genericUseMethods.sendMessageWithPrefix(p,
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.level-add-received")
-                            .replace("%amount%", String.valueOf(amount)).replace("%player%", player.getName())));
+                            .replace("%amount%", String.valueOf(amount)).replace("%player%", sender.getName())));
 
 
         }else if(args[1].equalsIgnoreCase("remove")){
             playerDataDatabase.removePlayerLevel(p.getUniqueId(), amount);
             playerDataDatabase.setPlayerXp(p.getUniqueId(), 0);
-            genericUseMethods.sendMessageWithPrefix(player,
+            genericUseMethods.sendVariedSenderMessage(sender,
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.level-removed")
                             .replace("%amount%", String.valueOf(amount)).replace("%player%", p.getName())));
 
             genericUseMethods.sendMessageWithPrefix(p,
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.level-removed-received")
-                            .replace("%amount%", String.valueOf(amount)).replace("%player%", player.getName())));
+                            .replace("%amount%", String.valueOf(amount)).replace("%player%", sender.getName())));
 
         }else if(args[1].equalsIgnoreCase("set")){
             playerDataDatabase.setPlayerXp(p.getUniqueId(), 0);
             playerDataDatabase.setPlayerLevel(p.getUniqueId(), amount);
 
-            genericUseMethods.sendMessageWithPrefix(player,
+            genericUseMethods.sendVariedSenderMessage(sender,
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.level-set")
                             .replace("%amount%", String.valueOf(amount)).replace("%player%", p.getName())));
 
             genericUseMethods.sendMessageWithPrefix(p,
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.level-set-received")
-                            .replace("%amount%", String.valueOf(amount)).replace("%player%", player.getName())));
+                            .replace("%amount%", String.valueOf(amount)).replace("%player%", sender.getName())));
         }
 
         new BukkitRunnable(){

@@ -41,7 +41,16 @@ public class RemoveCommand extends ChildCommand {
     }
 
     @Override
-    public void perform(Player player, String[] args) {
+    public Boolean consoleUse(){
+        return false;
+    }
+
+    @Override
+    public void perform(CommandSender sender, String[] args) {
+
+        if(!(sender instanceof Player)) return;
+        Player player = (Player) sender;
+
         if (!(args.length > 1)) {
             genericUseMethods.sendMessageWithPrefix(player, "&e" + this.getSyntax());
             return;

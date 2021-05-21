@@ -42,17 +42,22 @@ public class ExperienceCommand extends ChildCommand {
     }
 
     @Override
-    public void perform(Player player, String[] args) {
+    public Boolean consoleUse() {
+        return true;
+    }
+
+    @Override
+    public void perform(CommandSender sender, String[] args) {
+
         if(!(args.length >= 4)){
-            genericUseMethods.sendMessageWithPrefix(player, "&e" + this.getSyntax());
-            return;
+            genericUseMethods.sendVariedSenderMessage(sender, "&e" + this.getSyntax());
         }
 
         int amount = Integer.parseInt(args[2]);
         Player p = null;
 
         if (plugin.getServer().getPlayer(args[3]) == null) {
-            genericUseMethods.sendMessageWithPrefix(player, "&cError: Player is not online!");
+            genericUseMethods.sendVariedSenderMessage(sender, "&cError: Player is not online!");
             return;
         } else
             p = plugin.getServer().getPlayer(args[3]);
@@ -67,23 +72,28 @@ public class ExperienceCommand extends ChildCommand {
                 playerDataDatabase.setPlayerXp(p.getUniqueId(), newAmount);
                 playerDataDatabase.setPlayerLevel(p.getUniqueId(), level);
                 playerDataDatabase.addPlayerTotalXp(p.getUniqueId(), amount);
-                genericUseMethods.sendMessageWithPrefix(p, "&e" + player.getName() + " &7has added &e" + amount + "&7xp to you!");
-                genericUseMethods.sendMessageWithPrefix(p, "&7You are now level &e" + level + "&7, with &e" + newAmount + "&7xp");
+
+                genericUseMethods.sendMessageWithPrefix(p, plugin.getConfig().getString("messages.command.experience-added")
+                        .replace("%player%", sender.getName()).replace("%amount%", String.valueOf(amount)));
+
+                genericUseMethods.sendMessageWithPrefix(p, plugin.getConfig().getString("messages.command.experience-levelup")
+                        .replace("%level%", String.valueOf(level)).replace("%currentxp", String.valueOf(newAmount)));
             }else{
                 playerDataDatabase.addPlayerXp(p.getUniqueId(), amount);
                 playerDataDatabase.addPlayerTotalXp(p.getUniqueId(), amount);
-                genericUseMethods.sendMessageWithPrefix(p, "&e" + player.getName() + " &7has added &e" + amount + "&7xp to you!");
+                genericUseMethods.sendMessageWithPrefix(p, plugin.getConfig().getString("messages.command.experience-added")
+                        .replace("%player%", sender.getName()).replace("%amount%", String.valueOf(amount)));
             }
 
         }else if(args[1].equalsIgnoreCase("remove")){
             if(playerDataDatabase.getPlayerXp(p.getUniqueId()) - amount < 0){
-                genericUseMethods.sendMessageWithPrefix(player, "&cYou cannot remove more xp than they have.");
-                genericUseMethods.sendMessageWithPrefix(player, "&cWant to reduce their level? use &e/contracts level");
+                genericUseMethods.sendVariedSenderMessage(sender, plugin.getConfig().getString("messages.command.experience-remove-error"));
                 return;
             }
 
             playerDataDatabase.removePlayerXp(p.getUniqueId(), amount);
-            genericUseMethods.sendMessageWithPrefix(p, "&e" + player.getName() + "&7 has removed &e" + amount + "&7xp from you :(");
+            genericUseMethods.sendMessageWithPrefix(p, plugin.getConfig().getString("messages.command.experience-remove")
+                    .replace("%player%", sender.getName()).replace("%amount%", String.valueOf(amount)));
         }
 
         new BukkitRunnable(){
@@ -96,7 +106,6 @@ public class ExperienceCommand extends ChildCommand {
 
     @Override
     public List<String> onTab(CommandSender sender, String... args) {
-
         if(args.length == 2)
             return Arrays.asList("add", "remove");
 

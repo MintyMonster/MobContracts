@@ -18,11 +18,7 @@ public class ActiveCommand extends ChildCommand {
     private final CurrentContracts currentContracts;
     private final GenericUseMethods genericUseMethods;
 
-    public ActiveCommand(String command,
-                         MobContracts plugin,
-                         PlayerDataDatabase playerDataDatabase,
-                         CurrentContracts currentContracts,
-                         GenericUseMethods genericUseMethods) {
+    public ActiveCommand(String command, MobContracts plugin, PlayerDataDatabase playerDataDatabase, CurrentContracts currentContracts, GenericUseMethods genericUseMethods) {
         super(command);
         this.plugin = plugin;
         this.playerDataDatabase = playerDataDatabase;
@@ -32,12 +28,12 @@ public class ActiveCommand extends ChildCommand {
 
     @Override
     public String getPermission() {
-        return "mobcontracts.core";
+        return "mobcontracts.admin";
     }
 
     @Override
     public String getDescription() {
-        return "See all on-going contracts!";
+        return "See all active contracts!";
     }
 
     @Override
@@ -46,19 +42,28 @@ public class ActiveCommand extends ChildCommand {
     }
 
     @Override
-    public void perform(Player player, String[] args) {
+    public Boolean consoleUse() {
+        return false;
+    }
+
+    @Override
+    public void perform(CommandSender sender, String[] args) {
+
+        Player player = (Player) sender;
 
         if(currentContracts.getContracts().isEmpty()){
             genericUseMethods.sendMessageWithPrefix(player, "&cError: No active contracts!");
             return;
         }
 
-        player.sendMessage(ChatColor.AQUA + "Current Contracts:");
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.current-active-title")));
         currentContracts.getContracts().entrySet().forEach(e -> {
             Player p = plugin.getServer().getPlayer(e.getKey());
             player.sendMessage(ChatColor.GRAY + "-------------------");
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&eEntity: " + e.getValue().getCustomName() + " &eOwner: &6" + p.getName()));
+                    plugin.getConfig().getString("messages.command.current-active")
+                            .replace("%entity%", e.getValue().getCustomName())
+                            .replace("%name%", p.getName())));
         });
     }
 

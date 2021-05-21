@@ -140,6 +140,7 @@ settings:
     # If set to true, contracts have a chance to spawn with a powerful weapon
     allow-weapon: true
     # If set to true, this mob will use the targeting system
+    # This is recommended
     allow-targeting: true
 
   epic:
@@ -171,6 +172,7 @@ settings:
     # If set to true, contracts have a chance to spawn with a powerful weapon
     allow-weapon: true
     # If set to true, this mob will use the targeting system
+    # This is recommended
     allow-targeting: true
 
   legendary:
@@ -209,6 +211,7 @@ settings:
     # If set to true, contracts have a chance to spawn with a powerful weapon
     allow-weapon: true
     # If set to true, this mob will use the targeting system
+    # This is recommended
     allow-targeting: true
 
     # Add whatever you want to these
@@ -587,6 +590,7 @@ gui:
 # level -> Optional. Can be anything that an "unsafe" enchantment can be. Even 2048! If not specified with an enchantment, will default to 1.
 
 # NOTE: If in doubt, follow the examples below!
+# NOTE 2: These items are dropped, not given. So, anyone can access them on the floor!
 
 # Add as many as you want
 rewards:
@@ -715,6 +719,20 @@ messages:
     level-add-received: '&e%player% &7has added &e%amount% &7levels to you!'
     level-set-received: '&e%player% &7has set your level to &e%amount%'
     level-removed-received: '&e%player% &7has removed &e%amount% &7levels from you!'
+    # Experience command
+    experience-added: '&e%player% &7has added &e%amount%&7xp to you!'
+    experience-levelup: '&7You are now level &e%level%&7, with &e%currentxp%&7xp!'
+    experience-remove: '&e%player% &7has removed &e%amount%&7xp from you :('
+    experience-remove-error: '&cYou cannot remove more xp than they have. &cWant to reduce their level? use &e/contracts level'
+    # List command
+    list-title: '&bUsable contracts'
+    list-common: '&7Common: &e%common-amount%'
+    list-epic: '&5Epic: &e%epic-amount%'
+    list-legendary: '&6Legendary: &e%legendary-amount%'
+    # Active command.
+    # %entity% -> Entity's custom name
+    current-active-title: '&bCurrent contracts-:'
+    current-active: '&eEntity: %entity%, &eOwner: &6%name%'
 
   # %entity% -> Contract's custom name
   # %player% -> Player's name

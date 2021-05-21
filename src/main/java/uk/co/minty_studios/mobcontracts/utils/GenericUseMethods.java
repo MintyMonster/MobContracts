@@ -2,6 +2,8 @@ package uk.co.minty_studios.mobcontracts.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -18,6 +20,17 @@ public class GenericUseMethods {
     public void sendMessageWithPrefix(Player player, String message) {
         String fullMessage = plugin.getConfig().getString("prefix") + message;
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', fullMessage));
+    }
+
+    public void sendMessageNoPrefix(Player player, String message){
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+    }
+
+    public void sendVariedSenderMessage(CommandSender sender, String message){
+        if(sender instanceof Player)
+            sendMessageWithPrefix((Player) sender, message);
+        if(sender instanceof ConsoleCommandSender)
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
     }
 
     public void sendBossMessage(LivingEntity entity, String message) {

@@ -23,7 +23,9 @@ public abstract class ChildCommand {
 
     public abstract String getSyntax();
 
-    public abstract void perform(Player player, String[] args);
+    public abstract Boolean consoleUse();
+
+    public abstract void perform(CommandSender sender, String[] args);
 
     public abstract List<String> onTab(CommandSender sender, String... args);
 }
