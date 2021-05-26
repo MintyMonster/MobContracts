@@ -4,28 +4,26 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.commands.ChildCommand;
-import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.database.DatabaseManager;
 import uk.co.minty_studios.mobcontracts.utils.GenericUseMethods;
+import uk.co.minty_studios.mobcontracts.utils.PlayerObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LevelCommand extends ChildCommand {
 
     private final MobContracts plugin;
-    private final PlayerDataDatabase playerDataDatabase;
     private final GenericUseMethods genericUseMethods;
+    private final DatabaseManager databaseManager;
 
-    public LevelCommand(String command, MobContracts plugin, PlayerDataDatabase playerDataDatabase, GenericUseMethods genericUseMethods) {
+    public LevelCommand(String command, MobContracts plugin, GenericUseMethods genericUseMethods, DatabaseManager databaseManager) {
         super(command);
         this.plugin = plugin;
-        this.playerDataDatabase = playerDataDatabase;
         this.genericUseMethods = genericUseMethods;
+        this.databaseManager = databaseManager;
     }
 
     @Override
@@ -44,13 +42,14 @@ public class LevelCommand extends ChildCommand {
     }
 
     @Override
-    public Boolean consoleUse(){
+    public Boolean consoleUse() {
         return true;
     }
 
     @Override
     public void perform(CommandSender sender, String[] args) {
-        if(!(args.length >= 4)){
+        Map<UUID, PlayerObject> map = databaseManager.getPlayerMap();
+        if (!(args.length >= 4)) {
             genericUseMethods.sendVariedSenderMessage(sender, "&e" + this.getSyntax());
             return;
         }
@@ -65,8 +64,8 @@ public class LevelCommand extends ChildCommand {
         } else
             p = plugin.getServer().getPlayer(args[3]);
 
-        if(args[1].equalsIgnoreCase("add")){
-            playerDataDatabase.addPlayerLevel(p.getUniqueId(), amount);
+        if (args[1].equalsIgnoreCase("add")) {
+            map.get(p.getUniqueId()).setCurrentLevel(map.get(p.getUniqueId()).getCurrentLevel() + amount);
 
             genericUseMethods.sendVariedSenderMessage(sender,
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.level-add")
@@ -77,9 +76,10 @@ public class LevelCommand extends ChildCommand {
                             .replace("%amount%", String.valueOf(amount)).replace("%player%", sender.getName())));
 
 
-        }else if(args[1].equalsIgnoreCase("remove")){
-            playerDataDatabase.removePlayerLevel(p.getUniqueId(), amount);
-            playerDataDatabase.setPlayerXp(p.getUniqueId(), 0);
+        } else if (args[1].equalsIgnoreCase("remove")) {
+            map.get(p.getUniqueId()).setCurrentLevel(map.get(p.getUniqueId()).getCurrentLevel() - amount);
+            map.get(p.getUniqueId()).setCurrentXp(0);
+
             genericUseMethods.sendVariedSenderMessage(sender,
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.level-removed")
                             .replace("%amount%", String.valueOf(amount)).replace("%player%", p.getName())));
@@ -88,9 +88,9 @@ public class LevelCommand extends ChildCommand {
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.level-removed-received")
                             .replace("%amount%", String.valueOf(amount)).replace("%player%", sender.getName())));
 
-        }else if(args[1].equalsIgnoreCase("set")){
-            playerDataDatabase.setPlayerXp(p.getUniqueId(), 0);
-            playerDataDatabase.setPlayerLevel(p.getUniqueId(), amount);
+        } else if (args[1].equalsIgnoreCase("set")) {
+            map.get(p.getUniqueId()).setCurrentLevel(amount);
+            map.get(p.getUniqueId()).setCurrentXp(0);
 
             genericUseMethods.sendVariedSenderMessage(sender,
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.level-set")
@@ -100,25 +100,18 @@ public class LevelCommand extends ChildCommand {
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.command.level-set-received")
                             .replace("%amount%", String.valueOf(amount)).replace("%player%", sender.getName())));
         }
-
-        new BukkitRunnable(){
-            @Override
-            public void run(){
-                playerDataDatabase.updatePlayer(plugin.getServer().getPlayer(args[3]).getUniqueId());
-            }
-        }.runTaskLater(plugin, 30);
     }
 
     @Override
     public List<String> onTab(CommandSender sender, String... args) {
 
-        if(args.length == 2){
+        if (args.length == 2) {
             return Arrays.asList("add", "remove", "set");
 
-        }else if(args.length == 3){
+        } else if (args.length == 3) {
             return Arrays.asList("1", "2", "3", "4", "5");
 
-        }else if(args.length == 4){
+        } else if (args.length == 4) {
             List<String> players = new ArrayList<>();
             players.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()));
             return players;

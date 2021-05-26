@@ -126,7 +126,7 @@ public class EpicEffects {
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void epicWeakness(LivingEntity entity){
+    public void epicWeakness(LivingEntity entity) {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -141,7 +141,7 @@ public class EpicEffects {
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void epicBlind(LivingEntity entity){
+    public void epicBlind(LivingEntity entity) {
         new BukkitRunnable() {
             @Override
             public void run() {

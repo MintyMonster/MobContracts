@@ -5,9 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import uk.co.minty_studios.mobcontracts.MobContracts;
-import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
-import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
-import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.database.DatabaseManager;
 import uk.co.minty_studios.mobcontracts.gui.MainMenu;
 import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
 import uk.co.minty_studios.mobcontracts.gui.handler.PaginatedGui;
@@ -15,29 +13,21 @@ import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 import uk.co.minty_studios.mobcontracts.utils.PlayerObject;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ContractsKilledGui extends PaginatedGui {
 
     private final MobContracts plugin;
-    private final PlayerDataDatabase playerDataDatabase;
+    private final DatabaseManager databaseManager;
     private final CreateCustomGuiItem createCustomGuiItem;
-    private final ContractStorageDatabase contractStorageDatabase;
-    private final MobDataDatabase mobDataDatabase;
     private int index;
 
     public ContractsKilledGui(GuiUtil guiUtil,
-                              CreateCustomGuiItem createCustomGuiItem,
-                              MobContracts plugin,
-                              PlayerDataDatabase playerDataDatabase,
-                              ContractStorageDatabase contractStorageDatabase,
-                              MobDataDatabase mobDataDatabase) {
+                              DatabaseManager databaseManager, CreateCustomGuiItem createCustomGuiItem,
+                              MobContracts plugin) {
         super(guiUtil);
+        this.databaseManager = databaseManager;
         this.plugin = plugin;
-        this.playerDataDatabase = playerDataDatabase;
         this.createCustomGuiItem = createCustomGuiItem;
-        this.contractStorageDatabase = contractStorageDatabase;
-        this.mobDataDatabase = mobDataDatabase;
     }
 
     @Override
@@ -72,7 +62,7 @@ public class ContractsKilledGui extends PaginatedGui {
         // open profile
         // Player target = super.guiUtil.getPlayerForProfile();
 
-        ArrayList<Map.Entry<UUID, PlayerObject>> sorted = new ArrayList<>(playerDataDatabase.getPlayerMap().entrySet());
+        ArrayList<Map.Entry<UUID, PlayerObject>> sorted = new ArrayList<>(databaseManager.getPlayerMap().entrySet());
 
         if (e.getCurrentItem().getType().equals(Material.PAPER)) {
             if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Previous page")) {
@@ -80,7 +70,7 @@ public class ContractsKilledGui extends PaginatedGui {
                     page -= 1;
                     super.open();
                 } else {
-                    new MainMenu(plugin.getMenuUtil((Player) e.getWhoClicked()), createCustomGuiItem, plugin, playerDataDatabase, mobDataDatabase, contractStorageDatabase).open();
+                    new MainMenu(plugin.getMenuUtil((Player) e.getWhoClicked()), createCustomGuiItem, plugin, databaseManager).open();
                 }
             } else if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Next page")) {
                 if (!((index + 1) >= sorted.size())) {
@@ -98,7 +88,7 @@ public class ContractsKilledGui extends PaginatedGui {
 
         addBottomRow();
 
-        ArrayList<Map.Entry<UUID, PlayerObject>> sorted = new ArrayList<>(playerDataDatabase.getPlayerMap().entrySet());
+        ArrayList<Map.Entry<UUID, PlayerObject>> sorted = new ArrayList<>(databaseManager.getPlayerMap().entrySet());
         sorted.sort(Collections.reverseOrder(Comparator.comparing(k -> k.getValue().getTotalSlain())));
 
         for (int i = 0; i < super.maxItemsPerPage; i++) {

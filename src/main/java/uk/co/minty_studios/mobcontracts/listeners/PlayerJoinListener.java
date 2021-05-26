@@ -3,36 +3,21 @@ package uk.co.minty_studios.mobcontracts.listeners;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import uk.co.minty_studios.mobcontracts.MobContracts;
-import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
-import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.database.DatabaseManager;
 
 public class PlayerJoinListener implements Listener {
 
-    private final PlayerDataDatabase playerDataDatabase;
-    private final ContractStorageDatabase contractStorageDatabase;
     private final MobContracts plugin;
+    private final DatabaseManager databaseManager;
 
-    public PlayerJoinListener(PlayerDataDatabase playerDataDatabase, ContractStorageDatabase contractStorageDatabase, MobContracts plugin) {
-        this.playerDataDatabase = playerDataDatabase;
-        this.contractStorageDatabase = contractStorageDatabase;
+    public PlayerJoinListener(MobContracts plugin, DatabaseManager databaseManager) {
         this.plugin = plugin;
+        this.databaseManager = databaseManager;
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if (!(playerDataDatabase.uuidExists(event.getPlayer().getUniqueId())))
-            playerDataDatabase.addPlayer(event.getPlayer());
-
-        if (!(contractStorageDatabase.uuidExists(event.getPlayer().getUniqueId())))
-            contractStorageDatabase.addPlayer(event.getPlayer());
-
-        new BukkitRunnable(){
-            @Override
-            public void run(){
-                playerDataDatabase.updatePlayer(event.getPlayer().getUniqueId());
-            }
-        }.runTaskLater(plugin, 40L);
+        databaseManager.newPlayer(event.getPlayer());
     }
 }

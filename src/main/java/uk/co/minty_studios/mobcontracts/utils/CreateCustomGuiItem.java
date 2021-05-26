@@ -23,12 +23,12 @@ public class CreateCustomGuiItem {
         this.plugin = plugin;
     }
 
-    public ItemStack checkMaterial(final String material, final String displayName, @Nullable List<String> lore){
+    public ItemStack checkMaterial(final String material, final String displayName, @Nullable List<String> lore) {
 
-        if(lore != null){
-            if(Material.matchMaterial(material) != null){
+        if (lore != null) {
+            if (Material.matchMaterial(material) != null) {
                 return getCustomItem(Material.valueOf(material), displayName, lore);
-            }else{
+            } else {
                 return getCustomSkull(displayName, material, lore);
             }
         }
@@ -39,7 +39,7 @@ public class CreateCustomGuiItem {
         return item;
     }
 
-    public List<String> parsePlayerLore(ArrayList<Map.Entry<UUID, PlayerObject>> sorted, int index, List<String> lore){
+    public List<String> parsePlayerLore(ArrayList<Map.Entry<UUID, PlayerObject>> sorted, int index, List<String> lore) {
         int level = sorted.get(index).getValue().getCurrentLevel();
         int xp = sorted.get(index).getValue().getCurrentXp();
         int total_experience = sorted.get(index).getValue().getTotalXp();
@@ -52,7 +52,7 @@ public class CreateCustomGuiItem {
         int legendary_owned = sorted.get(index).getValue().getLegendaryOwned();
 
         return lore.stream().map(s ->
-                        s.replace("%level%", String.valueOf(level))
+                s.replace("%level%", String.valueOf(level))
                         .replace("%xp%", String.valueOf(xp))
                         .replace("%total_experience%", String.valueOf(total_experience))
                         .replace("%total_slain%", String.valueOf(total_slain))
@@ -62,7 +62,7 @@ public class CreateCustomGuiItem {
                         .replace("%common_owned%", String.valueOf(common_owned))
                         .replace("%epic_owned%", String.valueOf(epic_owned))
                         .replace("%legendary_owned%", String.valueOf(legendary_owned)))
-                        .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     public ItemStack getCustomSkull(final String displayName, String texture, List<String> lore) {
@@ -110,7 +110,7 @@ public class CreateCustomGuiItem {
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
         meta.setLore(Arrays.stream(newLore).map(line ->
                 ChatColor.translateAlternateColorCodes('&', line
-                .replace("[", "").replace("]", ""))).collect(Collectors.toList()));
+                        .replace("[", "").replace("]", ""))).collect(Collectors.toList()));
         item.setItemMeta(meta);
 
         return item;
@@ -133,7 +133,7 @@ public class CreateCustomGuiItem {
 
         meta.setLore(Arrays.stream(newLore).map(line ->
                 ChatColor.translateAlternateColorCodes('&', line
-                .replace("[", "").replace("]", ""))).collect(Collectors.toList()));
+                        .replace("[", "").replace("]", ""))).collect(Collectors.toList()));
         skull.setItemMeta(meta);
 
         return skull;

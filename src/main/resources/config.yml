@@ -54,14 +54,6 @@ contract-type:
   - 'PIGLIN_BRUTE'
 
 settings:
-
-  database:
-    host: 'host'
-    port: 3306
-    database-name: 'db-name'
-    username: 'username'
-    password: 'password'
-
   general:
     # When the player leaves, should we kill the contract?
     kill-contract-on-leave: true
@@ -213,6 +205,59 @@ settings:
     # If set to true, this mob will use the targeting system
     # This is recommended
     allow-targeting: true
+
+  # These weapons DO NOT drop when the mob is killed. They're simply there to add an extra bit of spice.
+  # The weapons will only work for specific mobs (Zombie, Skeleton etc...)
+  # These will only work if 'allow-weapon' is true in each mob's configuration section.
+  # Each mob has a 50% chance of having a weapon on spawn (Unless they can't have a weapon)
+  # Mobs, such as skeletons, that have the ability to have a sword and a bow get a randomly selected 1 of the 2.
+  # Each weapon can have ANY enchantment, and higher levels. (Even Sharpness 2000!)
+  # NOTE: Enchantments are optional. If you don't want any enchantments, remove the whole 'enchantments' section.
+  # NOTE: Level defaults to 1 if not set.
+
+  # Format
+  # {weapontype}:
+  #   enchantments:
+  #     {custom name}:
+  #       enchantment-name:
+  #       level:
+
+  mob-weapons:
+    # Skeletons, and the other boney bois.
+    bows:
+      enchantments:
+        enchant1:
+          enchantment-name: 'power'
+          level: 5
+        enchant2:
+          enchantment-name: 'knockback'
+          level: 2
+
+    # Zombies, husks, drowned, Zombie villagers, piglins, vindicators, skeleton, wither skeleton, stray.
+    swords:
+      # Types: netherite, diamond, golden, iron, stone, wooden. <- Use one of these names :))
+      type: 'diamond'
+      enchantments:
+        enchant1:
+          enchantment-name: 'sharpness'
+          level: 5
+        enchant2:
+          enchantment-name: 'flame'
+          level: 1
+        enchant3:
+          enchantment-name: 'punch'
+          level: 2
+    # Pillagers, piglins.
+    crossbow:
+      enchantments:
+        enchant1:
+          enchantment-name: 'multishot'
+          level: 1
+        enchant2:
+          enchantment-name: 'piercing'
+          level: 3
+
+
 
     # Add whatever you want to these
     # Ensure that you follow the format
@@ -661,7 +706,7 @@ rewards:
 
   # Set to true if you also want commands thrown when contract is killed.
   # When enabled, every command in the list will be executed for the respective contract.
-  commands-enabled: false
+  commands-enabled: true
   commands:
     legendary:
       commands:

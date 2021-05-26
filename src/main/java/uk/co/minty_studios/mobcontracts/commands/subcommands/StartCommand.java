@@ -2,19 +2,20 @@ package uk.co.minty_studios.mobcontracts.commands.subcommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.commands.ChildCommand;
 import uk.co.minty_studios.mobcontracts.contracts.CommonContract;
 import uk.co.minty_studios.mobcontracts.contracts.EpicContract;
 import uk.co.minty_studios.mobcontracts.contracts.LegendaryContract;
-import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
-import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.database.DatabaseManager;
 import uk.co.minty_studios.mobcontracts.utils.CurrentContracts;
 import uk.co.minty_studios.mobcontracts.utils.GenericUseMethods;
+import uk.co.minty_studios.mobcontracts.utils.PlayerObject;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class StartCommand extends ChildCommand {
 
@@ -22,29 +23,26 @@ public class StartCommand extends ChildCommand {
     private final CommonContract commonContract;
     private final EpicContract epicContract;
     private final LegendaryContract legendaryContract;
-    private final ContractStorageDatabase contractStorageDatabase;
     private final MobContracts plugin;
     private final CurrentContracts currentContracts;
-    private final PlayerDataDatabase playerDataDatabase;
+    private final DatabaseManager databaseManager;
 
     public StartCommand(String command,
                         GenericUseMethods genericUseMethods,
                         CommonContract commonContract,
                         EpicContract epicContract,
                         LegendaryContract legendaryContract,
-                        ContractStorageDatabase contractStorageDatabase,
                         MobContracts plugin,
                         CurrentContracts currentContracts,
-                        PlayerDataDatabase playerDataDatabase) {
+                        DatabaseManager databaseManager) {
         super(command);
         this.genericUseMethods = genericUseMethods;
         this.commonContract = commonContract;
         this.epicContract = epicContract;
         this.legendaryContract = legendaryContract;
-        this.contractStorageDatabase = contractStorageDatabase;
         this.plugin = plugin;
         this.currentContracts = currentContracts;
-        this.playerDataDatabase = playerDataDatabase;
+        this.databaseManager = databaseManager;
     }
 
     @Override
@@ -63,15 +61,16 @@ public class StartCommand extends ChildCommand {
     }
 
     @Override
-    public Boolean consoleUse(){
+    public Boolean consoleUse() {
         return false;
     }
 
     @Override
     public void perform(CommandSender sender, String[] args) {
 
-        if(!(sender instanceof Player)) return;
+        if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
+        Map<UUID, PlayerObject> map = databaseManager.getPlayerMap();
 
         if (!(args.length > 1)) {
             genericUseMethods.sendMessageWithPrefix(player, "&e" + this.getSyntax());
@@ -85,19 +84,21 @@ public class StartCommand extends ChildCommand {
 
         String type = args[1];
         if ((type.equalsIgnoreCase("legendary")) || (type.equalsIgnoreCase("leg")) || (type.equalsIgnoreCase("l"))) {
-            if (contractStorageDatabase.getLegendaryContracts(player.getUniqueId()) > 0) {
+
+            if(map.get(player.getUniqueId()).getLegendaryOwned() > 0){
                 legendaryContract.summonLegendaryContract(player);
-                contractStorageDatabase.useLegendaryContract(player.getUniqueId());
+                map.get(player.getUniqueId()).setLegendaryOwned(map.get(player.getUniqueId()).getLegendaryOwned() - 1);
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.start-legendary"));
-            } else {
+            }else{
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.no-contracts-left")
                         .replace("%type%", "Legendary"));
             }
 
         } else if ((type.equalsIgnoreCase("epic")) || (type.equalsIgnoreCase("ep")) || (type.equalsIgnoreCase("e"))) {
-            if (contractStorageDatabase.getEpicContracts(player.getUniqueId()) > 0) {
+
+            if(map.get(player.getUniqueId()).getEpicOwned() > 0){
                 epicContract.summonEpicContract(player);
-                contractStorageDatabase.useEpicContract(player.getUniqueId());
+                map.get(player.getUniqueId()).setEpicOwned(map.get(player.getUniqueId()).getEpicOwned() - 1);
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.start-epic"));
             } else {
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.no-contracts-left")
@@ -105,27 +106,21 @@ public class StartCommand extends ChildCommand {
             }
 
         } else if ((type.equalsIgnoreCase("common")) || (type.equalsIgnoreCase("com")) || (type.equalsIgnoreCase("c"))) {
-            if (contractStorageDatabase.getCommonContracts(player.getUniqueId()) > 0) {
+
+            if(map.get(player.getUniqueId()).getCommonOwned() > 0){
                 commonContract.summonCommonContract(player);
-                contractStorageDatabase.useCommonContract(player.getUniqueId());
+                map.get(player.getUniqueId()).setCommonOwned(map.get(player.getUniqueId()).getCommonOwned() - 1);
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.start-common"));
-            } else {
+            }else {
                 genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.command.no-contracts-left")
                         .replace("%type%", "Common"));
             }
         }
-
-        new BukkitRunnable(){
-            @Override
-            public void run(){
-                playerDataDatabase.updatePlayer(player.getUniqueId());
-            }
-        }.runTaskLater(plugin, 30L);
     }
 
     @Override
     public List<String> onTab(CommandSender sender, String... args) {
-        if(args.length == 2){
+        if (args.length == 2) {
             return Arrays.asList("Common", "Epic", "Legendary");
         }
         return null;

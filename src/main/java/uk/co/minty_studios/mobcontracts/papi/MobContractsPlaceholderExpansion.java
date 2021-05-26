@@ -11,7 +11,7 @@ import java.util.Map;
 public class MobContractsPlaceholderExpansion extends PlaceholderExpansion {
 
     private final MobContracts plugin;
-    private Map<String, Placeholder> placeholders = new HashMap<>();
+    private final Map<String, Placeholder> placeholders = new HashMap<>();
 
     public MobContractsPlaceholderExpansion(MobContracts plugin) {
         register();
@@ -34,32 +34,32 @@ public class MobContractsPlaceholderExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public boolean persist(){
+    public boolean persist() {
         return true;
     }
 
     @Override
-    public boolean canRegister(){
+    public boolean canRegister() {
         return true;
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String id){
+    public String onPlaceholderRequest(Player player, String id) {
 
-        if(player == null)
+        if (player == null)
             return "";
 
         Placeholder placeholder = placeholders.get(id);
 
-        if(placeholder != null)
+        if (placeholder != null)
             return placeholder.process(player, id);
         else
             return null;
     }
 
-    public void registerPlaceholders(Placeholder placeholder){
+    public void registerPlaceholders(Placeholder placeholder) {
         final Placeholder holders = placeholders.get(placeholder.getName());
-        if(holders != null) {
+        if (holders != null) {
             plugin.getLogger().info("Placeholder already registered: " + placeholder.getName());
             return;
         }

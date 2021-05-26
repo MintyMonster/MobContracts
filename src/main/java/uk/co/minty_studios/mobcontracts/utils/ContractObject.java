@@ -14,10 +14,10 @@ public class ContractObject {
     private final EntityType mobType;
     private final int health;
     private final int damage;
-    private final Date date;
+    private final long date;
     private final String summonerName;
 
-    public ContractObject(UUID playerUuid, String summonerName, UUID contractUuid, String displayName, String tier, EntityType mobType, int health, int damage, Date date) {
+    public ContractObject(UUID playerUuid, String summonerName, UUID contractUuid, String displayName, String tier, EntityType mobType, int health, int damage, long date) {
         this.playerUuid = playerUuid;
         this.contractUuid = contractUuid;
         this.displayName = displayName;
@@ -61,7 +61,7 @@ public class ContractObject {
         return damage;
     }
 
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 }

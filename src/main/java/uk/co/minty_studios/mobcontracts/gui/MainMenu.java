@@ -8,9 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import uk.co.minty_studios.mobcontracts.MobContracts;
-import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
-import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
-import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.database.DatabaseManager;
 import uk.co.minty_studios.mobcontracts.gui.generic.AllContractsGui;
 import uk.co.minty_studios.mobcontracts.gui.generic.ProfilesGui;
 import uk.co.minty_studios.mobcontracts.gui.handler.Gui;
@@ -24,30 +22,22 @@ import uk.co.minty_studios.mobcontracts.gui.stats.ServerStatsGui;
 import uk.co.minty_studios.mobcontracts.gui.stats.TotalExperienceGui;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainMenu extends Gui {
 
     private final CreateCustomGuiItem createCustomGuiItem;
     private final MobContracts plugin;
-    private final PlayerDataDatabase playerDataDatabase;
-    private final MobDataDatabase mobDataDatabase;
-    private final ContractStorageDatabase contractStorageDatabase;
     private final FileConfiguration config;
+    private final DatabaseManager databaseManager;
 
-    public MainMenu(GuiUtil menuUtil, CreateCustomGuiItem createCustomGuiItem, MobContracts plugin, PlayerDataDatabase playerDataDatabase, MobDataDatabase mobDataDatabase, ContractStorageDatabase contractStorageDatabase) {
+    public MainMenu(GuiUtil menuUtil, CreateCustomGuiItem createCustomGuiItem, MobContracts plugin, DatabaseManager databaseManager) {
         super(menuUtil);
         this.createCustomGuiItem = createCustomGuiItem;
         this.plugin = plugin;
-        this.playerDataDatabase = playerDataDatabase;
-        this.mobDataDatabase = mobDataDatabase;
-        this.contractStorageDatabase = contractStorageDatabase;
         this.config = plugin.getConfig();
+        this.databaseManager = databaseManager;
     }
 
     @Override
@@ -64,31 +54,31 @@ public class MainMenu extends Gui {
     public void handleMenu(InventoryClickEvent e) {
         switch (e.getSlot()) {
             case 3:
-                new AllContractsGui(plugin.getMenuUtil((Player) e.getWhoClicked()), mobDataDatabase, createCustomGuiItem, plugin, contractStorageDatabase, playerDataDatabase).open();
+                new AllContractsGui(plugin.getMenuUtil((Player) e.getWhoClicked()),  databaseManager, createCustomGuiItem, plugin).open();
                 break;
             case 4:
-                new ProfilesGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, playerDataDatabase, createCustomGuiItem, contractStorageDatabase, mobDataDatabase).open();
+                new ProfilesGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, databaseManager,  createCustomGuiItem).open();
                 break;
             case 5:
-                new ServerStatsGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, playerDataDatabase, mobDataDatabase, contractStorageDatabase, createCustomGuiItem).open();
+                new ServerStatsGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, databaseManager, createCustomGuiItem).open();
                 break;
             case 12:// "&e&lCONTRACTS KILLED":
-                new ContractsKilledGui(plugin.getMenuUtil((Player) e.getWhoClicked()), createCustomGuiItem, plugin, playerDataDatabase, contractStorageDatabase, mobDataDatabase).open();
+                new ContractsKilledGui(plugin.getMenuUtil((Player) e.getWhoClicked()), databaseManager, createCustomGuiItem, plugin).open();
                 break;
             case 13:
-                new TotalExperienceGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, playerDataDatabase, createCustomGuiItem, contractStorageDatabase, mobDataDatabase).open();
+                new TotalExperienceGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, databaseManager,  createCustomGuiItem).open();
                 break;
             case 14:
-                new PlayerLevelGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, playerDataDatabase, createCustomGuiItem, contractStorageDatabase, mobDataDatabase).open();
+                new PlayerLevelGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, databaseManager,  createCustomGuiItem).open();
                 break;
             case 21:
-                new CommonContractsGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, playerDataDatabase, createCustomGuiItem, contractStorageDatabase, mobDataDatabase).open();
+                new CommonContractsGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, databaseManager,  createCustomGuiItem).open();
                 break;
             case 22:
-                new EpicContractsGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, playerDataDatabase, createCustomGuiItem, contractStorageDatabase, mobDataDatabase).open();
+                new EpicContractsGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, databaseManager,  createCustomGuiItem).open();
                 break;
             case 23:
-                new LegendaryContractsGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, playerDataDatabase, createCustomGuiItem, contractStorageDatabase, mobDataDatabase).open();
+                new LegendaryContractsGui(plugin.getMenuUtil((Player) e.getWhoClicked()), plugin, databaseManager,  createCustomGuiItem).open();
                 break;
         }
     }
@@ -106,7 +96,7 @@ public class MainMenu extends Gui {
                 continue;
             }
 
-            if(i == 4){
+            if (i == 4) {
 
                 ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
                 SkullMeta meta = (SkullMeta) skull.getItemMeta();

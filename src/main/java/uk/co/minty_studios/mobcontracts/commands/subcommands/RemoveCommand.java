@@ -41,14 +41,14 @@ public class RemoveCommand extends ChildCommand {
     }
 
     @Override
-    public Boolean consoleUse(){
+    public Boolean consoleUse() {
         return false;
     }
 
     @Override
     public void perform(CommandSender sender, String[] args) {
 
-        if(!(sender instanceof Player)) return;
+        if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
 
         if (!(args.length > 1)) {
@@ -73,7 +73,7 @@ public class RemoveCommand extends ChildCommand {
 
     @Override
     public List<String> onTab(CommandSender sender, String... args) {
-        if(args.length == 2){
+        if (args.length == 2) {
             List<String> players = new ArrayList<>();
             players.add("all");
             players.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()));

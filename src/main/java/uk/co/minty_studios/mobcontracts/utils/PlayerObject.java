@@ -5,8 +5,8 @@ import java.util.UUID;
 
 public class PlayerObject {
 
-    private UUID uuid;
-    private String name;
+    private final UUID uuid;
+    private final String name;
     private int commonSlain;
     private int epicSlain;
     private int legendarySlain;
@@ -48,7 +48,7 @@ public class PlayerObject {
         this.totalOwned = totalOwned;
     }
 
-    public void updatePlayer(int cslain, int eslain, int lslain, int tslain, int xp, int level, int txp, int cowned, int eowned, int lowned, int towned){
+    public void updatePlayer(int cslain, int eslain, int lslain, int tslain, int xp, int level, int txp, int cowned, int eowned, int lowned, int towned) {
         this.commonSlain = cslain;
         this.epicSlain = eslain;
         this.legendarySlain = lslain;
@@ -83,7 +83,7 @@ public class PlayerObject {
     }
 
     public int getTotalSlain() {
-        return totalSlain;
+        return (getCommonSlain() + getLegendarySlain() + getEpicSlain());
     }
 
     public int getCurrentXp() {
@@ -98,19 +98,41 @@ public class PlayerObject {
         return totalXp;
     }
 
-    public int getCommonOwned(){
+    public int getCommonOwned() {
         return commonOwned;
     }
 
-    public int getEpicOwned(){
+    public int getEpicOwned() {
         return epicOwned;
     }
 
-    public int getLegendaryOwned(){
+    public int getLegendaryOwned() {
         return legendaryOwned;
     }
 
-    public int getTotalOwned(){
-        return totalOwned;
+    public int getTotalOwned() {
+        return (getCommonOwned() + getEpicOwned() + getLegendaryOwned());
     }
+
+    public void setCommonSlain(int slain){
+        this.commonSlain = slain;
+    }
+
+    public void setEpicSlain(int slain){
+        this.epicSlain = slain;
+    }
+
+    public void setLegendarySlain(int slain) { this.legendarySlain = slain; }
+
+    public void setCurrentXp(int xp) { this.currentXp = xp; }
+
+    public void setCurrentLevel(int level) { this.currentLevel = level; }
+
+    public void setTotalXp(int total) { this.totalXp = total; }
+
+    public void setCommonOwned(int owned) { this.commonOwned = owned; }
+
+    public void setEpicOwned(int owned) { this.epicOwned = owned; }
+
+    public void setLegendaryOwned(int owned) { this.legendaryOwned = owned; }
 }

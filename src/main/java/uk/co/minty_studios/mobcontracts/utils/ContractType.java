@@ -22,8 +22,10 @@ public class ContractType {
     }
 
     public void removeAllContracts() {
-        for (Map.Entry<UUID, ContractStats> entry : stats.entrySet())
-            stats.remove(entry.getKey());
+        if(stats.size() > 0){
+            for (Map.Entry<UUID, ContractStats> entry : stats.entrySet())
+                stats.remove(entry.getKey());
+        }
     }
 
     public Boolean contractExists(UUID uuid) {

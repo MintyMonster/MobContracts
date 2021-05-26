@@ -1,10 +1,10 @@
 package uk.co.minty_studios.mobcontracts.events;
 
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.ItemStack;
 import uk.co.minty_studios.mobcontracts.utils.ContractType;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class ContractKillEvent extends Event {
         return contractType.getEffectType(contract.getUniqueId());
     }
 
-    public List<ItemStack> getDrops(){
+    public List<ItemStack> getDrops() {
         return drops;
     }
 

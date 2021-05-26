@@ -3,6 +3,7 @@ version: 1.0
 main: uk.co.minty_studios.mobcontracts.MobContracts
 author: MintyMonster
 description: Defeat epic mobs, and collect bounties in Mobcontracts
+softdepend: [PlaceholderAPI]
 api-version: 1.16
 commands:
   mobcontracts:

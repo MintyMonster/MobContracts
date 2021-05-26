@@ -4,9 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.commands.ChildCommand;
-import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
-import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
-import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.database.DatabaseManager;
 import uk.co.minty_studios.mobcontracts.gui.MainMenu;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 
@@ -16,17 +14,13 @@ public class LeaderboardsCommand extends ChildCommand {
 
     private final MobContracts plugin;
     private final CreateCustomGuiItem createCustomGuiItem;
-    private final PlayerDataDatabase playerDataDatabase;
-    private final MobDataDatabase mobDataDatabase;
-    private final ContractStorageDatabase contractStorageDatabase;
+    private final DatabaseManager databaseManager;
 
-    public LeaderboardsCommand(String command, MobContracts plugin, CreateCustomGuiItem createCustomGuiItem, PlayerDataDatabase playerDataDatabase, MobDataDatabase mobDataDatabase, ContractStorageDatabase contractStorageDatabase) {
+    public LeaderboardsCommand(String command, MobContracts plugin, CreateCustomGuiItem createCustomGuiItem, DatabaseManager databaseManager) {
         super(command);
         this.plugin = plugin;
         this.createCustomGuiItem = createCustomGuiItem;
-        this.playerDataDatabase = playerDataDatabase;
-        this.mobDataDatabase = mobDataDatabase;
-        this.contractStorageDatabase = contractStorageDatabase;
+        this.databaseManager = databaseManager;
     }
 
     @Override
@@ -45,15 +39,15 @@ public class LeaderboardsCommand extends ChildCommand {
     }
 
     @Override
-    public Boolean consoleUse(){
+    public Boolean consoleUse() {
         return false;
     }
 
     @Override
     public void perform(CommandSender sender, String[] args) {
-        if(!(sender instanceof Player)) return;
+        if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
-        new MainMenu(plugin.getMenuUtil(player), createCustomGuiItem, plugin, playerDataDatabase, mobDataDatabase, contractStorageDatabase).open();
+        new MainMenu(plugin.getMenuUtil(player), createCustomGuiItem, plugin, databaseManager).open();
     }
 
     @Override

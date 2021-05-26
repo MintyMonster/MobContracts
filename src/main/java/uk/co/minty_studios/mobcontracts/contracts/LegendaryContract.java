@@ -5,7 +5,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import uk.co.minty_studios.mobcontracts.MobContracts;
-import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
 import uk.co.minty_studios.mobcontracts.effects.LegendaryEffects;
 import uk.co.minty_studios.mobcontracts.events.ContractSummonEvent;
 import uk.co.minty_studios.mobcontracts.mobs.MobFeatures;
@@ -18,15 +17,13 @@ public class LegendaryContract {
 
     private final MobContracts plugin;
     private final MobFeatures mobFeatures;
-    private final MobDataDatabase mobDataDatabase;
     private final LegendaryEffects legendaryEffects;
     private final ContractType contractType;
     private static final Random rnd = new Random();
 
-    public LegendaryContract(MobContracts plugin, MobFeatures mobFeatures, MobDataDatabase mobDataDatabase, LegendaryEffects legendaryEffects, ContractType contractType) {
+    public LegendaryContract(MobContracts plugin, MobFeatures mobFeatures, LegendaryEffects legendaryEffects, ContractType contractType) {
         this.plugin = plugin;
         this.mobFeatures = mobFeatures;
-        this.mobDataDatabase = mobDataDatabase;
         this.legendaryEffects = legendaryEffects;
         this.contractType = contractType;
     }

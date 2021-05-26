@@ -1,7 +1,6 @@
 package uk.co.minty_studios.mobcontracts.commands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 

@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.commands.ChildCommand;
-import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
 import uk.co.minty_studios.mobcontracts.utils.CurrentContracts;
 import uk.co.minty_studios.mobcontracts.utils.GenericUseMethods;
 
@@ -14,14 +13,12 @@ import java.util.List;
 public class ActiveCommand extends ChildCommand {
 
     private final MobContracts plugin;
-    private final PlayerDataDatabase playerDataDatabase;
     private final CurrentContracts currentContracts;
     private final GenericUseMethods genericUseMethods;
 
-    public ActiveCommand(String command, MobContracts plugin, PlayerDataDatabase playerDataDatabase, CurrentContracts currentContracts, GenericUseMethods genericUseMethods) {
+    public ActiveCommand(String command, MobContracts plugin, CurrentContracts currentContracts, GenericUseMethods genericUseMethods) {
         super(command);
         this.plugin = plugin;
-        this.playerDataDatabase = playerDataDatabase;
         this.currentContracts = currentContracts;
         this.genericUseMethods = genericUseMethods;
     }
@@ -51,7 +48,7 @@ public class ActiveCommand extends ChildCommand {
 
         Player player = (Player) sender;
 
-        if(currentContracts.getContracts().isEmpty()){
+        if (currentContracts.getContracts().isEmpty()) {
             genericUseMethods.sendMessageWithPrefix(player, "&cError: No active contracts!");
             return;
         }

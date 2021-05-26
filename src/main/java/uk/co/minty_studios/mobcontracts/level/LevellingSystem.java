@@ -2,26 +2,29 @@ package uk.co.minty_studios.mobcontracts.level;
 
 import org.bukkit.entity.Player;
 import uk.co.minty_studios.mobcontracts.MobContracts;
-import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.database.DatabaseManager;
 import uk.co.minty_studios.mobcontracts.utils.GenericUseMethods;
+import uk.co.minty_studios.mobcontracts.utils.PlayerObject;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class LevellingSystem {
 
     private final MobContracts plugin;
-    private final PlayerDataDatabase playerDataDatabase;
     private final GenericUseMethods genericUseMethods;
+    private final DatabaseManager databaseManager;
 
-    public LevellingSystem(MobContracts plugin, PlayerDataDatabase playerDataDatabase, GenericUseMethods genericUseMethods) {
+    public LevellingSystem(MobContracts plugin, GenericUseMethods genericUseMethods, DatabaseManager databaseManager) {
         this.plugin = plugin;
-        this.playerDataDatabase = playerDataDatabase;
         this.genericUseMethods = genericUseMethods;
+        this.databaseManager = databaseManager;
     }
 
     public void levels(Player player, String type) {
+        Map<UUID, PlayerObject> map = databaseManager.getPlayerMap();
         UUID uuid = player.getUniqueId();
-        int levelXp = playerDataDatabase.getPlayerLevel(uuid) * plugin.getConfig().getInt("settings.levels.xp-multi");
+        int levelXp = map.get(uuid).getCurrentLevel() * plugin.getConfig().getInt("settings.levels.xp-multi");
         int maxLevel = plugin.getConfig().getInt("settings.levels.max-level");
         int xp = 0;
         if (type.equalsIgnoreCase("Legendary"))
@@ -31,26 +34,33 @@ public class LevellingSystem {
         else if (type.equalsIgnoreCase("Common"))
             xp = plugin.getConfig().getInt("settings.levels.xp-common");
 
-        playerDataDatabase.addPlayerTotalXp(uuid, xp);
-        if (playerDataDatabase.getPlayerLevel(uuid) >= maxLevel) {
+        map.get(uuid).setTotalXp(map.get(uuid).getTotalXp() + xp);
+
+        if (map.get(uuid).getCurrentLevel() >= maxLevel) {
             genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.level.highest-level"));
             return;
         }
 
-        playerDataDatabase.addPlayerXp(uuid, xp);
+        if(map.get(uuid).getCurrentXp() + xp >= levelXp){
+            int level = map.get(uuid).getCurrentLevel();
+            while(map.get(uuid).getCurrentXp() + xp >= levelXp){
+                level++;
+            }
+            int newXp = (map.get(uuid).getCurrentXp() + xp) - ((level - 1) * plugin.getConfig().getInt("settings.levels.xp-multi"));
+            map.get(uuid).setCurrentXp(newXp);
+            map.get(uuid).setCurrentLevel(level);
 
-        if (playerDataDatabase.getPlayerXp(uuid) + xp >= levelXp) {
-            playerDataDatabase.removePlayerXp(uuid, levelXp);
-            playerDataDatabase.addPlayerLevel(uuid, 1);
             genericUseMethods.sendMessageWithPrefix(player, plugin.getConfig().getString("messages.levels.level-up")
-                    .replace("%level%", String.valueOf(playerDataDatabase.getPlayerLevel(uuid) + 1)));
-            return;
-        }
+                    .replace("%level%", String.valueOf(map.get(uuid).getCurrentLevel())));
 
-        genericUseMethods.sendMessageWithPrefix(player,
-                plugin.getConfig().getString("messages.levels.added-xp")
-                        .replace("%xp%", String.valueOf(xp))
-                        .replace("%levelxp%", String.valueOf(playerDataDatabase.getPlayerXp(uuid) + xp))
-                        .replace("%level%", String.valueOf(playerDataDatabase.getPlayerLevel(uuid))));
+        }else{
+            map.get(uuid).setCurrentXp(map.get(uuid).getCurrentXp() + xp);
+
+            genericUseMethods.sendMessageWithPrefix(player,
+                    plugin.getConfig().getString("messages.levels.added-xp")
+                            .replace("%xp%", String.valueOf(xp))
+                            .replace("%levelxp%", String.valueOf(map.get(uuid).getCurrentXp()))
+                            .replace("%level%", String.valueOf(map.get(uuid).getCurrentLevel())));
+        }
     }
 }

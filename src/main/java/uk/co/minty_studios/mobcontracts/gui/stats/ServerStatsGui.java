@@ -1,42 +1,32 @@
 package uk.co.minty_studios.mobcontracts.gui.stats;
 
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import uk.co.minty_studios.mobcontracts.MobContracts;
-import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
-import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
-import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.database.DatabaseManager;
 import uk.co.minty_studios.mobcontracts.gui.MainMenu;
 import uk.co.minty_studios.mobcontracts.gui.handler.Gui;
 import uk.co.minty_studios.mobcontracts.gui.handler.GuiUtil;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ServerStatsGui extends Gui {
 
     private final MobContracts plugin;
-    private final PlayerDataDatabase playerDataDatabase;
-    private final MobDataDatabase mobDataDatabase;
-    private final ContractStorageDatabase contractStorageDatabase;
+    private final DatabaseManager databaseManager;
     private final CreateCustomGuiItem createCustomGuiItem;
     private final FileConfiguration config;
 
     public ServerStatsGui(GuiUtil menuUtil,
                           MobContracts plugin,
-                          PlayerDataDatabase playerDataDatabase,
-                          MobDataDatabase mobDataDatabase,
-                          ContractStorageDatabase contractStorageDatabase,
+                          DatabaseManager databaseManager,
                           CreateCustomGuiItem createCustomGuiItem) {
         super(menuUtil);
         this.plugin = plugin;
-        this.playerDataDatabase = playerDataDatabase;
-        this.mobDataDatabase = mobDataDatabase;
-        this.contractStorageDatabase = contractStorageDatabase;
+        this.databaseManager = databaseManager;
         this.createCustomGuiItem = createCustomGuiItem;
         this.config = plugin.getConfig();
     }
@@ -55,7 +45,7 @@ public class ServerStatsGui extends Gui {
     public void handleMenu(InventoryClickEvent e) {
 
         if (e.getSlot() == 39)
-            new MainMenu(plugin.getMenuUtil((Player) e.getWhoClicked()), createCustomGuiItem, plugin, playerDataDatabase, mobDataDatabase, contractStorageDatabase).open();
+            new MainMenu(plugin.getMenuUtil((Player) e.getWhoClicked()), createCustomGuiItem, plugin, databaseManager).open();
 
     }
 
@@ -144,20 +134,20 @@ public class ServerStatsGui extends Gui {
         }
     }
 
-    public List<String> fillPlaceholders(List<String> lore){
+    public List<String> fillPlaceholders(List<String> lore) {
 
         return lore.stream().map(s ->
-                s.replace("%total_players%", String.valueOf(playerDataDatabase.getTotalCountPlayers()))
-                        .replace("%total_contracts%", String.valueOf(mobDataDatabase.getTotalCountContracts()))
-                        .replace("%common_killed%", String.valueOf(playerDataDatabase.getTotalStat("COMMON")))
-                        .replace("%epic_killed%", String.valueOf(playerDataDatabase.getTotalStat("EPIC")))
-                        .replace("%legendary_killed%", String.valueOf(playerDataDatabase.getTotalStat("LEGENDARY")))
-                        .replace("%common_stored%", String.valueOf(contractStorageDatabase.getTotalStat("COMMON")))
-                        .replace("%epic_stored%", String.valueOf(contractStorageDatabase.getTotalStat("EPIC")))
-                        .replace("%legendary_stored%", String.valueOf(contractStorageDatabase.getTotalStat("LEGENDARY")))
-                        .replace("%total_levels%", String.valueOf(playerDataDatabase.getTotalStat("LEVEL")))
-                        .replace("%global_total_experience%", String.valueOf(playerDataDatabase.getTotalStat("TOTALXP")))
-                        .replace("%total_damage%", String.valueOf(mobDataDatabase.getTotalStat("DAMAGE")))
-                        .replace("%total_health%", String.valueOf(mobDataDatabase.getTotalStat("HEALTH")))).collect(Collectors.toList());
+                s.replace("%total_players%", String.valueOf(databaseManager.getStat(DatabaseManager.StatType.TOTAL_PLAYERS)))
+                        .replace("%total_contracts%", String.valueOf(databaseManager.getStat(DatabaseManager.StatType.TOTAL_CONTRACTS)))
+                        .replace("%common_killed%", String.valueOf(databaseManager.getStat(DatabaseManager.StatType.SLAIN_COMMON)))
+                        .replace("%epic_killed%", String.valueOf(databaseManager.getStat(DatabaseManager.StatType.SLAIN_EPIC)))
+                        .replace("%legendary_killed%", String.valueOf(databaseManager.getStat(DatabaseManager.StatType.SLAIN_LEGENDARY)))
+                        .replace("%common_stored%", String.valueOf(databaseManager.getStat(DatabaseManager.StatType.OWNED_COMMON)))
+                        .replace("%epic_stored%", String.valueOf(databaseManager.getStat(DatabaseManager.StatType.OWNED_EPIC)))
+                        .replace("%legendary_stored%", String.valueOf(databaseManager.getStat(DatabaseManager.StatType.OWNED_LEGENDARY)))
+                        .replace("%total_levels%", String.valueOf(databaseManager.getStat(DatabaseManager.StatType.TOTAL_LEVELS)))
+                        .replace("%global_total_experience%", String.valueOf(databaseManager.getStat(DatabaseManager.StatType.TOTAL_TOTALXP)))
+                        .replace("%total_damage%", String.valueOf(databaseManager.getStat(DatabaseManager.StatType.TOTAL_DAMAGE)))
+                        .replace("%total_health%", String.valueOf(databaseManager.getStat(DatabaseManager.StatType.TOTAL_HEALTH)))).collect(Collectors.toList());
     }
 }

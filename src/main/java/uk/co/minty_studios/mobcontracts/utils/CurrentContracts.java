@@ -39,11 +39,12 @@ public class CurrentContracts {
     }
 
     public void removeAllContracts() { // For removing all contracts command
-        for (Map.Entry<UUID, Entity> entry : contracts.entrySet()) {
-            entry.getValue().remove();
-            contracts.remove(entry.getKey());
+        if(contracts.size() > 0){
+            for (Map.Entry<UUID, Entity> entry : contracts.entrySet()) {
+                entry.getValue().remove();
+                contracts.remove(entry.getKey());
+            }
         }
-
     }
 
     public void removePlayerContract(Player player) { // Remove single contract based on player
@@ -55,7 +56,7 @@ public class CurrentContracts {
         contracts.remove(player.getUniqueId());
     }
 
-    public Map<UUID, Entity> getContracts(){
+    public Map<UUID, Entity> getContracts() {
         return contracts;
     }
 }

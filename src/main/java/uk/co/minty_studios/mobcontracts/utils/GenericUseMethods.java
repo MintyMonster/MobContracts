@@ -22,14 +22,14 @@ public class GenericUseMethods {
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', fullMessage));
     }
 
-    public void sendMessageNoPrefix(Player player, String message){
+    public void sendMessageNoPrefix(Player player, String message) {
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
     }
 
-    public void sendVariedSenderMessage(CommandSender sender, String message){
-        if(sender instanceof Player)
+    public void sendVariedSenderMessage(CommandSender sender, String message) {
+        if (sender instanceof Player)
             sendMessageWithPrefix((Player) sender, message);
-        if(sender instanceof ConsoleCommandSender)
+        if (sender instanceof ConsoleCommandSender)
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
     }
 
@@ -62,10 +62,10 @@ public class GenericUseMethods {
         });
     }
 
-    public Enchantment parseEnchantment(String enchant){
+    public Enchantment parseEnchantment(String enchant) {
 
         enchant = enchant.toLowerCase();
-        switch(enchant){
+        switch (enchant) {
             case "protection":
                 return Enchantment.PROTECTION_ENVIRONMENTAL;
             case "fire_protection":

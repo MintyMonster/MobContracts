@@ -12,10 +12,7 @@ import uk.co.minty_studios.mobcontracts.commands.subcommands.*;
 import uk.co.minty_studios.mobcontracts.contracts.CommonContract;
 import uk.co.minty_studios.mobcontracts.contracts.EpicContract;
 import uk.co.minty_studios.mobcontracts.contracts.LegendaryContract;
-import uk.co.minty_studios.mobcontracts.database.ContractStorageDatabase;
-import uk.co.minty_studios.mobcontracts.database.Database;
-import uk.co.minty_studios.mobcontracts.database.MobDataDatabase;
-import uk.co.minty_studios.mobcontracts.database.PlayerDataDatabase;
+import uk.co.minty_studios.mobcontracts.database.*;
 import uk.co.minty_studios.mobcontracts.utils.ContractType;
 import uk.co.minty_studios.mobcontracts.utils.CreateCustomGuiItem;
 import uk.co.minty_studios.mobcontracts.utils.CurrentContracts;
@@ -34,51 +31,43 @@ public class CommandManager implements TabExecutor {
     private final LegendaryContract legendaryContract;
     private final EpicContract epicContract;
     private final CommonContract commonContract;
-    private final ContractStorageDatabase contractStorageDatabase;
     private final CurrentContracts currentContracts;
-    private final Database database;
     private final ContractType contractType;
     private final CreateCustomGuiItem createCustomGuiItem;
-    private final PlayerDataDatabase playerDataDatabase;
-    private final MobDataDatabase mobDataDatabase;
+    private final DatabaseManager databaseManager;
 
     public CommandManager(MobContracts plugin,
                           GenericUseMethods genericUseMethods,
                           LegendaryContract legendaryContract,
                           EpicContract epicContract,
                           CommonContract commonContract,
-                          ContractStorageDatabase contractStorageDatabase,
                           CurrentContracts currentContracts,
-                          Database database, ContractType contractType,
+                          ContractType contractType,
                           CreateCustomGuiItem createCustomGuiItem,
-                          PlayerDataDatabase playerDataDatabase,
-                          MobDataDatabase mobDataDatabase) {
+                          DatabaseManager databaseManager) {
 
         this.plugin = plugin;
         this.genericUseMethods = genericUseMethods;
         this.legendaryContract = legendaryContract;
         this.epicContract = epicContract;
         this.commonContract = commonContract;
-        this.contractStorageDatabase = contractStorageDatabase;
         this.currentContracts = currentContracts;
-        this.database = database;
         this.contractType = contractType;
         this.createCustomGuiItem = createCustomGuiItem;
-        this.playerDataDatabase = playerDataDatabase;
-        this.mobDataDatabase = mobDataDatabase;
+        this.databaseManager = databaseManager;
 
         plugin.getCommand("mobcontracts").setExecutor(this);
 
         // add commands here
         addCommands("mobcontracts",
-                new StartCommand("start", genericUseMethods, commonContract, epicContract, legendaryContract, contractStorageDatabase, plugin, currentContracts, playerDataDatabase),
+                new StartCommand("start", genericUseMethods, commonContract, epicContract, legendaryContract, plugin, currentContracts, databaseManager),
                 new RemoveCommand("clear", genericUseMethods, currentContracts, plugin),
-                new GiveCommand("give", genericUseMethods, plugin, contractStorageDatabase, playerDataDatabase),
-                new LeaderboardsCommand("leaderboard", plugin, createCustomGuiItem, playerDataDatabase, this.mobDataDatabase, contractStorageDatabase),
-                new LevelCommand("level", plugin, playerDataDatabase, genericUseMethods),
-                new ActiveCommand("active", plugin, playerDataDatabase, currentContracts, genericUseMethods),
-                new ListCommand("list", contractStorageDatabase, plugin, genericUseMethods),
-                new ExperienceCommand("xp", playerDataDatabase, genericUseMethods, plugin)
+                new GiveCommand("give", genericUseMethods, plugin, databaseManager),
+                new LeaderboardsCommand("leaderboard", plugin, createCustomGuiItem, databaseManager),
+                new LevelCommand("level", plugin, genericUseMethods, databaseManager),
+                new ActiveCommand("active", plugin, currentContracts, genericUseMethods),
+                new ListCommand("list", plugin, genericUseMethods, databaseManager),
+                new ExperienceCommand("experience", genericUseMethods, plugin, databaseManager)
         );
     }
 
@@ -86,34 +75,27 @@ public class CommandManager implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if(!(database.dataSourceExists())){
-            genericUseMethods.sendVariedSenderMessage(sender, "&cDatabase error: Are you connected?");
-            genericUseMethods.sendVariedSenderMessage(sender, "&cPlease check config and try again. You may need to restart.");
-            plugin.sendConsoleError("Database error: Are you connected? Please check config and try again.");
-            return true;
-        }
-
-        if(args.length > 0){
+        if (args.length > 0) {
             MasterCommand master = commands.get(command.getName().toLowerCase());
-            if(master != null){
-                for(ChildCommand child : master.getChildCommands().values()){
-                    if(args[0].equalsIgnoreCase(child.getName())){
-                        if(sender instanceof ConsoleCommandSender){
-                            if(child.consoleUse()){
+            if (master != null) {
+                for (ChildCommand child : master.getChildCommands().values()) {
+                    if (args[0].equalsIgnoreCase(child.getName())) {
+                        if (sender instanceof ConsoleCommandSender) {
+                            if (child.consoleUse()) {
                                 child.perform(sender, args);
-                            }else{
+                            } else {
                                 Bukkit.getConsoleSender().sendMessage("This command cannot be used from console!");
                             }
-                        } else if(sender instanceof Player){
-                            if(sender.hasPermission(child.getPermission())){
+                        } else if (sender instanceof Player) {
+                            if (sender.hasPermission(child.getPermission())) {
                                 child.perform(sender, args);
                             }
                         }
                     }
                 }
             }
-        }else{
-            if(sender instanceof ConsoleCommandSender) return true;
+        } else {
+            if (sender instanceof ConsoleCommandSender) return true;
             Player player = (Player) sender;
             MasterCommand master = commands.get(command.getName().toLowerCase());
             if (master != null) {
@@ -145,17 +127,17 @@ public class CommandManager implements TabExecutor {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 
         MasterCommand master = commands.get(command.getName().toLowerCase());
-        if(master != null){
-            if(args.length == 1){
+        if (master != null) {
+            if (args.length == 1) {
                 List<String> children = new ArrayList<>();
-                for(ChildCommand child : master.getChildCommands().values()){
+                for (ChildCommand child : master.getChildCommands().values()) {
                     children.add(child.getName());
                 }
 
                 return children;
-            }else{
-                for(ChildCommand child : master.getChildCommands().values()){
-                    if(args[0].equalsIgnoreCase(child.getName())){
+            } else {
+                for (ChildCommand child : master.getChildCommands().values()) {
+                    if (args[0].equalsIgnoreCase(child.getName())) {
                         return child.onTab(sender, args);
                     }
                 }

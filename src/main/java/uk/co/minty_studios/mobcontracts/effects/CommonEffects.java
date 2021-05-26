@@ -27,128 +27,128 @@ public class CommonEffects {
         this.duration = plugin.getConfig().getInt("settings.common.effect-duration");
     }
 
-    public void commonFire(LivingEntity entity){
-        new BukkitRunnable(){
+    public void commonFire(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(entity.isDead()){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.setFireTicks(duration);
 
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void commonPoison(LivingEntity entity){
-        new BukkitRunnable(){
+    public void commonPoison(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(entity.isDead()){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void commonSick(LivingEntity entity){
-        new BukkitRunnable(){
+    public void commonSick(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(entity.isDead()){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void commonSlow(LivingEntity entity){
-        new BukkitRunnable(){
+    public void commonSlow(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(entity.isDead()){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void commonWither(LivingEntity entity){
-        new BukkitRunnable(){
+    public void commonWither(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(entity.isDead()){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void commonSmite(LivingEntity entity){
-        new BukkitRunnable(){
+    public void commonSmite(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(entity.isDead()){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.getWorld().strikeLightning(p.getLocation());
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void commonBlind(LivingEntity entity){
-        new BukkitRunnable(){
+    public void commonBlind(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(entity.isDead()){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public void commonWeakness(LivingEntity entity){
-        new BukkitRunnable(){
+    public void commonWeakness(LivingEntity entity) {
+        new BukkitRunnable() {
             @Override
-            public void run(){
-                if(entity.isDead()){
+            public void run() {
+                if (entity.isDead()) {
                     cancel();
                     return;
                 }
-                for(Player p : Bukkit.getOnlinePlayers())
-                    if(p.getLocation().distance(entity.getLocation()) <= distance)
+                for (Player p : Bukkit.getOnlinePlayers())
+                    if (p.getLocation().distance(entity.getLocation()) <= distance)
                         p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, duration, amplifier));
             }
         }.runTaskTimer(plugin, 0L, repeat);
     }
 
-    public String randomCommonEffect(LivingEntity entity){
+    public String randomCommonEffect(LivingEntity entity) {
         int chance = rnd.nextInt(8);
         String effect = "";
         switch (chance) {
