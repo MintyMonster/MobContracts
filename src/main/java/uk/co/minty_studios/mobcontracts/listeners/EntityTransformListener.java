@@ -10,17 +10,7 @@ public class EntityTransformListener implements Listener {
     public void onEntityTransform(EntityTransformEvent event) {
 
         if (event.getEntity().getScoreboardTags().contains("Contract")) {
-            if (event.getTransformReason().equals(EntityTransformEvent.TransformReason.DROWNED))
-                event.setCancelled(true);
-
-            if (event.getTransformReason().equals(EntityTransformEvent.TransformReason.CURED))
-                event.setCancelled(true);
-
-            if (event.getTransformReason().equals(EntityTransformEvent.TransformReason.SPLIT))
-                event.setCancelled(true);
-
-            if (event.getTransformReason().equals(EntityTransformEvent.TransformReason.LIGHTNING))
-                event.setCancelled(true);
+            event.setCancelled(true);
         }
     }
 }

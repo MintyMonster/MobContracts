@@ -24,6 +24,14 @@ public class CurrentContracts {
         return entity;
     }
 
+    public UUID getPlayerUuid(Entity entity){
+        UUID uuid = null;
+        for(Map.Entry<UUID, Entity> entry : contracts.entrySet())
+            if(entry.getValue().equals(entity))
+                uuid = entry.getKey();
+        return uuid;
+    }
+
     public boolean inContract(Player player) {
         for (Map.Entry<UUID, Entity> entry : contracts.entrySet())
             if (entry.getKey().equals(player.getUniqueId()))

@@ -67,7 +67,7 @@ public class CommandManager implements TabExecutor {
                 new LevelCommand("level", plugin, genericUseMethods, databaseManager),
                 new ActiveCommand("active", plugin, currentContracts, genericUseMethods),
                 new ListCommand("list", plugin, genericUseMethods, databaseManager),
-                new ExperienceCommand("experience", genericUseMethods, plugin, databaseManager)
+                new ExperienceCommand("xp", genericUseMethods, plugin, databaseManager)
         );
     }
 

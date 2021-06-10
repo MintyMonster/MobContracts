@@ -190,8 +190,6 @@ public class DatabaseManager {
     }
 
     public void updateDatabase(){
-        plugin.getLogger().info("Saving player data...");
-
         String sql = "INSERT INTO PLAYERDATA (UUID,COMMON,EPIC,LEGENDARY,TOTAL,COMMON_OWNED,EPIC_OWNED,LEGENDARY_OWNED,TOTAL_OWNED,XP,LEVEL,TOTALXP) " +
                 "VALUES (?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(UUID) DO UPDATE SET " +
                 "COMMON = EXCLUDED.COMMON, EPIC = EXCLUDED.EPIC, LEGENDARY = EXCLUDED.LEGENDARY, TOTAL = EXCLUDED.TOTAL, " +
@@ -220,7 +218,6 @@ public class DatabaseManager {
                 throwables.printStackTrace();
             }
         });
-        plugin.getLogger().info("Player data saved!");
     }
 
     public void savePlayers(){

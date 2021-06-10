@@ -132,8 +132,7 @@ public class MobContracts extends JavaPlugin {
         pluginManager.registerEvents(new PlayerJoinListener(this, databaseManager), this);
         pluginManager.registerEvents(new PlayerLeaveListener(currentContracts, this), this);
         pluginManager.registerEvents(new ContractSummonListener(currentContracts, databaseManager), this);
-        pluginManager.registerEvents(new EntityDeathListener(this, contractType, currentContracts), this);
-        pluginManager.registerEvents(new ContractKillListener(this, genericUseMethods, levellingSystem, currentContracts, contractType, mobFeatures, databaseManager), this);
+        pluginManager.registerEvents(new EntityDeathListener(this, contractType, currentContracts, databaseManager, genericUseMethods, levellingSystem, mobFeatures), this);
         pluginManager.registerEvents(new EntityDamageListener(this), this);
         pluginManager.registerEvents(new EntityTransformListener(), this);
         pluginManager.registerEvents(new GuiClickListener(), this);
@@ -184,9 +183,9 @@ public class MobContracts extends JavaPlugin {
     public void onDisable() {
         this.isEnabled = false;
         currentContracts.removeAllContracts();
-        contractType.removeAllContracts();
         getLogger().info("Contracts removed.");
         databaseManager.savePlayers();
+        databaseManager.saveContractsOnDisable();
         reloadConfig();
         getLogger().info("Config.yml saved");
         getLogger().info("Disabled");

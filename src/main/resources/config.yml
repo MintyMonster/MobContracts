@@ -60,6 +60,9 @@ settings:
     # When player kills contract, announce?
     announce-contract-kill: true
 
+    # This will allow players to find their contract, should they lose it.
+    enable-glowing-contract: true
+
     # Enable/Disable damaging events
     # true = cancel damage
     # false = allow damage
@@ -78,6 +81,7 @@ settings:
       suffocation: true
       wither: true # (Wither potion effect)
       thorns: true
+      explosions: true
 
   levels:
     # Max level that players can achieve
@@ -92,6 +96,9 @@ settings:
   targeting:
     # If set to true, the entity will teleport to their target upon re-targeting.
     allow-teleport: true
+    # Set to true if you want the mob to instantly teleport out of liquids to the targeted player
+    # Some mobs have issues with getting out of water to attack (Endermite, Silverfish etc)
+    instant-teleport-liquids: true
     # If set to true, targeting message will be displayed
     allow-target-message: true
     # Distance in blocks for player to be within from entity for targeting to count them
@@ -485,14 +492,14 @@ gui:
     total-damage:
       material: 'd6cc6b83763a67fcada1ea184c2d1752ad240746c6be258a73983d8b657f4bb5'
       name-color: '&6&l'
-      name: '&9&lTOTAL DAMAGE'
+      name: '&9&lTOTAL DAMAGE 🪓'
       lore:
         - '&8➟ &a%total_damage% &7total damage'
         - '&8➟ &7from all contracts'
     total-health:
       material: 'b837f3db13a40d4979de77179e18af6e0bc3cc39ea6aba518bb080a6f01a40'
       name-color: '&6&l'
-      name: '&c&lTOTAL HEALTH'
+      name: '&c&lTOTAL HEALTH ❤'
       lore:
         - '&8➟ &a%total_health% &7total health'
         - '&8➟ &7from all contracts'
@@ -509,8 +516,8 @@ gui:
     lore:
       - '&8➟ &aStats'
       - '&7Summoner: &c%name%'
-      - '&7Health: &e%health%&7hp'
-      - '&7Damage: &e%damage% &7Per hit'
+      - '&7Health: &e%health%&7 ❤'
+      - '&7Damage: &e%damage% &7🪓'
       - '&7Type: %color%%tier%'
       - '&7Entity: &e%entity_type%'
       - '&7Date: %date%'

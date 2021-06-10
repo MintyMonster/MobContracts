@@ -40,7 +40,7 @@ public class ExperienceCommand extends ChildCommand {
 
     @Override
     public String getSyntax() {
-        return "/contracts experience [add|remove] [amount] [player]";
+        return "/contracts xp [add|remove] [amount] [player]";
     }
 
     @Override
@@ -55,6 +55,7 @@ public class ExperienceCommand extends ChildCommand {
 
         if (!(args.length >= 4)) {
             genericUseMethods.sendVariedSenderMessage(sender, "&e" + this.getSyntax());
+            return;
         }
 
         int amount = Integer.parseInt(args[2]);

@@ -176,15 +176,19 @@ public class MobFeatures {
                 List<Player> plist = new ArrayList<>();
                 for (Player p : Bukkit.getOnlinePlayers())
                     if (p.getLocation().distance(entity.getLocation()) <= maxDistance)
-                        plist.add(p);
+                        if(!(p.isOp()) || !(p.getGameMode().equals(GameMode.SPECTATOR)) || !(p.getGameMode().equals(GameMode.CREATIVE)))
+                            plist.add(p);
 
                 Player player = plist.get(rnd.nextInt(plist.size()));
 
                 ContractTargetEvent contractTargetEvent = new ContractTargetEvent(entity, player, player.getLocation(), entity.getLocation());
                 Bukkit.getServer().getPluginManager().callEvent(contractTargetEvent);
-
-
                 entity.setTarget(player);
+
+                if(config.getBoolean("instant-teleport-liquids"))
+                    if((allowTeleport) && (entity.getLocation().getBlock().isLiquid()))
+                        entity.teleport(player);
+
                 if ((allowTeleport) && (player.getLocation().distance(entity.getLocation()) >= minDistance))
                     entity.teleport(player);
 

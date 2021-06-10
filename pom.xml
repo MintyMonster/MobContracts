@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.co.minty_studios</groupId>
-    <artifactId>MobContractsV1</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>MobContracts</artifactId>
+    <version>1.0</version>
 
     <build>
         <plugins>
@@ -15,7 +15,7 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>
                 <configuration>
-                    <finalName>${project.artifactId}-${project.version}-MobContracts</finalName>
+                    <finalName>MobContracts-${project.artifactId}-${project.version}</finalName>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <shadedArtifactAttached>true</shadedArtifactAttached>
@@ -50,6 +50,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.9</version>
+        </dependency>
+        <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>minecraft-server</artifactId>
             <version>1.16.5-SNAPSHOT</version>
@@ -62,20 +67,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>4.0.3</version>
-        </dependency>
-        <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.10.9</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.1</version>
         </dependency>
     </dependencies>
 

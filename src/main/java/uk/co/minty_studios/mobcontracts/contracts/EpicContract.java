@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.effects.EpicEffects;
 import uk.co.minty_studios.mobcontracts.events.ContractSummonEvent;
@@ -66,6 +68,9 @@ public class EpicContract {
         String effect = "No effect";
         if (plugin.getConfig().getBoolean("settings.epic.allow-weapon"))
             mobFeatures.giveWeapons(spawned);
+
+        if(plugin.getConfig().getBoolean("settings.general.enable-glowing-contract"))
+            spawned.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 100000, 1));
 
         if (plugin.getConfig().getBoolean("settings.epic.allow-targeting"))
             mobFeatures.getTarget((Creature) spawned);

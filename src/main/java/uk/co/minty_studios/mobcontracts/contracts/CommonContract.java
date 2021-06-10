@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import uk.co.minty_studios.mobcontracts.MobContracts;
 import uk.co.minty_studios.mobcontracts.effects.CommonEffects;
 import uk.co.minty_studios.mobcontracts.events.ContractSummonEvent;
@@ -67,6 +69,9 @@ public class CommonContract {
 
         if (plugin.getConfig().getBoolean("settings.common.allow-targeting"))
             mobFeatures.getTarget((Creature) spawned);
+
+        if(plugin.getConfig().getBoolean("settings.general.enable-glowing-contract"))
+            spawned.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 100000, 1));
 
         String effect = "No effect";
         if (plugin.getConfig().getBoolean("settings.common.enable-aoe-effects"))
