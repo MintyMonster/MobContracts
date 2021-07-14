@@ -77,7 +77,8 @@ public class EntityDeathListener implements Listener {
             else if (tier.equalsIgnoreCase("legendary"))
                 map.get(player.getUniqueId()).setLegendarySlain(map.get(player.getUniqueId()).getLegendarySlain() + 1);
 
-            mobFeatures.dropItems(entity, tier);
+            if(plugin.getConfig().getBoolean("rewards.items-enabled"))
+                mobFeatures.dropItems(entity, tier);
 
             if (plugin.getConfig().getBoolean("rewards.commands-enabled")) {
                 plugin.getConfig().getStringList("rewards.commands." + tier.toLowerCase() + ".commands").forEach(c ->

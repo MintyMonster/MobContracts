@@ -2,7 +2,6 @@
 # Written by MintyMonster
 
 # /////// INFO ///////
-# // 🪓 ⚔
 
 # Placeholders:
 # To use placeholders, you'll need to have PlaceholderAPI installed :)
@@ -31,7 +30,7 @@ prefix: '&6Contracts &8➟ '
 # - Guardian/Elder Guardian needs water
 # - Phantom is really annoying lmao
 # - Witches are a little useless
-# - MagmaCube and Slime break the plugin
+# - MagmaCube and Slime break the plugin (because they split) <- To be fixed in a later update! Stay tuned, kids!
 contract-type:
   - 'EVOKER'
   - 'VINDICATOR'
